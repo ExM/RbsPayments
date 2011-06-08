@@ -1,4 +1,6 @@
 Драйвер для проведения электронных платежей в системе "Альфа-Банк-РБС".
+Исходный код
+ git://github.com/ExM/RbsPayments.git
 
 Сайт системы
  https://www.paymentgate.ru/bpcservlet/BPC/index.jsp

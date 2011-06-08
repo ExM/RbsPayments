@@ -1,12 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RbsPayments", "RbsPayments\RbsPayments.csproj", "{643200D1-E0E3-4BC5-BD29-3A5B22E69FC9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{643200D1-E0E3-4BC5-BD29-3A5B22E69FC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{643200D1-E0E3-4BC5-BD29-3A5B22E69FC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{643200D1-E0E3-4BC5-BD29-3A5B22E69FC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{643200D1-E0E3-4BC5-BD29-3A5B22E69FC9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = RbsPayments\RbsPayments.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
