@@ -4,13 +4,15 @@ using System.Collections.Specialized;
 
 namespace RbsPayments
 {
-	public abstract class RbsTranslator
+	public class RbsTranslator
 	{
+		private readonly IConnector _conn;
 		private readonly string _merchantNum;
 		private readonly string _merchantPass;
 		
-		public RbsTranslator(string merchantNum, string merchantPass)
+		public RbsTranslator(IConnector conn, string merchantNum, string merchantPass)
 		{
+			_conn = conn;
 			_merchantNum = merchantNum;
 			_merchantPass = merchantPass;
 		}
@@ -36,13 +38,10 @@ namespace RbsPayments
 				{"CHARSET", "UTF-8"}
 			};
 			
-			Request("Merchant2Rbs", getParams,
+			_conn.Request("Merchant2Rbs", getParams,
 				(resp) => completed(resp, 0, 0, RbsPaymentState.Deposited),
 				excepted);
 		}
-		
-		protected abstract void Request(string cmd, NameValueCollection getParams,
-			Action<string> completed, Action<Exception> excepted);
 	}
 }
 
