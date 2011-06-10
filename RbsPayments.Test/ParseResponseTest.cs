@@ -27,6 +27,25 @@ namespace RbsPayments.Test
 				Assert.Fail("unexpected exception: {0}", ex);
 			});
 		}
+		
+		[Test]
+		public void Merchant2Rbs_IncorrectFormat()
+		{
+			string text = "orderNumber is not a number\r\nSystem error =For input string: \"ABC\" <p> may be" +
+				" some enetered data is in incorrect format, try again\r\n";
+			
+			RbsResponse.Merchant2Rbs(text, 
+			(morder, f, s, state) =>
+			{
+				Assert.Fail("missed error");
+			},
+			(ex) => 
+			{
+				Assert.AreEqual(text, ex.Message);
+			});
+		}
+		
+		
 	}
 }
 
