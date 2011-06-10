@@ -16,7 +16,9 @@ namespace RbsPayments.Test
 				(morder, f, s, state) =>
 			{
 				Console.WriteLine(morder);
-				
+				Console.WriteLine(f);
+				Console.WriteLine(s);
+				Console.WriteLine(state);
 			},
 			(ex) => 
 			{

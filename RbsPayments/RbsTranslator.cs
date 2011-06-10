@@ -39,9 +39,11 @@ namespace RbsPayments
 			};
 			
 			_conn.Request("Merchant2Rbs", getParams,
-				(resp) => completed(resp, 0, 0, RbsPaymentState.Deposited),
+				(resp) => RbsResponse.Merchant2Rbs(resp, completed, excepted),
 				excepted);
 		}
+
+
 	}
 }
 
