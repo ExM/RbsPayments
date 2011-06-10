@@ -41,6 +41,7 @@ namespace RbsPayments.Test
 			},
 			(ex) => 
 			{
+				Assert.IsInstanceOf<InvalidOperationException>(ex);
 				Assert.AreEqual(text, ex.Message);
 			});
 		}

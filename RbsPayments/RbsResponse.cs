@@ -20,12 +20,12 @@ namespace RbsPayments
 			RbsPaymentState state = RbsPaymentState.Declined;
 			int primaryRC = 0;
 			int secondaryRC = 0;
-
+			
+			string answer = null;
+			string stateText = null;
+			
 			try
 			{
-				string answer = null;
-				string stateText = null;
-
 				foreach (string pair in text.Split('&'))
 				{
 					int d = pair.IndexOf('=');
@@ -53,13 +53,21 @@ namespace RbsPayments
 					throw new FormatException("key `ANSWER' not found");
 				if (string.IsNullOrEmpty(stateText))
 					throw new FormatException("key `STATE' not found");
-
+			}
+			catch (Exception err)
+			{
+				excepted(new InvalidOperationException(text, err));
+				return;
+			}
+			
+			try
+			{
 				ExtractCodeResult(answer, out primaryRC, out secondaryRC);
 				state = ParseState(stateText);
 				if(state != RbsPaymentState.Approved &&
 					state != RbsPaymentState.Declined &&
 					state != RbsPaymentState.Deposited)
-					throw new FormatException(string.Format("unexpected payment state `{0}'", state));
+					throw new InvalidOperationException(string.Format("unexpected payment state `{0}'", state));
 			}
 			catch (Exception err)
 			{
