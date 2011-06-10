@@ -37,10 +37,24 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\NUnit-2.5.10.11092\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="NLog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\NLog\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="Configuration, Version=1.0.4164.28513, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Configuration\Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Configuration.File, Version=1.0.4164.28513, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Configuration\Configuration.File.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="OperationTest.cs" />
+    <Compile Include="ParseResponseTest.cs" />
+    <Compile Include="Env.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -48,5 +62,10 @@
       <Project>{643200D1-E0E3-4BC5-BD29-3A5B22E69FC9}</Project>
       <Name>RbsPayments</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="RbsPayments.Test.cfg.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

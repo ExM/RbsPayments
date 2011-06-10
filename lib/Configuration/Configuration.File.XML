@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Configuration.File</name>
+    </assembly>
+    <members>
+        <member name="T:Configuration.FileSettings">
+            <summary>
+            settings loaded from a file
+            </summary>
+        </member>
+        <member name="M:Configuration.FileSettings.#ctor(System.String)">
+            <summary>
+            settings loaded from a file
+            </summary>
+            <param name="fileName">file name</param>
+        </member>
+        <member name="M:Configuration.FileSettings.Load``1(Configuration.EmptyResult,System.String)">
+            <summary>
+            load section
+            </summary>
+        </member>
+        <member name="M:Configuration.FileSettings.Save``1(``0,System.String)">
+            <summary>
+            replace section
+            </summary>
+        </member>
+        <member name="M:Configuration.FileSettings.Save">
+            <summary>
+            save current configuration to file
+            </summary>
+        </member>
+        <member name="P:Configuration.FileSettings.FullPath">
+            <summary>
+            full path to configuration file
+            </summary>
+        </member>
+        <member name="T:Configuration.XDocumentExtention">
+            <summary>
+            XmlDocument extentions for serialisation of objects in XML elements
+            </summary>
+        </member>
+        <member name="M:Configuration.XDocumentExtention.LoadElement``1(System.Xml.Linq.XDocument,System.String)">
+            <summary>
+            load object 
+            </summary>
+            <param name="elName">element name</param>
+            <returns>null if element is missing</returns>
+        </member>
+        <member name="M:Configuration.XDocumentExtention.SaveElement``1(System.Xml.Linq.XDocument,``0,System.String)">
+            <summary>
+            replace element
+            </summary>
+            <param name="obj">save object</param>
+            <param name="elName">element name</param>
+        </member>
+    </members>
+</doc>

@@ -4,15 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Xml.Linq;
+using NLog;
 
 namespace RbsPayments
 {
 	public class RbsResponse
 	{
-		//MDORDER=98-4822-4978-117-5986-54119-41-2591-42114-19_p1&ANSWER=%3C%3Fxml+version%3D%221.0%22+encoding%3D%22UTF-8%22%3F%3E%0A%3CPSApiResult+primaryRC%3D%220%22+secondaryRC%3D%220%22%2F%3E&STATE=payment_deposited
-
+		private static Logger Log = LogManager.GetCurrentClassLogger();
+		
 		public static void Merchant2Rbs(string text, Action<string, int, int, RbsPaymentState> completed, Action<Exception> excepted)
 		{
+			Log.Trace("Merchant2Rbs response:`{0}'", text);
+			
 			string mdorder = null;
 			RbsPaymentState state = RbsPaymentState.Declined;
 			int primaryRC = 0;
@@ -28,19 +31,19 @@ namespace RbsPayments
 					int d = pair.IndexOf('=');
 					if (d == -1)
 					{
-						throw new FormatException("char `=' missed");
-						//TODO: warning
+						Log.Warn("char `=' missed in pair `{0}'", pair);
+						continue;
 					}
 					else
 					{
 						string key = HttpUtility.UrlDecode(pair.Substring(0, d));
 						string val = HttpUtility.UrlDecode(pair.Substring(d + 1, pair.Length - d - 1));
 						if (key == "MDORDER")
-							mdorder = val;
+							mdorder = val.Trim();
 						else if (key == "ANSWER")
 							answer = val;
 						else if (key == "STATE")
-							stateText = val;
+							stateText = val.Trim();
 					}
 				}
 
@@ -69,8 +72,7 @@ namespace RbsPayments
 
 		public static RbsPaymentState ParseState(string stateText)
 		{
-
-			switch (stateText.Trim())
+			switch (stateText)
 			{
 				case "payment_approved": return RbsPaymentState.Approved;
 				case "payment_deposited": return RbsPaymentState.Deposited;

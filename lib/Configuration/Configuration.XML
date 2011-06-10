@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Configuration</name>
+    </assembly>
+    <members>
+        <member name="T:Configuration.EmptyResult">
+            <summary>
+            behavior in without setting
+            </summary>
+        </member>
+        <member name="F:Configuration.EmptyResult.Throw">
+            <summary>
+            throwed of error
+            </summary>
+        </member>
+        <member name="F:Configuration.EmptyResult.Null">
+            <summary>
+            return null
+            </summary>
+        </member>
+        <member name="F:Configuration.EmptyResult.Default">
+            <summary>
+            return default setting
+            </summary>
+        </member>
+        <member name="T:Configuration.IAppSettings">
+            <summary>
+            store application settings
+            </summary>
+        </member>
+        <member name="M:Configuration.IAppSettings.Save``1(``0,System.String)">
+            <summary>
+            saves a copy of the settings of this type
+            </summary>
+            <typeparam name="T">setting type</typeparam>
+            <param name="instance">instance of the setting</param>
+            <param name="sectionName">section name</param>
+        </member>
+        <member name="M:Configuration.IAppSettings.Load``1(Configuration.EmptyResult,System.String)">
+            <summary>
+            creates an instance of the settings of this type
+            </summary>
+            <typeparam name="T">setting type</typeparam>
+            <param name="mode">behavior in without setting</param>
+            <param name="sectionName">section name</param>
+        </member>
+    </members>
+</doc>

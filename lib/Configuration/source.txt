@@ -1,0 +1,7 @@
+﻿Простое управление конфигурациями приложения.
+
+Сайт проекта.
+ https://github.com/ExM/Configuration
+
+Url архива: https://download.github.com/ExM-Configuration-v0.1-0-g10fad4e.zip
+

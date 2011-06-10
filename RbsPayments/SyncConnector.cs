@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.IO;
 using System.Text;
+using System.Collections.Specialized;
 
 namespace RbsPayments
 {
@@ -17,7 +18,7 @@ namespace RbsPayments
 		}
 
 		#region IConnector implementation
-		public void Request(string cmd, System.Collections.Specialized.NameValueCollection getParams, Action<string> completed, Action<Exception> excepted)
+		public void Request(string cmd, NameValueCollection getParams, Action<string> completed, Action<Exception> excepted)
 		{
 			string uri = _baseUri + "/" + cmd + "?" + UriParameters.Encode(getParams);
 			

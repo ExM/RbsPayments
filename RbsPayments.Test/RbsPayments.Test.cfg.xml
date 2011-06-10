@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Config>
+  <RbsConnection Uri="http://playground.paymentgate.ru/bpcservlet"
+				 MerchantNumber="118600118603000118604"
+				 Login="merchant"
+				 MerchantPassword="lazY2k" />
+</Config>
