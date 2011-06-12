@@ -58,7 +58,26 @@ namespace RbsPayments.Test
 				"paymentType=\"BPC\" payment_state=\"payment_approved\"/></PaymentCollection></PSOrder>"+
 				"</PSApiResult><!-- transaction_type=SSL_transaction -->";
 
-
+			RbsResponse.QueryOrders(text, 
+			(rInfo, pInfo, state) =>
+			{
+				Assert.AreEqual(1000, pInfo.Amount);
+				Assert.AreEqual("123456", pInfo.ApprovalCode);
+				Assert.AreEqual(1000, pInfo.ApproveAmount);
+				Assert.AreEqual(0, pInfo.AuthCode);
+				Assert.AreEqual(new DateTime(2011, 6, 10, 17, 16, 17, DateTimeKind.Unspecified), pInfo.AuthTime);
+				Assert.AreEqual(0, pInfo.DepositAmount);
+				Assert.AreEqual("118600604", pInfo.MerchantNumber);
+				Assert.AreEqual("5687340", pInfo.OrderNumber);
+				Assert.AreEqual("411111**1112", pInfo.Pan);
+				Assert.AreEqual(RbsPaymentState.Deposited, state);
+				Assert.AreEqual(0, rInfo.PrimaryRC);
+				Assert.AreEqual(0, rInfo.SecondaryRC);
+			},
+			(ex) => 
+			{
+				Assert.Fail("unexpected exception: {0}", ex);
+			});
 		}
 		
 		[Test]

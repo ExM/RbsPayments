@@ -42,6 +42,7 @@ namespace RbsPayments
 				(resp) => RbsResponse.Merchant2Rbs(resp, completed, excepted),
 				excepted);
 		}
+		
 		/// <summary>
 		/// Запрос состояния платежа
 		/// </summary>
@@ -49,13 +50,13 @@ namespace RbsPayments
 		/// уникальный идентификатор заказа, полученный при регистрации заказа от Системы РБС
 		/// </param>
 		/// <param name='completed'>
-		/// 
+		/// детализация состояния заказа
 		/// </param>
 		/// <param name='excepted'>
 		/// ошибка операции
 		/// </param>
 		public void QueryOrders(string mdOrder,
-			Action<string> completed, Action<Exception> excepted)
+			Action<ResultInfo, PaymentInfo, RbsPaymentState> completed, Action<Exception> excepted)
 		{
 			NameValueCollection getParams = new NameValueCollection
 			{

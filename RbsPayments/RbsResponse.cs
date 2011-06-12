@@ -79,11 +79,30 @@ namespace RbsPayments
 		}
 		
 		
-		public static void QueryOrders(string text, Action<string> completed, Action<Exception> excepted)
+		public static void QueryOrders(string text, Action<ResultInfo, PaymentInfo, RbsPaymentState> completed, Action<Exception> excepted)
 		{
 			Log.Trace("QueryOrders response:`{0}'", text);
+			ResultInfo rInfo = new ResultInfo();
+			PaymentInfo pInfo = null;
+			RbsPaymentState state = RbsPaymentState.Approved;
+			
+			try
+			{
+				XDocument doc = XDocument.Parse(text);
+				if(doc.Root.Name != _namePSApiResult)
+					throw new FormatException(string.Format("unknown root name `{0}'", doc.Root.Name));
+				
+				
+				
+			}
+			catch(SystemException err)
+			{
+				excepted(new FormatException("can not parse response", err));
+				return;
+			}
 			
 			
+			completed(rInfo, pInfo, state);
 		}
 
 		public static RbsPaymentState ParseState(string stateText)
@@ -123,6 +142,28 @@ namespace RbsPayments
 					throw new FormatException("secondaryRC attribute not found");
 				if (!int.TryParse(sAt.Value, out secondaryRC))
 					throw new FormatException("secondaryRC attribute not a number");
+			}
+			catch(SystemException err)
+			{
+				throw new FormatException("can not extract code result", err);
+			}
+		}
+		
+		public static PaimentInfo ExtractPaimentInfo(XElement el, out RbsPaymentState state)
+		{
+			try
+			{
+				//<PSOrder amount="123456789" currency="810" merchantNumber="123456789" orderNumber="123456789" state="order_ordered">
+				//  <PaymentCollection>
+				//    <PSPayment approvalCode="207433" approveAmount="123456789" authCode="0"
+				//      authTime="Thu Mar 14 12:10:24 GMT+03:00 2002" capCode="0"
+				//      depositAmount="123456789" paymentNumber="123456789" 
+				//      paymentType="BPC" payment_state="payment_deposited" 
+				//      pan="412345..1234"/>
+				//  </PaymentCollection>
+				//</PSOrder>
+				
+				
 			}
 			catch(SystemException err)
 			{

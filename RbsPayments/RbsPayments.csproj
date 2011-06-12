@@ -50,7 +50,7 @@
     <Compile Include="UriParameters.cs" />
     <Compile Include="RbsConnectionConfig.cs" />
     <Compile Include="PaymentInfo.cs" />
-    <Compile Include="PaymentResult.cs" />
+    <Compile Include="ResultInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

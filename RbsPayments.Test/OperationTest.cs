@@ -39,7 +39,7 @@ namespace RbsPayments.Test
 		public void QueryOrders_IncorrectMdOrder()
 		{
 			_tr.QueryOrders("123",
-				(text) =>
+				(rInfo, pInfo, state) =>
 				{
 
 				},
@@ -53,7 +53,7 @@ namespace RbsPayments.Test
 		public void QueryOrders()
 		{
 			_tr.QueryOrders("98-4822-4978-117-5986-54119-41-2591-42114-19_p1",
-				(text) =>
+				(rInfo, pInfo, state) =>
 				{
 
 				},
