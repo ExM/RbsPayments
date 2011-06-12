@@ -62,7 +62,7 @@ namespace RbsPayments.Test
 		}
 		
 		[Test]
-		public void QueryOrders_IncorrectFormat()
+		public void QueryOrders_IncorrectMdOrder()
 		{
 			string text = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<error>System error =String index out of " +
 				"range: 6 <p> may be some entered data is in incorrect format, try again</error>\r\n";
