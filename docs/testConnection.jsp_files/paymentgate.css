@@ -1,0 +1,226 @@
+A:link {
+text-decoration: none; 
+color: #000000;
+} 
+
+A:visited {
+text-decoration: none
+color: #000000;
+}
+ 
+A:active {
+text-decoration: none;
+color: #000000;
+}
+
+A:hover {
+text-decoration: underline; 
+color: #000000;
+}
+
+A:blue {
+text-decoration: underline; 
+color: #blue;
+}
+
+.flexTableBg{
+	background-color:  #dddddd;
+	vertical-align: middle;
+}
+
+td{
+	vertical-align: top;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+}
+td.chet{
+	vertical-align: top;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+        background-color:  #ffffff;
+}
+td.nechet{
+	vertical-align: top;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+        background-color:  #ffffff;
+}
+
+td.middle{
+	vertical-align: middle;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+}
+td.big{
+	vertical-align: middle;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+}
+td.bigPageBar{
+	vertical-align: top;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 10pt;
+}
+td.middle_small{
+	vertical-align: middle;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 6pt;
+}
+
+td.right{
+	vertical-align: middle;
+	text-align: right;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+	color: #000000;
+}
+
+td.center{
+	vertical-align: top;
+	text-align: center;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+}
+td.grn{
+	vertical-align: top;
+	text-align: center;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	color: green;
+	font-size: 8pt;
+}
+td.blue{
+	vertical-align: top;
+	text-align: center;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	color: blue;
+	font-size: 8pt;
+}
+td.red{
+	vertical-align: top;
+	text-align: center;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	color: red;
+	font-size: 8pt;
+}
+
+.button{
+	font-size:8pt; 
+	border: 1px solid; 
+	line-height: 14px; 
+	background-color: #FFFFFF;
+	margin-right: 3px;
+	margin-left: 3px;
+	margin-top:4px;
+	margin-bottom:4px;
+}
+
+.text {
+	font-size:8pt; 
+	border: 1px solid; 
+	line-height: 14px; 
+	width: 100px; 
+	background-color: #FFFFFF;
+	margin-right: 3px;
+	margin-left: 3px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.blue{
+	vertical-align: top;
+	text-align: center;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	color: blue;
+	font-size: 8pt;
+}
+
+select {
+	font-size:8pt; 
+	border: 1px solid; 
+	line-height: 14px; 
+	background-color: #FFFFFF;
+	margin-right: 3px;
+	margin-left: 3px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.longtext {
+	font-size:8pt; 
+	border: 1px solid; 
+	line-height: 14px; 
+	width: 200px; 
+	background-color: #FFFFFF;
+	margin-right: 3px;
+	margin-left: 3px;
+}
+
+.bigtext {
+	font-size:8pt; 
+	border: 1px solid; 
+	line-height: 14px; 
+	width: 200px; 
+	background-color: #FFFFFF;
+	margin-right: 3px;
+	margin-left: 3px;
+}
+
+.newsText {
+	font-size:8pt; 
+	border: 1px solid; 
+	line-height: 14px; 
+	background-color: #FFFFFF;
+	margin-right: 3px;
+	margin-left: 3px;
+}
+
+
+
+td.merchantLogin{
+	vertical-align: middle;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 8pt;	
+}
+
+td.contacts{
+	vertical-align: top;
+	text-align: left;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+	color: #FFFFFF;
+	padding: 3px;
+}
+
+td.corner{
+	vertical-align: bottom;
+	text-align: right;
+}
+
+td.gray{
+	text-align: center;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+	background-color:  #dddddd;
+}
+
+ul{
+	list-style: disc;
+}
+
+
+a.menu{
+	color: #000000;
+	text-decoration: none;
+}
+
+a.menuselected{
+	color: #000000;
+	text-decoration: underline;
+}
