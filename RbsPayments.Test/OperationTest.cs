@@ -8,42 +8,74 @@ namespace RbsPayments.Test
 	[TestFixture]
 	public class OperationTest
 	{
-		[Test]
-		public void Block()
+		RbsTranslator _tr;
+		
+		[TestFixtureSetUp]
+		public void SetUp()
 		{
-			RbsConnectionConfig cfg = Env.AppSettings.Load<RbsConnectionConfig>(EmptyResult.Throw);
-			SyncConnector conn = new SyncConnector(cfg.Uri, TimeSpan.FromSeconds(10));
-			RbsTranslator translator = new RbsTranslator(conn, cfg.MerchantNumber, cfg.MerchantPassword);
-			translator.Merchant2Rbs("5687340", "test", 1000, "www", false, "4111111111111112", "123", "201110", "Card Holder",
-				(morder, f, s, state) =>
-			{
-				Assert.Greater(morder.Length, 10);
-				Assert.AreEqual(0, f);
-				Assert.AreEqual(0, s);
-				Assert.AreEqual(RbsPaymentState.Deposited, state);
-			},
-			(ex) => 
-			{
-				Assert.Fail("unexpected exception: {0}", ex);
-			});
+			RbsConnectionConfig cfg = Env.AppSettings.Load<RbsConnectionConfig>(EmptyResult.Throw, "RbsSandbox");
+			SyncConnector conn = new SyncConnector(new Uri(cfg.Uri), TimeSpan.FromSeconds(10));
+			_tr = new RbsTranslator(conn, cfg.MerchantNumber, cfg.MerchantPassword);
 		}
 		
 		[Test]
-		public void Block_IncorrectFormat()
+		public void Merchant2Rbs()
 		{
-			RbsConnectionConfig cfg = Env.AppSettings.Load<RbsConnectionConfig>(EmptyResult.Throw);
-			SyncConnector conn = new SyncConnector(cfg.Uri, TimeSpan.FromSeconds(10));
-			RbsTranslator translator = new RbsTranslator(conn, cfg.MerchantNumber, cfg.MerchantPassword);
-			translator.Merchant2Rbs("ABC", "test", 100, "www", false, "4111111111111112", "123", "201110", "Card Holder",
+			_tr.Merchant2Rbs("5687340", "test", 1000, "www", false, "4111111111111112", "123", "201110", "Card Holder",
 				(morder, f, s, state) =>
-			{
-				Assert.Fail("missed error");
-			},
-			(ex) => 
-			{
-				Assert.IsInstanceOf<InvalidOperationException>(ex);
-				Assert.IsTrue(ex.Message.Contains("ABC"), "not contain `ABC' in `{0}'", ex.Message);
-			});
+				{
+					Assert.Greater(morder.Length, 10);
+					Assert.AreEqual(0, f);
+					Assert.AreEqual(0, s);
+					Assert.AreEqual(RbsPaymentState.Deposited, state);
+				},
+				(ex) => 
+				{
+					Assert.Fail("unexpected exception: {0}", ex);
+				});
+		}
+		
+		[Test]
+		public void QueryOrders_IncorrectMdOrder()
+		{
+			_tr.QueryOrders("123",
+				(text) =>
+				{
+
+				},
+				(ex) => 
+				{
+					Assert.Fail("unexpected exception: {0}", ex);
+				});
+		}
+		
+		[Test]
+		public void QueryOrders()
+		{
+			_tr.QueryOrders("98-4822-4978-117-5986-54119-41-2591-42114-19_p1",
+				(text) =>
+				{
+
+				},
+				(ex) => 
+				{
+					Assert.Fail("unexpected exception: {0}", ex);
+				});
+		}
+		
+		[Test]
+		public void Merchant2Rbs_IncorrectFormat()
+		{
+			_tr.Merchant2Rbs("ABC", "test", 100, "www", false, "4111111111111112", "123", "201110", "Card Holder",
+				(morder, f, s, state) =>
+				{
+					Assert.Fail("missed error");
+				},
+				(ex) => 
+				{
+					Assert.IsInstanceOf<InvalidOperationException>(ex);
+					Assert.IsTrue(ex.Message.Contains("ABC"), "not contain `ABC' in `{0}'", ex.Message);
+				});
 		}
 	}
 }

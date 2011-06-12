@@ -55,6 +55,7 @@
     <Compile Include="OperationTest.cs" />
     <Compile Include="ParseResponseTest.cs" />
     <Compile Include="Env.cs" />
+    <Compile Include="NoConnectionTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

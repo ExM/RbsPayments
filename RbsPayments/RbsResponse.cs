@@ -77,6 +77,14 @@ namespace RbsPayments
 
 			completed(mdorder, primaryRC, secondaryRC, state);
 		}
+		
+		
+		public static void QueryOrders(string text, Action<string> completed, Action<Exception> excepted)
+		{
+			Log.Trace("QueryOrders response:`{0}'", text);
+			
+			
+		}
 
 		public static RbsPaymentState ParseState(string stateText)
 		{

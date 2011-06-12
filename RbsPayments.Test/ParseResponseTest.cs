@@ -46,6 +46,39 @@ namespace RbsPayments.Test
 			});
 		}
 		
+		[Test]
+		public void QueryOrders_Approved()
+		{
+			string text = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" +
+				"<PSApiResult objectCount=\"1\" primaryRC=\"0\" secondaryRC=\"0\">"+
+				"<PSOrder PAN=\"411111**1112\" amount=\"1000\" currency=\"810\" expiry=\"201110\" "+
+				"merchantNumber=\"118600604\" orderNumber=\"5687340\" state=\"order_ordered\">"+
+				"<PaymentCollection><PSPayment approvalCode=\"123456\" approveAmount=\"1000\" authCode=\"0\" "+
+				"authTime=\"Fri Jun 10 17:16:17 MSD 2011\" depositAmount=\"0\" paymentNumber=\"1\" "+
+				"paymentType=\"BPC\" payment_state=\"payment_approved\"/></PaymentCollection></PSOrder>"+
+				"</PSApiResult><!-- transaction_type=SSL_transaction -->";
+
+
+		}
+		
+		[Test]
+		public void QueryOrders_IncorrectFormat()
+		{
+			string text = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<error>System error =String index out of " +
+				"range: 6 <p> may be some entered data is in incorrect format, try again</error>\r\n";
+			
+			//RbsResponse.QueryOrders(text, 
+			//(morder, f, s, state) =>
+			//{
+			//	Assert.Fail("missed error");
+			//},
+			//(ex) => 
+			//{
+			//	Assert.IsInstanceOf<InvalidOperationException>(ex);
+			//	Assert.AreEqual(text, ex.Message);
+			//});
+		}
+		
 		
 	}
 }
