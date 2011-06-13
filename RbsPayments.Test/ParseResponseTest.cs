@@ -15,11 +15,11 @@ namespace RbsPayments.Test
 				"+primaryRC%3D%220%22+secondaryRC%3D%220%22%2F%3E&STATE=payment_deposited";
 			
 			RbsResponse.Merchant2Rbs(text, 
-			(morder, f, s, state) =>
+			(morder, rInfo, state) =>
 			{
 				Assert.AreEqual("98-4822-4978-117-5986-54119-41-2591-42114-19_p1", morder);
-				Assert.AreEqual(0, f);
-				Assert.AreEqual(0, s);
+				Assert.AreEqual(0, rInfo.PrimaryRC);
+				Assert.AreEqual(0, rInfo.SecondaryRC);
 				Assert.AreEqual(RbsPaymentState.Deposited, state);
 			},
 			(ex) => 
@@ -35,7 +35,7 @@ namespace RbsPayments.Test
 				" some enetered data is in incorrect format, try again\r\n";
 			
 			RbsResponse.Merchant2Rbs(text, 
-			(morder, f, s, state) =>
+			(morder, rInfo, state) =>
 			{
 				Assert.Fail("missed error");
 			},
@@ -86,16 +86,16 @@ namespace RbsPayments.Test
 			string text = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<error>System error =String index out of " +
 				"range: 6 <p> may be some entered data is in incorrect format, try again</error>\r\n";
 			
-			//RbsResponse.QueryOrders(text, 
-			//(morder, f, s, state) =>
-			//{
-			//	Assert.Fail("missed error");
-			//},
-			//(ex) => 
-			//{
-			//	Assert.IsInstanceOf<InvalidOperationException>(ex);
-			//	Assert.AreEqual(text, ex.Message);
-			//});
+			RbsResponse.QueryOrders(text, 
+			(rInfo, pInfo, state) =>
+			{
+				Assert.Fail("missed error");
+			},
+			(ex) => 
+			{
+				Assert.IsInstanceOf<InvalidOperationException>(ex);
+				Assert.AreEqual(text, ex.Message);
+			});
 		}
 		
 		

@@ -23,7 +23,7 @@ namespace RbsPayments.Test
 		public void Block()
 		{
 			_tr.Merchant2Rbs("123", "test", 100, "www", false, "4111111111111112", "123", "201110", "Card Holder",
-				(morder, f, s, state) =>
+				(morder, rInfo, state) =>
 				{
 					Assert.Fail("missed error");
 				},

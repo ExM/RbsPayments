@@ -22,11 +22,11 @@ namespace RbsPayments.Test
 		public void Merchant2Rbs()
 		{
 			_tr.Merchant2Rbs("5687340", "test", 1000, "www", false, "4111111111111112", "123", "201110", "Card Holder",
-				(morder, f, s, state) =>
+				(morder, rInfo, state) =>
 				{
 					Assert.Greater(morder.Length, 10);
-					Assert.AreEqual(0, f);
-					Assert.AreEqual(0, s);
+					Assert.AreEqual(0, rInfo.PrimaryRC);
+					Assert.AreEqual(0, rInfo.SecondaryRC);
 					Assert.AreEqual(RbsPaymentState.Deposited, state);
 				},
 				(ex) => 
@@ -67,7 +67,7 @@ namespace RbsPayments.Test
 		public void Merchant2Rbs_IncorrectFormat()
 		{
 			_tr.Merchant2Rbs("ABC", "test", 100, "www", false, "4111111111111112", "123", "201110", "Card Holder",
-				(morder, f, s, state) =>
+				(morder, rInfo, state) =>
 				{
 					Assert.Fail("missed error");
 				},

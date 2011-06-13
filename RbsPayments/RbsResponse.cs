@@ -8,18 +8,16 @@ using NLog;
 
 namespace RbsPayments
 {
-	public class RbsResponse
+	public static class RbsResponse
 	{
 		private static Logger Log = LogManager.GetCurrentClassLogger();
 		
-		public static void Merchant2Rbs(string text, Action<string, int, int, RbsPaymentState> completed, Action<Exception> excepted)
+		public static void Merchant2Rbs(string text, Action<string, ResultInfo, RbsPaymentState> completed, Action<Exception> excepted)
 		{
 			Log.Trace("Merchant2Rbs response:`{0}'", text);
 			
 			string mdorder = null;
 			RbsPaymentState state = RbsPaymentState.Declined;
-			int primaryRC = 0;
-			int secondaryRC = 0;
 			
 			string answer = null;
 			string stateText = null;
@@ -60,9 +58,12 @@ namespace RbsPayments
 				return;
 			}
 			
+			ResultInfo rInfo;
+			
 			try
 			{
-				ExtractCodeResult(answer, out primaryRC, out secondaryRC);
+				XDocument doc = XDocument.Parse(answer);
+				rInfo = ExtractResultInfo(doc.Root);
 				state = ParseState(stateText);
 				if(state != RbsPaymentState.Approved &&
 					state != RbsPaymentState.Declined &&
@@ -75,25 +76,33 @@ namespace RbsPayments
 				return;
 			}
 
-			completed(mdorder, primaryRC, secondaryRC, state);
+			completed(mdorder, rInfo, state);
 		}
-		
 		
 		public static void QueryOrders(string text, Action<ResultInfo, PaymentInfo, RbsPaymentState> completed, Action<Exception> excepted)
 		{
 			Log.Trace("QueryOrders response:`{0}'", text);
 			ResultInfo rInfo = new ResultInfo();
 			PaymentInfo pInfo = null;
-			RbsPaymentState state = RbsPaymentState.Approved;
+			RbsPaymentState state = RbsPaymentState.Unknown;
 			
 			try
 			{
 				XDocument doc = XDocument.Parse(text);
-				if(doc.Root.Name != _namePSApiResult)
-					throw new FormatException(string.Format("unknown root name `{0}'", doc.Root.Name));
+				rInfo = ExtractResultInfo(doc.Root);
+				if(rInfo.Success)
+				{
+					XElement psOrderEl = doc.Root.Element(_namePSOrder);
+					if(psOrderEl == null)
+						throw new FormatException("element `PSOrder' nof found");
 				
-				
-				
+					pInfo = ExtractPaymentInfo(psOrderEl, out state);
+				}
+				else if(!rInfo.MdOrderNotFound)
+				{
+					Log.Warn("unexpected code result {0}", rInfo);
+					throw new FormatException(string.Format("unexpected code result {0}", rInfo));
+				}
 			}
 			catch(SystemException err)
 			{
@@ -101,8 +110,38 @@ namespace RbsPayments
 				return;
 			}
 			
-			
 			completed(rInfo, pInfo, state);
+		}
+		
+		private static ResultInfo ExtractResultInfo(XElement el)
+		{
+			try
+			{
+				//<?xml version="1.0" encoding="UTF-8">
+				//	<PSApiResult primaryRC="0" secondaryRC="0"/>
+				if(el.Name != _namePSApiResult)
+					throw new FormatException(string.Format("unknown element name `{0}'", el.Name));
+	
+				XAttribute pAt = el.Attribute(_namePrimaryRC);
+				if (pAt == null || string.IsNullOrEmpty(pAt.Value))
+					throw new FormatException("primaryRC attribute not found");
+				int pRC;
+				if(!int.TryParse(pAt.Value, out pRC))
+					throw new FormatException("primaryRC attribute not a number");
+
+				XAttribute sAt = el.Attribute(_nameSecondaryRC);
+				if (sAt == null || string.IsNullOrEmpty(sAt.Value))
+					throw new FormatException("secondaryRC attribute not found");
+				int sRC;
+				if (!int.TryParse(sAt.Value, out sRC))
+					throw new FormatException("secondaryRC attribute not a number");
+				
+				return new ResultInfo{PrimaryRC = pRC, SecondaryRC = sRC};
+			}
+			catch(SystemException err)
+			{
+				throw new FormatException("can not extract code result", err);
+			}
 		}
 
 		public static RbsPaymentState ParseState(string stateText)
@@ -120,36 +159,12 @@ namespace RbsPayments
 		private static XName _namePSApiResult = _ns + "PSApiResult";
 		private static XName _namePrimaryRC = _ns + "primaryRC";
 		private static XName _nameSecondaryRC = _ns + "secondaryRC";
-
-		public static void ExtractCodeResult(string xmlText, out int primaryRC, out int secondaryRC)
-		{
-			try
-			{
-				//<?xml version="1.0" encoding="UTF-8">
-				//	<PSApiResult primaryRC="0" secondaryRC="0"/>
-				XDocument doc = XDocument.Parse(xmlText);
-				if(doc.Root.Name != _namePSApiResult)
-					throw new FormatException(string.Format("unknown root name `{0}'", doc.Root.Name));
-
-				XAttribute pAt = doc.Root.Attribute(_namePrimaryRC);
-				if (pAt == null || string.IsNullOrEmpty(pAt.Value))
-					throw new FormatException("primaryRC attribute not found");
-				if(!int.TryParse(pAt.Value, out primaryRC))
-					throw new FormatException("primaryRC attribute not a number");
-
-				XAttribute sAt = doc.Root.Attribute(_nameSecondaryRC);
-				if (sAt == null || string.IsNullOrEmpty(sAt.Value))
-					throw new FormatException("secondaryRC attribute not found");
-				if (!int.TryParse(sAt.Value, out secondaryRC))
-					throw new FormatException("secondaryRC attribute not a number");
-			}
-			catch(SystemException err)
-			{
-				throw new FormatException("can not extract code result", err);
-			}
-		}
+		private static XName _namePSOrder = _ns + "PSOrder";
+		private static XName _nameAmount = _ns + "amount";
+		private static XName _nameMerchantNumber = _ns + "merchantNumber";
+		private static XName _nameOrderNumber = _ns + "orderNumber";
 		
-		public static PaimentInfo ExtractPaimentInfo(XElement el, out RbsPaymentState state)
+		public static PaymentInfo ExtractPaymentInfo(XElement el, out RbsPaymentState state)
 		{
 			try
 			{
@@ -162,13 +177,49 @@ namespace RbsPayments
 				//      pan="412345..1234"/>
 				//  </PaymentCollection>
 				//</PSOrder>
+				PaymentInfo pInfo = new PaymentInfo();
 				
+				pInfo.Amount = el.GetIntAttribute(_nameAmount);
+				pInfo.MerchantNumber = el.GetStringAttribute(_nameMerchantNumber);
+				pInfo.OrderNumber = el.GetStringAttribute(_nameOrderNumber);
 				
+				state = RbsPaymentState.Declined;
+				return pInfo;
 			}
 			catch(SystemException err)
 			{
-				throw new FormatException("can not extract code result", err);
+				throw new FormatException("can not extract payment info", err);
 			}
+		}
+					
+		public static int GetIntAttribute(this XElement el, XName xn)
+		{
+			XAttribute at = el.Attribute(xn);
+			if(at == null)
+				throw new FormatException(
+					string.Format("attribute `{0}' in element `{1}' not found", xn, el.Name));
+			try
+			{
+				return int.Parse(at.Value);
+			}
+			catch(SystemException err)
+			{
+				throw new FormatException(
+					string.Format("attribute `{0}' not contain number", xn), err);
+			}
+		}
+		
+		public static string GetStringAttribute(this XElement el, XName xn)
+		{
+			XAttribute at = el.Attribute(xn);
+			if(at == null)
+				throw new FormatException(
+					string.Format("attribute `{0}' in element `{1}' not found", xn, el.Name));
+			if(string.IsNullOrEmpty(at.Value))
+				throw new FormatException(
+					string.Format("attribute `{0}' not contain text", xn));
+			
+			return at.Value;
 		}
 	}
 }

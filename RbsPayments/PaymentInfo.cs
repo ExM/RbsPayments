@@ -41,7 +41,7 @@ namespace RbsPayments
 		/// Значение суммы переведенной на счет Магазина с карты клиента.
 		/// Значение указано в копейках. 
 		/// </summary>
-		public DateTime DepositAmount;
+		public int DepositAmount;
 		/// <summary>
 		/// Маскированный номер карты
 		/// </summary>

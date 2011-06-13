@@ -19,7 +19,7 @@ namespace RbsPayments
 		
 		public void Merchant2Rbs(string orderNum, string orderDesc, int amount, string backUrl, bool depositFlag,
 			string cardNum, string cardCvc, string cardExpDate, string cardHolderName,
-			Action<string, int, int, RbsPaymentState> completed, Action<Exception> excepted)
+			Action<string, ResultInfo, RbsPaymentState> completed, Action<Exception> excepted)
 		{
 			NameValueCollection getParams = new NameValueCollection
 			{
