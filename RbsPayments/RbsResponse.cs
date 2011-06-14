@@ -160,14 +160,12 @@ namespace RbsPayments
 		private static XName _namePrimaryRC = _ns + "primaryRC";
 		private static XName _nameSecondaryRC = _ns + "secondaryRC";
 		private static XName _namePSOrder = _ns + "PSOrder";
-		private static XName _nameAmount = _ns + "amount";
-		private static XName _nameMerchantNumber = _ns + "merchantNumber";
-		private static XName _nameOrderNumber = _ns + "orderNumber";
 		
 		public static PaymentInfo ExtractPaymentInfo(XElement el, out RbsPaymentState state)
 		{
 			try
 			{
+				//HACK: это пример ответа из документации
 				//<PSOrder amount="123456789" currency="810" merchantNumber="123456789" orderNumber="123456789" state="order_ordered">
 				//  <PaymentCollection>
 				//    <PSPayment approvalCode="207433" approveAmount="123456789" authCode="0"
@@ -177,13 +175,39 @@ namespace RbsPayments
 				//      pan="412345..1234"/>
 				//  </PaymentCollection>
 				//</PSOrder>
+				
+				//HACK: это пример ответа тестового сервера
+				//<?xml version="1.0" encoding="UTF-8"?>
+				//<PSApiResult objectCount="1" primaryRC="0" secondaryRC="0">
+				//  <PSOrder PAN="411111**1112" amount="1000" currency="810" expiry="201110" 
+				//      merchantNumber="118600604" orderNumber="5687340" state="order_ordered">
+				//    <PaymentCollection>
+				//      <PSPayment approvalCode="123456" approveAmount="1000" authCode="0" 
+				//        authTime="Fri Jun 10 17:16:17 MSD 2011" depositAmount="0" paymentNumber="1" 
+				//        paymentType="BPC" payment_state="payment_approved"/>
+				//    </PaymentCollection>
+				//  </PSOrder>
+				//</PSApiResult>
+				//<!-- transaction_type=SSL_transaction -->;
+				
 				PaymentInfo pInfo = new PaymentInfo();
 				
-				pInfo.Amount = el.GetIntAttribute(_nameAmount);
-				pInfo.MerchantNumber = el.GetStringAttribute(_nameMerchantNumber);
-				pInfo.OrderNumber = el.GetStringAttribute(_nameOrderNumber);
+				pInfo.Amount = el.GetIntAttribute("amount");
+				pInfo.MerchantNumber = el.GetStringAttribute("merchantNumber");
+				pInfo.OrderNumber = el.GetStringAttribute("orderNumber");
 				
-				state = RbsPaymentState.Declined;
+				XElement psPayEl = el
+					.GetElement("PaymentCollection")
+					.GetElement("PSPayment");
+				
+				pInfo.ApprovalCode = psPayEl.GetStringAttribute("approvalCode");
+				pInfo.ApproveAmount = psPayEl.GetIntAttribute("approveAmount");
+				pInfo.AuthCode = psPayEl.GetIntAttribute("authCode");
+				//pInfo.AuthTime = 
+				pInfo.DepositAmount = psPayEl.GetIntAttribute("depositAmount");
+				pInfo.Pan = psPayEl.GetStringAttribute("pan"); //HACK: в реальном выводе используется PAN
+
+				state = ParseState(psPayEl.GetStringAttribute("payment_state"));
 				return pInfo;
 			}
 			catch(SystemException err)
@@ -191,13 +215,23 @@ namespace RbsPayments
 				throw new FormatException("can not extract payment info", err);
 			}
 		}
-					
-		public static int GetIntAttribute(this XElement el, XName xn)
+		
+		public static XElement GetElement(this XElement el, string name)
 		{
-			XAttribute at = el.Attribute(xn);
+			XElement result = el.Element(XNamespace.None + name);
+			if(result == null)
+				throw new FormatException(
+					string.Format("element `{0}' not contain element `{1}' ", el.Name, name));
+			
+			return result;
+		}
+		
+		public static int GetIntAttribute(this XElement el, string name)
+		{
+			XAttribute at = el.Attribute(XNamespace.None + name);
 			if(at == null)
 				throw new FormatException(
-					string.Format("attribute `{0}' in element `{1}' not found", xn, el.Name));
+					string.Format("element `{0}' not contain attribute `{1}'", el.Name, name));
 			try
 			{
 				return int.Parse(at.Value);
@@ -205,19 +239,19 @@ namespace RbsPayments
 			catch(SystemException err)
 			{
 				throw new FormatException(
-					string.Format("attribute `{0}' not contain number", xn), err);
+					string.Format("attribute `{0}' not contain number", name), err);
 			}
 		}
 		
-		public static string GetStringAttribute(this XElement el, XName xn)
+		public static string GetStringAttribute(this XElement el, string name)
 		{
-			XAttribute at = el.Attribute(xn);
+			XAttribute at = el.Attribute(XNamespace.None + name);
 			if(at == null)
 				throw new FormatException(
-					string.Format("attribute `{0}' in element `{1}' not found", xn, el.Name));
+					string.Format("element `{0}' not contain attribute `{1}'", el.Name, name));
 			if(string.IsNullOrEmpty(at.Value))
 				throw new FormatException(
-					string.Format("attribute `{0}' not contain text", xn));
+					string.Format("attribute `{0}' not contain text", name));
 			
 			return at.Value;
 		}
