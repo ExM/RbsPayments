@@ -5,6 +5,7 @@ using System.Text;
 using System.Web;
 using System.Xml.Linq;
 using NLog;
+using System.Globalization;
 
 namespace RbsPayments
 {
@@ -203,9 +204,9 @@ namespace RbsPayments
 				pInfo.ApprovalCode = psPayEl.GetStringAttribute("approvalCode");
 				pInfo.ApproveAmount = psPayEl.GetIntAttribute("approveAmount");
 				pInfo.AuthCode = psPayEl.GetIntAttribute("authCode");
-				//pInfo.AuthTime = 
+				pInfo.AuthTime = ParseTime(psPayEl.GetStringAttribute("authTime"));
 				pInfo.DepositAmount = psPayEl.GetIntAttribute("depositAmount");
-				pInfo.Pan = psPayEl.GetStringAttribute("pan"); //HACK: в реальном выводе используется PAN
+				pInfo.Pan = el.GetStringAttribute("PAN");
 
 				state = ParseState(psPayEl.GetStringAttribute("payment_state"));
 				return pInfo;
@@ -214,6 +215,12 @@ namespace RbsPayments
 			{
 				throw new FormatException("can not extract payment info", err);
 			}
+		}
+		
+		public static DateTime ParseTime(string text)
+		{
+			//Fri Jun 10 17:16:17 MSD 2011
+			return DateTime.ParseExact(text, "ddd' 'MMM' 'dd' 'HH':'mm':'ss' MSD 'yyyy", CultureInfo.InvariantCulture);
 		}
 		
 		public static XElement GetElement(this XElement el, string name)

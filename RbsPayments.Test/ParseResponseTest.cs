@@ -47,6 +47,13 @@ namespace RbsPayments.Test
 		}
 		
 		[Test]
+		public void DateTimeParse()
+		{
+			DateTime dt = RbsResponse.ParseTime("Fri Jun 10 17:16:17 MSD 2011");
+			Assert.AreEqual(new DateTime(2011, 6, 10, 17, 16, 17, DateTimeKind.Unspecified), dt);
+		}
+		
+		[Test]
 		public void QueryOrders_Approved()
 		{
 			string text = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" +
@@ -70,7 +77,7 @@ namespace RbsPayments.Test
 				Assert.AreEqual("118600604", pInfo.MerchantNumber);
 				Assert.AreEqual("5687340", pInfo.OrderNumber);
 				Assert.AreEqual("411111**1112", pInfo.Pan);
-				Assert.AreEqual(RbsPaymentState.Deposited, state);
+				Assert.AreEqual(RbsPaymentState.Approved, state);
 				Assert.AreEqual(0, rInfo.PrimaryRC);
 				Assert.AreEqual(0, rInfo.SecondaryRC);
 			},
