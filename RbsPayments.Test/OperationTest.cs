@@ -6,6 +6,7 @@ using Configuration;
 namespace RbsPayments.Test
 {
 	[TestFixture]
+	[Category("required link to playground.paymentgate.ru")]
 	public class OperationTest
 	{
 		RbsTranslator _tr;

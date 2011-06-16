@@ -87,16 +87,21 @@ namespace RbsPayments
 			PaymentInfo pInfo = null;
 			RbsPaymentState state = RbsPaymentState.Unknown;
 			
+			
+			//HACK: в тексте ошибки может быть включен не закрытый тег <p>
+			text = text.Replace("<p>", "\n");
+			
 			try
 			{
 				XDocument doc = XDocument.Parse(text);
+				
+				if(doc.Root.Name == XNamespace.None + "error")
+					throw new InvalidOperationException(doc.Root.Value);
+				
 				rInfo = ExtractResultInfo(doc.Root);
 				if(rInfo.Success)
 				{
-					XElement psOrderEl = doc.Root.Element(_namePSOrder);
-					if(psOrderEl == null)
-						throw new FormatException("element `PSOrder' nof found");
-				
+					XElement psOrderEl = doc.Root.GetElement("PSOrder");
 					pInfo = ExtractPaymentInfo(psOrderEl, out state);
 				}
 				else if(!rInfo.MdOrderNotFound)
@@ -104,6 +109,11 @@ namespace RbsPayments
 					Log.Warn("unexpected code result {0}", rInfo);
 					throw new FormatException(string.Format("unexpected code result {0}", rInfo));
 				}
+			}
+			catch(InvalidOperationException err)
+			{
+				excepted(err);
+				return;
 			}
 			catch(SystemException err)
 			{
@@ -120,22 +130,11 @@ namespace RbsPayments
 			{
 				//<?xml version="1.0" encoding="UTF-8">
 				//	<PSApiResult primaryRC="0" secondaryRC="0"/>
-				if(el.Name != _namePSApiResult)
+				if(el.Name != XNamespace.None + "PSApiResult")
 					throw new FormatException(string.Format("unknown element name `{0}'", el.Name));
 	
-				XAttribute pAt = el.Attribute(_namePrimaryRC);
-				if (pAt == null || string.IsNullOrEmpty(pAt.Value))
-					throw new FormatException("primaryRC attribute not found");
-				int pRC;
-				if(!int.TryParse(pAt.Value, out pRC))
-					throw new FormatException("primaryRC attribute not a number");
-
-				XAttribute sAt = el.Attribute(_nameSecondaryRC);
-				if (sAt == null || string.IsNullOrEmpty(sAt.Value))
-					throw new FormatException("secondaryRC attribute not found");
-				int sRC;
-				if (!int.TryParse(sAt.Value, out sRC))
-					throw new FormatException("secondaryRC attribute not a number");
+				int pRC = el.GetIntAttribute("primaryRC");
+				int sRC = el.GetIntAttribute("secondaryRC");
 				
 				return new ResultInfo{PrimaryRC = pRC, SecondaryRC = sRC};
 			}
@@ -152,22 +151,21 @@ namespace RbsPayments
 				case "payment_approved": return RbsPaymentState.Approved;
 				case "payment_deposited": return RbsPaymentState.Deposited;
 				case "payment_declined": return RbsPaymentState.Declined;
+				case "payment_void": return RbsPaymentState.Void;
+				case "payment_pending": return RbsPaymentState.Pending;
+				case "refunded": return RbsPaymentState.Refunded;
+				case "refund failed": return RbsPaymentState.RefundFailed;
 			}
 			throw new FormatException(string.Format("unknown payment state `{0}'", stateText));
 		}
-
-		private static XNamespace _ns = XNamespace.None;
-		private static XName _namePSApiResult = _ns + "PSApiResult";
-		private static XName _namePrimaryRC = _ns + "primaryRC";
-		private static XName _nameSecondaryRC = _ns + "secondaryRC";
-		private static XName _namePSOrder = _ns + "PSOrder";
 		
 		public static PaymentInfo ExtractPaymentInfo(XElement el, out RbsPaymentState state)
 		{
 			try
 			{
 				//HACK: это пример ответа из документации
-				//<PSOrder amount="123456789" currency="810" merchantNumber="123456789" orderNumber="123456789" state="order_ordered">
+				//<PSOrder amount="123456789" currency="810" merchantNumber="123456789"
+				//    orderNumber="123456789" state="order_ordered">
 				//  <PaymentCollection>
 				//    <PSPayment approvalCode="207433" approveAmount="123456789" authCode="0"
 				//      authTime="Thu Mar 14 12:10:24 GMT+03:00 2002" capCode="0"
@@ -178,18 +176,14 @@ namespace RbsPayments
 				//</PSOrder>
 				
 				//HACK: это пример ответа тестового сервера
-				//<?xml version="1.0" encoding="UTF-8"?>
-				//<PSApiResult objectCount="1" primaryRC="0" secondaryRC="0">
-				//  <PSOrder PAN="411111**1112" amount="1000" currency="810" expiry="201110" 
-				//      merchantNumber="118600604" orderNumber="5687340" state="order_ordered">
-				//    <PaymentCollection>
-				//      <PSPayment approvalCode="123456" approveAmount="1000" authCode="0" 
-				//        authTime="Fri Jun 10 17:16:17 MSD 2011" depositAmount="0" paymentNumber="1" 
-				//        paymentType="BPC" payment_state="payment_approved"/>
-				//    </PaymentCollection>
-				//  </PSOrder>
-				//</PSApiResult>
-				//<!-- transaction_type=SSL_transaction -->;
+				//<PSOrder PAN="411111**1112" amount="1000" currency="810" expiry="201110" 
+				//    merchantNumber="118600604" orderNumber="5687340" state="order_ordered">
+				//  <PaymentCollection>
+				//    <PSPayment approvalCode="123456" approveAmount="1000" authCode="0" 
+				//      authTime="Fri Jun 10 17:16:17 MSD 2011" depositAmount="0" paymentNumber="1" 
+				//      paymentType="BPC" payment_state="payment_approved"/>
+				//  </PaymentCollection>
+				//</PSOrder>
 				
 				PaymentInfo pInfo = new PaymentInfo();
 				

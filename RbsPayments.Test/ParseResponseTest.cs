@@ -93,6 +93,9 @@ namespace RbsPayments.Test
 			string text = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<error>System error =String index out of " +
 				"range: 6 <p> may be some entered data is in incorrect format, try again</error>\r\n";
 			
+			string errText = "System error =String index out of range: 6 \n" + 
+				" may be some entered data is in incorrect format, try again";
+			
 			RbsResponse.QueryOrders(text, 
 			(rInfo, pInfo, state) =>
 			{
@@ -100,8 +103,8 @@ namespace RbsPayments.Test
 			},
 			(ex) => 
 			{
-				Assert.IsInstanceOf<InvalidOperationException>(ex);
-				Assert.AreEqual(text, ex.Message);
+				Assert.IsInstanceOf<InvalidOperationException>(ex, "current exception: {0}", ex);
+				Assert.AreEqual(errText, ex.Message);
 			});
 		}
 		
