@@ -22,6 +22,7 @@ namespace RbsPayments.Test
 		[Test]
 		public void Merchant2Rbs()
 		{
+			//HACK: на тестовом сервере допускается дублирование платежей
 			_tr.Merchant2Rbs("5687340", "test", 1000, "www", false, "4111111111111112", "123", "201110", "Card Holder",
 				(morder, rInfo, state) =>
 				{
@@ -42,11 +43,12 @@ namespace RbsPayments.Test
 			_tr.QueryOrders("123",
 				(rInfo, pInfo, state) =>
 				{
-
+					Assert.Fail("missed error");
 				},
 				(ex) => 
 				{
-					Assert.Fail("unexpected exception: {0}", ex);
+					Assert.IsInstanceOf<InvalidOperationException>(ex, "current exception: {0}", ex);
+					Assert.AreEqual(ExpectedMessage.IncorectMdOrder, ex.Message);
 				});
 		}
 		
@@ -56,7 +58,7 @@ namespace RbsPayments.Test
 			_tr.QueryOrders("98-4822-4978-117-5986-54119-41-2591-42114-19_p1",
 				(rInfo, pInfo, state) =>
 				{
-
+					//TODO: создать новый платеж перед этой проверкой
 				},
 				(ex) => 
 				{
