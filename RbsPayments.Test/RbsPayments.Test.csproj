@@ -57,6 +57,7 @@
     <Compile Include="Env.cs" />
     <Compile Include="NoConnectionTest.cs" />
     <Compile Include="ExpectedMessage.cs" />
+    <Compile Include="AsyncOperationTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
