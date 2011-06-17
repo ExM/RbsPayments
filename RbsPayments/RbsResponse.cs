@@ -87,9 +87,7 @@ namespace RbsPayments
 			PaymentInfo pInfo = null;
 			RbsPaymentState state = RbsPaymentState.Unknown;
 			
-			
-			//HACK: в тексте ошибки может быть включен не закрытый тег <p>
-			text = text.Replace("<p>", "\n");
+			text = FixUnclosedTag(text);
 			
 			try
 			{
@@ -122,6 +120,42 @@ namespace RbsPayments
 			}
 			
 			completed(rInfo, pInfo, state);
+		}
+
+		public static void DepositPayment(string text, Action<ResultInfo> completed, Action<Exception> excepted)
+		{
+			Log.Trace("DepositPayment response:`{0}'", text);
+			ResultInfo rInfo;
+			
+			text = FixUnclosedTag(text);
+			
+			try
+			{
+				XDocument doc = XDocument.Parse(text);
+				
+				if(doc.Root.Name == XNamespace.None + "error")
+					throw new InvalidOperationException(doc.Root.Value);
+				
+				rInfo = ExtractResultInfo(doc.Root);
+			}
+			catch(InvalidOperationException err)
+			{
+				excepted(err);
+				return;
+			}
+			catch(SystemException err)
+			{
+				excepted(new FormatException("can not parse response", err));
+				return;
+			}
+			
+			completed(rInfo);
+		}
+		
+		private static string FixUnclosedTag(string text)
+		{
+			//HACK: в тексте ошибки может быть включен не закрытый тег <p>
+			return text.Replace("<p>", "\n");
 		}
 		
 		private static ResultInfo ExtractResultInfo(XElement el)

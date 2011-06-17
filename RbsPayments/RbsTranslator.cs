@@ -68,8 +68,40 @@ namespace RbsPayments
 				(resp) => RbsResponse.QueryOrders(resp, completed, excepted),
 				excepted);
 		}
-
-
+		/// <summary>
+		/// Завершение двухстадийного платежа. (Проведение отложенной авторизации).
+		/// </summary>
+		/// <param name='mdOrder'>
+		/// Уникальный идентификатор заказа, полученный при регистрации заказа от Системы РБС
+		/// </param>
+		/// <param name='amount'>
+		/// Необязательный параметр. Сумма в копейках, на которую будет производно завершение платежа.
+		/// Блокировка средств на карте на сумму разницы между заблокированной суммой и суммой завершения будет
+		/// автоматически отменена. Если данный параметр не указан то с карты покупателя будет списана целиком
+		/// вся сумма, на которую первоначально была сделана блокировка. 
+		/// </param>
+		/// <param name='completed'>
+		/// результат выполнения операции
+		/// </param>
+		/// <param name='excepted'>
+		/// ошибка операции
+		/// </param>
+		public void DepositPayment(string mdOrder, int? amount,
+			Action<ResultInfo> completed, Action<Exception> excepted)
+		{
+			NameValueCollection getParams = new NameValueCollection
+			{
+				{"MDORDER", mdOrder},
+				{"MERCHANTPASSWD", _merchantPass}
+			};
+			
+			if(amount.HasValue)
+				getParams.Add("DEPOSIT_AMOUNT", amount.Value.ToString());
+			
+			_conn.Request("DepositPayment", getParams,
+				(resp) => RbsResponse.DepositPayment(resp, completed, excepted),
+				excepted);
+		}
 	}
 }
 
