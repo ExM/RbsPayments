@@ -200,6 +200,24 @@ namespace RbsPayments
 				excepted);
 		}
 		
+		public void Bpc3ds(string mdOrder, string paRes,
+			Action<string, ResultInfo, RbsPaymentState> completed,
+			Action<Exception> excepted)
+		{
+			NameValueCollection getParams = new NameValueCollection
+			{
+				{"MD", mdOrder},
+				{"PaRes", paRes}
+			};
+			
+			_conn.Request("BPC3DS", getParams,
+				(resp) => RbsResponse.Merchant2Rbs(resp, completed,
+					(morder, acsUrl, paReq) =>
+					{
+						excepted(new InvalidOperationException("again 3DS required"));
+					}, excepted),
+				excepted);
+		}
 	}
 }
 

@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using RbsPayments;
+using RbsPayments.Example;
 using Configuration;
 using System.Threading;
 using System.Net;
@@ -27,7 +28,7 @@ namespace RbsPayments.Test
 			ManualResetEvent wait =  new ManualResetEvent(false);
 			Exception ex = null;
 			
-			_tr.Merchant2Rbs("ABC", "test", 100, "www", false, "4111111111111112", "123", "201110", "Card Holder",
+			_tr.Block("ABC", 100m, TestCard.Good,
 				(morder, rInfo, state) =>
 				{
 					wait.Set();

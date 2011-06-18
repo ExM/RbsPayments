@@ -1,8 +1,9 @@
 using System;
 using System.Net;
 using System.Collections.Specialized;
+using RbsPayments.Example;
 
-namespace RbsPayments.Example
+namespace RbsPayments
 {
 	/// <summary>
 	/// Пример специализации под конкретные задачи клиента

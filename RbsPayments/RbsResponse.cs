@@ -39,7 +39,8 @@ namespace RbsPayments
 					else
 					{
 						string key = HttpUtility.UrlDecode(pair.Substring(0, d));
-						string val = HttpUtility.UrlDecode(pair.Substring(d + 1, pair.Length - d - 1));
+						string encVal = pair.Substring(d + 1, pair.Length - d - 1);
+						string val = HttpUtility.UrlDecode(encVal);
 						if (key == "MDORDER")
 							mdorder = val.Trim();
 						else if (key == "ANSWER")
@@ -47,9 +48,9 @@ namespace RbsPayments
 						else if (key == "STATE")
 							stateText = val.Trim();
 						else if (key == "ACSUrl")
-							acsUrl = val;
+							acsUrl = val.Trim();
 						else if (key == "PaReq")
-							paReq = val;
+							paReq = encVal;
 					}
 				}
 
@@ -58,7 +59,8 @@ namespace RbsPayments
 			}
 			catch (Exception err)
 			{
-				excepted(new InvalidOperationException(text, err));
+				Log.Warn("unexpected keys in `{0}'", text);
+				excepted(new InvalidOperationException("can not parse response", err));
 				return;
 			}
 			

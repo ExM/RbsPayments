@@ -60,6 +60,7 @@
     <Compile Include="AsyncOperationTest.cs" />
     <Compile Include="Example\PaymentCard.cs" />
     <Compile Include="Example\RbsTranslatorExtensions.cs" />
+    <Compile Include="TestCard.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
