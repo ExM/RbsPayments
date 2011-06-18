@@ -3,6 +3,7 @@ using NUnit.Framework;
 using RbsPayments;
 using Configuration;
 using System.Threading;
+using System.Net;
 
 namespace RbsPayments.Test
 {
@@ -43,6 +44,7 @@ namespace RbsPayments.Test
 			
 			Assert.IsTrue(wait.WaitOne(20000), "elapsed 20 seconds");
 			Assert.IsNotNull(ex, "missed error");
+			Assert.IsNotInstanceOf<WebException>(ex);
 			Assert.IsInstanceOf<InvalidOperationException>(ex);
 			Assert.IsTrue(ex.Message.Contains("ABC"), "not contain `ABC' in `{0}'", ex.Message);
 		}

@@ -58,6 +58,8 @@
     <Compile Include="NoConnectionTest.cs" />
     <Compile Include="ExpectedMessage.cs" />
     <Compile Include="AsyncOperationTest.cs" />
+    <Compile Include="Example\PaymentCard.cs" />
+    <Compile Include="Example\RbsTranslatorExtensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -70,5 +72,8 @@
     <None Include="RbsPayments.Test.cfg.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Example\" />
   </ItemGroup>
 </Project>
