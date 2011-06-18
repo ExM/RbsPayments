@@ -31,13 +31,17 @@ namespace RbsPayments.Test
 				{
 					wait.Set();
 				},
+				(morder, acsUrl, paReq) =>
+				{
+					wait.Set();
+				},
 				(iex) => 
 				{
 					ex = iex;
 					wait.Set();
 				});
 			
-			Assert.IsTrue(wait.WaitOne(10000), "elapsed 10 seconds");
+			Assert.IsTrue(wait.WaitOne(20000), "elapsed 20 seconds");
 			Assert.IsNotNull(ex, "missed error");
 			Assert.IsInstanceOf<InvalidOperationException>(ex);
 			Assert.IsTrue(ex.Message.Contains("ABC"), "not contain `ABC' in `{0}'", ex.Message);

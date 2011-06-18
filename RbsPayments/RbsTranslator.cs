@@ -28,7 +28,8 @@ namespace RbsPayments
 		
 		public void Merchant2Rbs(string orderNum, string orderDesc, int amount, string backUrl, bool depositFlag,
 			string cardNum, string cardCvc, string cardExpDate, string cardHolderName,
-			Action<string, ResultInfo, RbsPaymentState> completed, Action<Exception> excepted)
+			Action<string, ResultInfo, RbsPaymentState> completed,
+			Action<string, string, string> req3DSecure, Action<Exception> excepted)
 		{
 			NameValueCollection getParams = new NameValueCollection
 			{
@@ -48,7 +49,7 @@ namespace RbsPayments
 			};
 			
 			_conn.Request("Merchant2Rbs", getParams,
-				(resp) => RbsResponse.Merchant2Rbs(resp, completed, excepted),
+				(resp) => RbsResponse.Merchant2Rbs(resp, completed, req3DSecure, excepted),
 				excepted);
 		}
 		

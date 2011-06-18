@@ -13,15 +13,18 @@ namespace RbsPayments
 	{
 		private static Logger Log = LogManager.GetCurrentClassLogger();
 		
-		public static void Merchant2Rbs(string text, Action<string, ResultInfo, RbsPaymentState> completed, Action<Exception> excepted)
+		public static void Merchant2Rbs(string text,
+			Action<string, ResultInfo, RbsPaymentState> completed,
+			Action<string, string, string> req3DSecure,
+			Action<Exception> excepted)
 		{
 			Log.Trace("Merchant2Rbs response:`{0}'", text);
 			
 			string mdorder = null;
-			RbsPaymentState state = RbsPaymentState.Declined;
-			
 			string answer = null;
 			string stateText = null;
+			string acsUrl = null;
+			string paReq = null;
 			
 			try
 			{
@@ -43,15 +46,15 @@ namespace RbsPayments
 							answer = val;
 						else if (key == "STATE")
 							stateText = val.Trim();
+						else if (key == "ACSUrl")
+							acsUrl = val;
+						else if (key == "PaReq")
+							paReq = val;
 					}
 				}
 
 				if (string.IsNullOrEmpty(mdorder))
 					throw new FormatException("key `MDORDER' not found");
-				if (string.IsNullOrEmpty(answer))
-					throw new FormatException("key `ANSWER' not found");
-				if (string.IsNullOrEmpty(stateText))
-					throw new FormatException("key `STATE' not found");
 			}
 			catch (Exception err)
 			{
@@ -59,7 +62,22 @@ namespace RbsPayments
 				return;
 			}
 			
+			if(!(string.IsNullOrEmpty(answer) || string.IsNullOrEmpty(stateText)))
+				No3DSequre(mdorder, answer, stateText, completed, excepted);
+			else if(!(string.IsNullOrEmpty(acsUrl) || string.IsNullOrEmpty(paReq)))
+				req3DSecure(mdorder, acsUrl, paReq);
+			else
+			{
+				Log.Warn("unexpected keys in `{0}'", text);
+				excepted(new InvalidOperationException("unexpected keys"));
+			}
+		}
+
+		private static void No3DSequre(string mdorder, string answer, string stateText,
+			Action<string, ResultInfo, RbsPaymentState> completed, Action<Exception> excepted)
+		{
 			ResultInfo rInfo;
+			RbsPaymentState state;
 			
 			try
 			{
@@ -76,7 +94,7 @@ namespace RbsPayments
 				excepted(new FormatException("can not parse response", err));
 				return;
 			}
-
+			
 			completed(mdorder, rInfo, state);
 		}
 		

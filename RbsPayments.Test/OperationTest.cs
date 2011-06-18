@@ -31,6 +31,10 @@ namespace RbsPayments.Test
 					Assert.AreEqual(0, rInfo.SecondaryRC);
 					Assert.AreEqual(RbsPaymentState.Deposited, state);
 				},
+				(morder, acsUrl, paReq) =>
+				{
+					Assert.Fail("unexpected response");
+				},
 				(ex) => 
 				{
 					Assert.Fail("unexpected exception: {0}", ex);
@@ -73,6 +77,10 @@ namespace RbsPayments.Test
 				(morder, rInfo, state) =>
 				{
 					Assert.Fail("missed error");
+				},
+				(morder, acsUrl, paReq) =>
+				{
+					Assert.Fail("unexpected response");
 				},
 				(ex) => 
 				{

@@ -27,6 +27,10 @@ namespace RbsPayments.Test
 				{
 					Assert.Fail("missed error");
 				},
+				(morder, acsUrl, paReq) =>
+				{
+					Assert.Fail("unexpected response");
+				},
 				(ex) => 
 				{
 					Assert.IsInstanceOf<WebException>(ex, "unexpected exception: {0}", ex);
