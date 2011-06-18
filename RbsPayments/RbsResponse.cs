@@ -145,6 +145,68 @@ namespace RbsPayments
 			}
 			catch(SystemException err)
 			{
+				//HACK: в документации не отражено что возвращает сервер в случае ошибки
+				excepted(new FormatException("can not parse response", err));
+				return;
+			}
+			
+			completed(rInfo);
+		}
+		
+		public static void Refund(string text, Action<ResultInfo> completed, Action<Exception> excepted)
+		{
+			Log.Trace("Refund response:`{0}'", text);
+			ResultInfo rInfo;
+			
+			text = FixUnclosedTag(text);
+			
+			try
+			{
+				XDocument doc = XDocument.Parse(text);
+				
+				if(doc.Root.Name == XNamespace.None + "error")
+					throw new InvalidOperationException(doc.Root.Value);
+				
+				rInfo = ExtractResultInfo(doc.Root);
+			}
+			catch(InvalidOperationException err)
+			{
+				excepted(err);
+				return;
+			}
+			catch(SystemException err)
+			{
+				//HACK: в документации не отражено что возвращает сервер в случае ошибки
+				excepted(new FormatException("can not parse response", err));
+				return;
+			}
+			
+			completed(rInfo);
+		}
+		
+		public static void DepositReversal(string text, Action<ResultInfo> completed, Action<Exception> excepted)
+		{
+			Log.Trace("DepositReversal response:`{0}'", text);
+			ResultInfo rInfo;
+			
+			text = FixUnclosedTag(text);
+			XDocument doc;
+			try
+			{
+				doc = XDocument.Parse(text);
+			}
+			catch(SystemException err)
+			{
+				excepted(new InvalidOperationException(text, err));
+				return;
+			}
+			
+			try
+			{
+				rInfo = ExtractResultInfo(doc.Root);
+			}
+			catch(SystemException err)
+			{
 				excepted(new FormatException("can not parse response", err));
 				return;
 			}

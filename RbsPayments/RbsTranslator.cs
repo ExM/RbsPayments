@@ -9,12 +9,21 @@ namespace RbsPayments
 		private readonly IConnector _conn;
 		private readonly string _merchantNum;
 		private readonly string _merchantPass;
+		private readonly string _refundUser;
+		private readonly string _refundPass;
 		
-		public RbsTranslator(IConnector conn, string merchantNum, string merchantPass)
+		public RbsTranslator(IConnector conn, string merchantNum, string merchantPass, string refundUser, string refundPass)
 		{
 			_conn = conn;
 			_merchantNum = merchantNum;
 			_merchantPass = merchantPass;
+			_refundUser = refundUser;
+			_refundPass = refundPass;
+		}
+		
+		public RbsTranslator(IConnector conn, RbsConnectionConfig cfg)
+			:this(conn, cfg.MerchantNumber, cfg.MerchantPassword, cfg.User, cfg.Password)
+		{
 		}
 		
 		public void Merchant2Rbs(string orderNum, string orderDesc, int amount, string backUrl, bool depositFlag,
@@ -68,6 +77,7 @@ namespace RbsPayments
 				(resp) => RbsResponse.QueryOrders(resp, completed, excepted),
 				excepted);
 		}
+		
 		/// <summary>
 		/// Завершение двухстадийного платежа. (Проведение отложенной авторизации).
 		/// </summary>
@@ -102,6 +112,93 @@ namespace RbsPayments
 				(resp) => RbsResponse.DepositPayment(resp, completed, excepted),
 				excepted);
 		}
+		
+		/// <summary>
+		/// Инициация Снятие блокировки средств на счету клиента.
+		/// </summary>
+		/// <param name='mdOrder'>
+		/// Уникальный идентификатор заказа, полученный при регистрации заказа от Системы РБС.
+		/// </param>
+		/// <param name='completed'>
+		/// результат выполнения операции
+		/// </param>
+		/// <param name='excepted'>
+		/// ошибка операции
+		/// </param>
+		public void DepositReversal(string mdOrder,
+			Action<ResultInfo> completed, Action<Exception> excepted)
+		{
+			NameValueCollection getParams = new NameValueCollection
+			{
+				{"MDORDER", mdOrder},
+				{"MERCHANTPASSWD", _merchantPass}
+			};
+			
+			_conn.Request("DepositReversal", getParams,
+				(resp) => RbsResponse.DepositReversal(resp, completed, excepted),
+				excepted);
+		}
+		
+		/// <summary>
+		/// Инициация отмены одностадийного платежа.
+		/// </summary>
+		/// <param name='mdOrder'>
+		/// Уникальный идентификатор заказа, полученный при регистрации заказа от Системы РБС.
+		/// </param>
+		/// <param name='completed'>
+		/// результат выполнения операции
+		/// </param>
+		/// <param name='excepted'>
+		/// ошибка операции
+		/// </param>
+		public void Refund(string mdOrder,
+			Action<ResultInfo> completed, Action<Exception> excepted)
+		{
+			NameValueCollection getParams = new NameValueCollection
+			{
+				{"MDORDER", mdOrder},
+				{"MERCHANTPASSWD", _merchantPass},
+				{"user", _refundUser},
+				{"pwd", _refundPass}
+			};
+			
+			_conn.Request("DepositReversal", getParams,
+				(resp) => RbsResponse.DepositReversal(resp, completed, excepted),
+				excepted);
+		}
+		
+		/// <summary>
+		/// Возврат денег на карту
+		/// </summary>
+		/// <param name='mdOrder'>
+		/// уникальный идентификатор заказа, полученный при регистрации заказа от системы РБС
+		/// </param>
+		/// <param name='amount'>
+		/// Сумма возврата в копейках
+		/// </param>
+		/// <param name='completed'>
+		/// результат выполнения операции
+		/// </param>
+		/// <param name='excepted'>
+		/// ошибка операции
+		/// </param>
+		public void Refund(string mdOrder, int amount,
+			Action<ResultInfo> completed, Action<Exception> excepted)
+		{
+			NameValueCollection getParams = new NameValueCollection
+			{
+				{"MDORDER", mdOrder},
+				{"MERCHANTPASSWD", _merchantPass},
+				{"AMOUNT", amount.ToString()},
+				{"user", _refundUser},
+				{"pwd", _refundPass}
+			};
+			
+			_conn.Request("Refund", getParams,
+				(resp) => RbsResponse.Refund(resp, completed, excepted),
+				excepted);
+		}
+		
 	}
 }
 

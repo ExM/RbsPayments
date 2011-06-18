@@ -16,7 +16,7 @@ namespace RbsPayments.Test
 		{
 			RbsConnectionConfig cfg = Env.AppSettings.Load<RbsConnectionConfig>(EmptyResult.Throw, "NoConnection");
 			SyncConnector conn = new SyncConnector(new Uri(cfg.Uri), TimeSpan.FromSeconds(10));
-			_tr = new RbsTranslator(conn, cfg.MerchantNumber, cfg.MerchantPassword);
+			_tr = new RbsTranslator(conn, cfg);
 		}
 		
 		[Test]

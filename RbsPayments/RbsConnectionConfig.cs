@@ -17,6 +17,9 @@ namespace RbsPayments
 		public string MerchantPassword { get; set; }
 
 		[XmlAttribute]
-		public string Login { get; set; }
+		public string User { get; set; }
+		
+		[XmlAttribute]
+		public string Password { get; set; }
 	}
 }
