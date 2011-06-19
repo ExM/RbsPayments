@@ -29,30 +29,22 @@ namespace RbsPayments
 				{
 					int d = pair.IndexOf('=');
 					if (d == -1)
-					{
-						Log.Warn("char `=' missed in pair `{0}'", pair);
 						continue;
-					}
-					else
-					{
-						string key = HttpUtility.UrlDecode(pair.Substring(0, d));
-						string encVal = pair.Substring(d + 1, pair.Length - d - 1);
-						string val = HttpUtility.UrlDecode(encVal);
-						if (key == "MDORDER")
-							mdorder = val.Trim();
-						else if (key == "ANSWER")
-							answer = val;
-						else if (key == "STATE")
-							stateText = val.Trim();
-						else if (key == "ACSUrl")
-							acsUrl = val.Trim();
-						else if (key == "PaReq")
-							paReq = encVal;
-					}
-				}
 
-				if (string.IsNullOrEmpty(mdorder))
-					throw new FormatException("key `MDORDER' not found");
+					string key = HttpUtility.UrlDecode(pair.Substring(0, d));
+					string encVal = pair.Substring(d + 1, pair.Length - d - 1);
+					string val = HttpUtility.UrlDecode(encVal);
+					if (key == "MDORDER")
+						mdorder = val.Trim();
+					else if (key == "ANSWER")
+						answer = val;
+					else if (key == "STATE")
+						stateText = val.Trim();
+					else if (key == "ACSUrl")
+						acsUrl = val.Trim();
+					else if (key == "PaReq")
+						paReq = encVal;
+				}
 			}
 			catch (Exception err)
 			{
@@ -61,15 +53,38 @@ namespace RbsPayments
 				return;
 			}
 			
-			if(!(string.IsNullOrEmpty(answer) || string.IsNullOrEmpty(stateText)))
+			if (!string.IsNullOrEmpty(answer) &&
+				!string.IsNullOrEmpty(stateText) &&
+				!string.IsNullOrEmpty(mdorder))
 				No3DSequre(mdorder, answer, stateText, completed, excepted);
-			else if(!(string.IsNullOrEmpty(acsUrl) || string.IsNullOrEmpty(paReq)))
+			else if(!string.IsNullOrEmpty(acsUrl) &&
+				!string.IsNullOrEmpty(paReq) &&
+				!string.IsNullOrEmpty(mdorder))
 				completed(new RegisterResult(mdorder, acsUrl, paReq));
 			else
+				CheckResultCode(text, completed, excepted);
+		}
+		
+		private static void CheckResultCode(string text, 
+			Action<RegisterResult> completed, Action<Exception> excepted)
+		{
+			ResultCode rCode;
+			
+			try
 			{
-				Log.Warn("unexpected keys in `{0}'", text);
-				excepted(new InvalidOperationException("unexpected keys"));
+				XDocument doc = XDocument.Parse(text);
+				rCode = ExtractResultInfo(doc.Root);
 			}
+			catch (Exception)
+			{
+				excepted(new InvalidOperationException(text));
+				return;
+			}
+			
+			if(rCode.Success)
+				excepted(new InvalidOperationException("unexpected success result code"));
+			else
+				completed(new RegisterResult(rCode));
 		}
 
 		private static void No3DSequre(string mdorder, string answer, string stateText,
