@@ -29,11 +29,7 @@ namespace RbsPayments.Test
 			Exception ex = null;
 			
 			_tr.Block("ABC", 100m, TestCard.Good,
-				(morder, rInfo, state) =>
-				{
-					wait.Set();
-				},
-				(morder, acsUrl, paReq) =>
+				(result) =>
 				{
 					wait.Set();
 				},

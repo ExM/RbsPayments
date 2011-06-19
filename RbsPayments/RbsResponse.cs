@@ -13,10 +13,7 @@ namespace RbsPayments
 	{
 		private static Logger Log = LogManager.GetCurrentClassLogger();
 		
-		public static void Merchant2Rbs(string text,
-			Action<string, ResultInfo, RbsPaymentState> completed,
-			Action<string, string, string> req3DSecure,
-			Action<Exception> excepted)
+		public static void Merchant2Rbs(string text, Action<RegisterResult> completed, Action<Exception> excepted)
 		{
 			Log.Trace("Merchant2Rbs response:`{0}'", text);
 			
@@ -67,7 +64,7 @@ namespace RbsPayments
 			if(!(string.IsNullOrEmpty(answer) || string.IsNullOrEmpty(stateText)))
 				No3DSequre(mdorder, answer, stateText, completed, excepted);
 			else if(!(string.IsNullOrEmpty(acsUrl) || string.IsNullOrEmpty(paReq)))
-				req3DSecure(mdorder, acsUrl, paReq);
+				completed(new RegisterResult(mdorder, acsUrl, paReq));
 			else
 			{
 				Log.Warn("unexpected keys in `{0}'", text);
@@ -76,9 +73,9 @@ namespace RbsPayments
 		}
 
 		private static void No3DSequre(string mdorder, string answer, string stateText,
-			Action<string, ResultInfo, RbsPaymentState> completed, Action<Exception> excepted)
+			Action<RegisterResult> completed, Action<Exception> excepted)
 		{
-			ResultInfo rInfo;
+			ResultCode rInfo;
 			RbsPaymentState state;
 			
 			try
@@ -97,13 +94,13 @@ namespace RbsPayments
 				return;
 			}
 			
-			completed(mdorder, rInfo, state);
+			completed(new RegisterResult(mdorder, rInfo, state));
 		}
 		
-		public static void QueryOrders(string text, Action<ResultInfo, PaymentInfo, RbsPaymentState> completed, Action<Exception> excepted)
+		public static void QueryOrders(string text, Action<ResultCode, PaymentInfo, RbsPaymentState> completed, Action<Exception> excepted)
 		{
 			Log.Trace("QueryOrders response:`{0}'", text);
-			ResultInfo rInfo = new ResultInfo();
+			ResultCode rInfo = new ResultCode();
 			PaymentInfo pInfo = null;
 			RbsPaymentState state = RbsPaymentState.Unknown;
 			
@@ -142,10 +139,10 @@ namespace RbsPayments
 			completed(rInfo, pInfo, state);
 		}
 
-		public static void DepositPayment(string text, Action<ResultInfo> completed, Action<Exception> excepted)
+		public static void DepositPayment(string text, Action<ResultCode> completed, Action<Exception> excepted)
 		{
 			Log.Trace("DepositPayment response:`{0}'", text);
-			ResultInfo rInfo;
+			ResultCode rInfo;
 			
 			text = FixUnclosedTag(text);
 			
@@ -173,10 +170,10 @@ namespace RbsPayments
 			completed(rInfo);
 		}
 		
-		public static void Refund(string text, Action<ResultInfo> completed, Action<Exception> excepted)
+		public static void Refund(string text, Action<ResultCode> completed, Action<Exception> excepted)
 		{
 			Log.Trace("Refund response:`{0}'", text);
-			ResultInfo rInfo;
+			ResultCode rInfo;
 			
 			text = FixUnclosedTag(text);
 			
@@ -204,10 +201,10 @@ namespace RbsPayments
 			completed(rInfo);
 		}
 		
-		public static void DepositReversal(string text, Action<ResultInfo> completed, Action<Exception> excepted)
+		public static void DepositReversal(string text, Action<ResultCode> completed, Action<Exception> excepted)
 		{
 			Log.Trace("DepositReversal response:`{0}'", text);
-			ResultInfo rInfo;
+			ResultCode rInfo;
 			
 			text = FixUnclosedTag(text);
 			XDocument doc;
@@ -240,7 +237,7 @@ namespace RbsPayments
 			return text.Replace("<p>", "\n");
 		}
 		
-		private static ResultInfo ExtractResultInfo(XElement el)
+		private static ResultCode ExtractResultInfo(XElement el)
 		{
 			try
 			{
@@ -252,7 +249,7 @@ namespace RbsPayments
 				int pRC = el.GetIntAttribute("primaryRC");
 				int sRC = el.GetIntAttribute("secondaryRC");
 				
-				return new ResultInfo{PrimaryRC = pRC, SecondaryRC = sRC};
+				return new ResultCode{PrimaryRC = pRC, SecondaryRC = sRC};
 			}
 			catch(SystemException err)
 			{

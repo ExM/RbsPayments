@@ -3,9 +3,9 @@ using System;
 namespace RbsPayments
 {
 	/// <summary>
-	/// Результат выполнения операции
+	/// Код выполнения операции
 	/// </summary>
-	public struct ResultInfo
+	public struct ResultCode
 	{
 		/// <summary>
 		/// Результат прохождения команды
@@ -40,7 +40,7 @@ namespace RbsPayments
 		
 		public override string ToString ()
 		{
-			return string.Format ("[ResultInfo: PrimaryRC={0}, SecondaryRC={1}]", PrimaryRC, SecondaryRC);
+			return string.Format ("[ResultCode: PrimaryRC={0}, SecondaryRC={1}]", PrimaryRC, SecondaryRC);
 		}
 	}
 }

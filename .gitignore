@@ -7,3 +7,4 @@
 *.userprefs
 *.pidb
 */test-results/*
+test-results/*

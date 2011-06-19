@@ -28,8 +28,7 @@ namespace RbsPayments
 		
 		public void Merchant2Rbs(string orderNum, string orderDesc, int amount, string backUrl, bool depositFlag,
 			string cardNum, string cardCvc, string cardExpDate, string cardHolderName,
-			Action<string, ResultInfo, RbsPaymentState> completed,
-			Action<string, string, string> req3DSecure, Action<Exception> excepted)
+			Action<RegisterResult> completed, Action<Exception> excepted)
 		{
 			NameValueCollection getParams = new NameValueCollection
 			{
@@ -49,7 +48,7 @@ namespace RbsPayments
 			};
 			
 			_conn.Request("Merchant2Rbs", getParams,
-				(resp) => RbsResponse.Merchant2Rbs(resp, completed, req3DSecure, excepted),
+				(resp) => RbsResponse.Merchant2Rbs(resp, completed, excepted),
 				excepted);
 		}
 		
@@ -66,7 +65,7 @@ namespace RbsPayments
 		/// ошибка операции
 		/// </param>
 		public void QueryOrders(string mdOrder,
-			Action<ResultInfo, PaymentInfo, RbsPaymentState> completed, Action<Exception> excepted)
+			Action<ResultCode, PaymentInfo, RbsPaymentState> completed, Action<Exception> excepted)
 		{
 			NameValueCollection getParams = new NameValueCollection
 			{
@@ -98,7 +97,7 @@ namespace RbsPayments
 		/// ошибка операции
 		/// </param>
 		public void DepositPayment(string mdOrder, int? amount,
-			Action<ResultInfo> completed, Action<Exception> excepted)
+			Action<ResultCode> completed, Action<Exception> excepted)
 		{
 			NameValueCollection getParams = new NameValueCollection
 			{
@@ -127,7 +126,7 @@ namespace RbsPayments
 		/// ошибка операции
 		/// </param>
 		public void DepositReversal(string mdOrder,
-			Action<ResultInfo> completed, Action<Exception> excepted)
+			Action<ResultCode> completed, Action<Exception> excepted)
 		{
 			NameValueCollection getParams = new NameValueCollection
 			{
@@ -153,7 +152,7 @@ namespace RbsPayments
 		/// ошибка операции
 		/// </param>
 		public void Refund(string mdOrder,
-			Action<ResultInfo> completed, Action<Exception> excepted)
+			Action<ResultCode> completed, Action<Exception> excepted)
 		{
 			NameValueCollection getParams = new NameValueCollection
 			{
@@ -184,7 +183,7 @@ namespace RbsPayments
 		/// ошибка операции
 		/// </param>
 		public void Refund(string mdOrder, int amount,
-			Action<ResultInfo> completed, Action<Exception> excepted)
+			Action<ResultCode> completed, Action<Exception> excepted)
 		{
 			NameValueCollection getParams = new NameValueCollection
 			{
@@ -201,7 +200,7 @@ namespace RbsPayments
 		}
 		
 		public void Bpc3ds(string mdOrder, string paRes,
-			Action<string, ResultInfo, RbsPaymentState> completed,
+			Action<RegisterResult> completed,
 			Action<Exception> excepted)
 		{
 			NameValueCollection getParams = new NameValueCollection
@@ -211,10 +210,13 @@ namespace RbsPayments
 			};
 			
 			_conn.Request("BPC3DS", getParams,
-				(resp) => RbsResponse.Merchant2Rbs(resp, completed,
-					(morder, acsUrl, paReq) =>
+				(resp) => RbsResponse.Merchant2Rbs(resp,
+					(result) =>
 					{
-						excepted(new InvalidOperationException("again 3DS required"));
+						if(result.Required3DSecure)
+							excepted(new InvalidOperationException("again 3DS required"));
+						else
+							completed(result);
 					}, excepted),
 				excepted);
 		}

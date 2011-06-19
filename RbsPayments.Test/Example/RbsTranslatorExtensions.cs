@@ -30,27 +30,23 @@ namespace RbsPayments
 		}
 		
 		public static void Block(this RbsTranslator tr, string orderNum, decimal amount, PaymentCard card,
-			Action<string, ResultInfo, RbsPaymentState> completed,
-			Action<string, string, string> req3DSecure,
-			Action<Exception> excepted)
+			Action<RegisterResult> completed, Action<Exception> excepted)
 		{
 			tr.Merchant2Rbs(orderNum, "example payment", ToMinorOfUnit(amount), "www.example.com", false,
 				card.Number, card.CVV, card.ExpDate.ToString("yyyyMM"), card.Holder,
-				completed, req3DSecure, excepted);
+				completed, excepted);
 		}
 		
 		public static void Capture(this RbsTranslator tr, string orderNum, decimal amount, PaymentCard card,
-			Action<string, ResultInfo, RbsPaymentState> completed,
-			Action<string, string, string> req3DSecure,
-			Action<Exception> excepted)
+			Action<RegisterResult> completed, Action<Exception> excepted)
 		{
 			tr.Merchant2Rbs(orderNum, "example payment", ToMinorOfUnit(amount), "www.example.com", true,
 				card.Number, card.CVV, card.ExpDate.ToString("yyyyMM"), card.Holder,
-				completed, req3DSecure, excepted);
+				completed, excepted);
 		}
 		
 		public static void Capture(this RbsTranslator tr, string mdOrder, decimal? amount,
-			Action<ResultInfo> completed, Action<Exception> excepted)
+			Action<ResultCode> completed, Action<Exception> excepted)
 		{
 			int? iAmount = null;
 			if(amount.HasValue)
@@ -59,7 +55,7 @@ namespace RbsPayments
 		}
 		
 		public static void CancelBlock(this RbsTranslator tr, string mdOrder,
-			Action<ResultInfo> completed, Action<Exception> excepted)
+			Action<ResultCode> completed, Action<Exception> excepted)
 		{
 			tr.DepositReversal(mdOrder, completed, excepted);
 		}
