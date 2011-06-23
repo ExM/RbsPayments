@@ -5,12 +5,13 @@ using RbsPayments.Example;
 using Configuration;
 using System.Threading;
 using System.Net;
+using RbsPayments.Test;
 
-namespace RbsPayments.Test
+namespace RbsPayments.ServerTests
 {
 	[TestFixture]
 	[Category("required link to playground.paymentgate.ru")]
-	public class AsyncOperationTest
+	public class AsyncExample
 	{
 		RbsTranslator _tr;
 		
@@ -23,7 +24,7 @@ namespace RbsPayments.Test
 		}
 
 		[Test]
-		public void Merchant2Rbs_IncorrectFormat()
+		public void Block_IncorrectFormat()
 		{
 			ManualResetEvent wait =  new ManualResetEvent(false);
 			Exception ex = null;

@@ -1,11 +1,12 @@
 using System;
 using NUnit.Framework;
 using RbsPayments;
+using RbsPayments.Test;
 
-namespace RbsPayments.Test
+namespace RbsPayments
 {
 	[TestFixture]
-	public class ParseResponseTest
+	public class ParseResponseTests
 	{
 		[Test]
 		public void Merchant2Rbs_Deposited()

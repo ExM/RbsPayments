@@ -3,12 +3,13 @@ using NUnit.Framework;
 using RbsPayments;
 using RbsPayments.Example;
 using Configuration;
+using RbsPayments.Test;
 
-namespace RbsPayments.Test
+namespace RbsPayments.ServerTests
 {
 	[TestFixture]
 	[Category("required link to playground.paymentgate.ru")]
-	public class OperationTest
+	public class Common
 	{
 		RbsTranslator _tr;
 		
@@ -16,7 +17,7 @@ namespace RbsPayments.Test
 		public void SetUp()
 		{
 			RbsConnectionConfig cfg = Env.AppSettings.Load<RbsConnectionConfig>(EmptyResult.Throw, "RbsSandbox");
-			SyncConnector conn = new SyncConnector(new Uri(cfg.Uri), TimeSpan.FromSeconds(20));
+			SyncConnector conn = new SyncConnector(new Uri(cfg.Uri), TimeSpan.FromSeconds(30));
 			_tr = new RbsTranslator(conn, cfg);
 		}
 		
@@ -28,44 +29,6 @@ namespace RbsPayments.Test
 				(result) =>
 				{
 					Assert.IsFalse(result.Required3DSecure);
-					Assert.Greater(result.MdOrder.Length, 10);
-					Assert.AreEqual(0, result.Code.PrimaryRC);
-					Assert.AreEqual(0, result.Code.SecondaryRC);
-					Assert.AreEqual(RbsPaymentState.Deposited, result.State);
-				},
-				(ex) => 
-				{
-					Assert.Fail("unexpected exception: {0}", ex);
-				});
-		}
-		
-		[Test]
-		public void Block_3DSec()
-		{
-			//HACK: на тестовом сервере допускается дублирование платежей
-			_tr.Block("5687345", 100.12m, TestCard.Good3DSec,
-				(result) =>
-				{
-					Assert.IsTrue(result.Required3DSecure);
-					Assert.Greater(result.MdOrder.Length, 10);
-					Assert.IsNotEmpty(result.AcsUrl);
-					Assert.IsNotEmpty(result.PaReq);
-					Assert.Greater(Convert.FromBase64String(result.PaReq).Length, 350);
-				},
-				(ex) => 
-				{
-					Assert.Fail("unexpected exception: {0}", ex);
-				});
-		}
-		
-		[Test]
-		public void Return_3ds()
-		{
-			string mdOrder = "109195326-11-4512705498-58-87101-6210973_p1";
-			string PaRes = "++"; //HACK: не читаемый PaRes, но ответ сервера "-2 	6 	Эмитент отклонил  VbV/SecureCode аутентификацию."
-			_tr.Bpc3ds(mdOrder, PaRes,
-				(result) =>
-				{
 					Assert.Greater(result.MdOrder.Length, 10);
 					Assert.AreEqual(0, result.Code.PrimaryRC);
 					Assert.AreEqual(0, result.Code.SecondaryRC);

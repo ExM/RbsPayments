@@ -3,11 +3,12 @@ using NUnit.Framework;
 using RbsPayments;
 using Configuration;
 using System.Net;
+using RbsPayments.Test;
 
-namespace RbsPayments.Test
+namespace RbsPayments
 {
 	[TestFixture]
-	public class NoConnectionTest
+	public class NoConnectionTests
 	{
 		RbsTranslator _tr;
 		

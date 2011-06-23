@@ -52,15 +52,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="OperationTest.cs" />
-    <Compile Include="ParseResponseTest.cs" />
     <Compile Include="Env.cs" />
     <Compile Include="NoConnectionTest.cs" />
     <Compile Include="ExpectedMessage.cs" />
-    <Compile Include="AsyncOperationTest.cs" />
     <Compile Include="Example\PaymentCard.cs" />
     <Compile Include="Example\RbsTranslatorExtensions.cs" />
     <Compile Include="TestCard.cs" />
+    <Compile Include="ServerTests\Common.cs" />
+    <Compile Include="ServerTests\Secure3D.cs" />
+    <Compile Include="ServerTests\AsyncExample.cs" />
+    <Compile Include="ParseResponseTests\ParseResponseTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -76,5 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Example\" />
+    <Folder Include="ServerTests\" />
+    <Folder Include="ParseResponseTests\" />
   </ItemGroup>
 </Project>
