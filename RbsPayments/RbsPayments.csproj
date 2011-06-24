@@ -39,6 +39,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\NLog\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.4.0.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\HtmlAgilityPack\HtmlAgilityPack.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
@@ -53,9 +57,13 @@
     <Compile Include="RegisterResult.cs" />
     <Compile Include="ResultCode.cs" />
     <Compile Include="PostParameters.cs" />
-    <Compile Include="RbsSite.cs" />
-    <Compile Include="ISiteConnector.cs" />
     <Compile Include="ICommandConnector.cs" />
+    <Compile Include="Site\RbsSiteResponse.cs" />
+    <Compile Include="Site\RbsSite.cs" />
+    <Compile Include="Site\ISiteConnector.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Site\" />
+  </ItemGroup>
 </Project>

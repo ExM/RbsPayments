@@ -63,6 +63,7 @@
     <Compile Include="ServerTests\AsyncExample.cs" />
     <Compile Include="ParseResponseTests\ParseResponseTests.cs" />
     <Compile Include="SiteTests\Common.cs" />
+    <Compile Include="ParseSitePageTests\ParseSitePageTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -75,11 +76,16 @@
     <None Include="RbsPayments.Test.cfg.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="SiteResponse\ErrorAuth.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Example\" />
     <Folder Include="ServerTests\" />
     <Folder Include="ParseResponseTests\" />
     <Folder Include="SiteTests\" />
+    <Folder Include="SiteResponse\" />
+    <Folder Include="ParseSitePageTests\" />
   </ItemGroup>
 </Project>

@@ -12,20 +12,21 @@ namespace RbsPayments.SiteTests
 	[Category("required link to playground.paymentgate.ru")]
 	public class Common
 	{
+		RbsConnectionConfig _cfg;
 		RbsSite _site;
 		
 		[TestFixtureSetUp]
 		public void SetUp()
 		{
-			RbsConnectionConfig cfg = Env.AppSettings.Load<RbsConnectionConfig>(EmptyResult.Throw, "RbsSandbox");
-			SyncConnector conn = new SyncConnector(new Uri(cfg.Uri), TimeSpan.FromSeconds(30));
-			_site = new RbsSite(conn, cfg.User, cfg.Password);
+			_cfg = Env.AppSettings.Load<RbsConnectionConfig>(EmptyResult.Throw, "RbsSandbox");
+			SyncConnector conn = new SyncConnector(new Uri(_cfg.Uri), TimeSpan.FromSeconds(30));
+			_site = new RbsSite(conn);
 		}
 		
 		[Test]
-		public void LogIn()
+		public void Login()
 		{
-			_site.LogIn(
+			_site.Login(_cfg.User, _cfg.Password,
 				(result) =>
 				{
 					Assert.AreNotEqual(0, result.Count, "cookies expected");
@@ -33,6 +34,21 @@ namespace RbsPayments.SiteTests
 				(ex) => 
 				{
 					Assert.Fail("unexpected exception: {0}", ex);
+				});
+		}
+		
+		[Test]
+		public void Login_WrongPass()
+		{
+			_site.Login(_cfg.User, "???",
+				(result) =>
+				{
+					Assert.Fail("missed error");
+				},
+				(ex) => 
+				{
+					Assert.IsInstanceOf<InvalidOperationException>(ex);
+					Assert.AreEqual(ExpectedMessage.ErrorAuth, ex.Message);
 				});
 		}
 	}

@@ -1,0 +1,11 @@
+﻿Библиотека для парсинга структуры HTML.
+
+Сайт проекта
+ http://htmlagilitypack.codeplex.com/
+
+Страница загрузки
+ http://htmlagilitypack.codeplex.com/releases/view/44954
+ 
+Текущая версия 1.4.0
+Файл архива HtmlAgilityPack.1.4.0.zip получен из
+ http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=htmlagilitypack&DownloadId=120934&FileTime=129177270573670000&Build=17889

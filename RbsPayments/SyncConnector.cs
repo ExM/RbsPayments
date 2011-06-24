@@ -71,14 +71,10 @@ namespace RbsPayments
 			Log.Trace("Request for uri:`{0}'", uri);
 			HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(uri);
 			
-			
 			webReq.Method = "POST";
 			webReq.Timeout = _to;
 			webReq.ContentType = "application/x-www-form-urlencoded";
-			
 			webReq.Headers.Add("Content-Encoding", "UTF8");
-
-			//webReq.UserAgent = "Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1";
 			
 			byte[] postContent = PostParameters.Encode(postParams);
 			webReq.ContentLength = postContent.Length;
@@ -91,20 +87,14 @@ namespace RbsPayments
 			{
 				using(Stream respS = webReq.GetRequestStream())
 					respS.Write(postContent, 0, postContent.Length);
-				
-				Log.Trace("Post sended");
-				
+
 				using (HttpWebResponse resp = (HttpWebResponse)webReq.GetResponse())
 				{
 					cookies = resp.Cookies;
-					foreach(Cookie c in cookies)
-					{
-						Log.Trace("{0}:{1}", c.Name, c.Value);
-					}
 					
 					if(resp.ContentLength != 0)
 					{
-						Encoding enc = Encoding.GetEncoding(resp.ContentEncoding);
+						Encoding enc = Encoding.GetEncoding(resp.CharacterSet);
 						using (Stream respS = resp.GetResponseStream())
 							respText = enc.GetString(ReadToEnd(respS));
 					}
