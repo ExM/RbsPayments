@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace RbsPayments
 {
-	public class AsyncConnector: IConnector
+	public class AsyncConnector: ICommandConnector
 	{
 		private static Logger Log = LogManager.GetCurrentClassLogger();
 		

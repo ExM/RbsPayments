@@ -62,6 +62,7 @@
     <Compile Include="ServerTests\Secure3D.cs" />
     <Compile Include="ServerTests\AsyncExample.cs" />
     <Compile Include="ParseResponseTests\ParseResponseTests.cs" />
+    <Compile Include="SiteTests\Common.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -79,5 +80,6 @@
     <Folder Include="Example\" />
     <Folder Include="ServerTests\" />
     <Folder Include="ParseResponseTests\" />
+    <Folder Include="SiteTests\" />
   </ItemGroup>
 </Project>

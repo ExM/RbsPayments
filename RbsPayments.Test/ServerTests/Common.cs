@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using NUnit.Framework;
 using RbsPayments;
 using RbsPayments.Example;

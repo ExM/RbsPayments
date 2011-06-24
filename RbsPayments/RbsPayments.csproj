@@ -45,7 +45,6 @@
     <Compile Include="RbsPaymentState.cs" />
     <Compile Include="RbsResponse.cs" />
     <Compile Include="RbsTranslator.cs" />
-    <Compile Include="IConnector.cs" />
     <Compile Include="SyncConnector.cs" />
     <Compile Include="UriParameters.cs" />
     <Compile Include="RbsConnectionConfig.cs" />
@@ -53,6 +52,10 @@
     <Compile Include="AsyncConnector.cs" />
     <Compile Include="RegisterResult.cs" />
     <Compile Include="ResultCode.cs" />
+    <Compile Include="PostParameters.cs" />
+    <Compile Include="RbsSite.cs" />
+    <Compile Include="ISiteConnector.cs" />
+    <Compile Include="ICommandConnector.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

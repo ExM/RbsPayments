@@ -7,7 +7,7 @@ using NLog;
 
 namespace RbsPayments
 {
-	public class SyncConnector: IConnector
+	public class SyncConnector: ICommandConnector, ISiteConnector
 	{
 		private static Logger Log = LogManager.GetCurrentClassLogger();
 		
@@ -31,7 +31,8 @@ namespace RbsPayments
 			string respText;
 			try
 			{
-				using (Stream respS = webReq.GetResponse().GetResponseStream())
+				using (WebResponse resp = webReq.GetResponse())
+				using (Stream respS = resp.GetResponseStream())
 					respText = Encoding.UTF8.GetString(ReadToEnd(respS));
 			}
 			catch(WebException err)
@@ -60,6 +61,71 @@ namespace RbsPayments
 					ms.Write(buffer, 0, read);
 				return ms.ToArray();
 			}
+		}
+
+		public void Request (string cmd, NameValueCollection getParams, NameValueCollection postParams, Action<string, CookieCollection> completed, Action<Exception> excepted)
+		{
+			if(getParams != null)
+				cmd = cmd + "?" + UriParameters.Encode(getParams);
+			Uri uri = new Uri(_baseUri, cmd);
+			Log.Trace("Request for uri:`{0}'", uri);
+			HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(uri);
+			
+			
+			webReq.Method = "POST";
+			webReq.Timeout = _to;
+			webReq.ContentType = "application/x-www-form-urlencoded";
+			
+			webReq.Headers.Add("Content-Encoding", "UTF8");
+
+			//webReq.UserAgent = "Mozilla/5.0 (X11; Linux x86_64; rv:2.0.1) Gecko/20100101 Firefox/4.0.1";
+			
+			byte[] postContent = PostParameters.Encode(postParams);
+			webReq.ContentLength = postContent.Length;
+			webReq.AllowAutoRedirect = false;
+			webReq.CookieContainer = new CookieContainer();
+			
+			string respText;
+			CookieCollection cookies;
+			try
+			{
+				using(Stream respS = webReq.GetRequestStream())
+					respS.Write(postContent, 0, postContent.Length);
+				
+				Log.Trace("Post sended");
+				
+				using (HttpWebResponse resp = (HttpWebResponse)webReq.GetResponse())
+				{
+					cookies = resp.Cookies;
+					foreach(Cookie c in cookies)
+					{
+						Log.Trace("{0}:{1}", c.Name, c.Value);
+					}
+					
+					if(resp.ContentLength != 0)
+					{
+						Encoding enc = Encoding.GetEncoding(resp.ContentEncoding);
+						using (Stream respS = resp.GetResponseStream())
+							respText = enc.GetString(ReadToEnd(respS));
+					}
+					else
+						respText = string.Empty;
+				}
+			}
+			catch(WebException err)
+			{
+				Log.Debug("WebException: {0}", err);
+				excepted(err);
+				return;
+			}
+			catch(Exception err)
+			{
+				Log.Debug("Exception: {0}", err);
+				excepted(new WebException("data transmission error", err, WebExceptionStatus.UnknownError, null));
+				return;
+			}
+			
+			completed(respText, cookies);
 		}
 	}
 }

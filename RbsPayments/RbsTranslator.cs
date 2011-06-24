@@ -6,13 +6,13 @@ namespace RbsPayments
 {
 	public class RbsTranslator
 	{
-		private readonly IConnector _conn;
+		private readonly ICommandConnector _conn;
 		private readonly string _merchantNum;
 		private readonly string _merchantPass;
 		private readonly string _refundUser;
 		private readonly string _refundPass;
 		
-		public RbsTranslator(IConnector conn, string merchantNum, string merchantPass, string refundUser, string refundPass)
+		public RbsTranslator(ICommandConnector conn, string merchantNum, string merchantPass, string refundUser, string refundPass)
 		{
 			_conn = conn;
 			_merchantNum = merchantNum;
@@ -21,7 +21,7 @@ namespace RbsPayments
 			_refundPass = refundPass;
 		}
 		
-		public RbsTranslator(IConnector conn, RbsConnectionConfig cfg)
+		public RbsTranslator(ICommandConnector conn, RbsConnectionConfig cfg)
 			:this(conn, cfg.MerchantNumber, cfg.MerchantPassword, cfg.User, cfg.Password)
 		{
 		}
@@ -220,6 +220,7 @@ namespace RbsPayments
 					}, excepted),
 				excepted);
 		}
+
 	}
 }
 
