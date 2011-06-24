@@ -1,0 +1,530 @@
+
+
+
+
+
+
+
+
+
+<html>
+<head>
+	<title>Runet Business Systems: надежная система электронных платежей</title>
+	<META content="text/html;charset=windows-1251" http-equiv="Content-Type">
+	<link type="text/css" rel="stylesheet" href="/bpcservlet/BPC/css/paymentgate.css" media="screen">
+<script>
+function setLighter(el){el.bgColor="#E9E9E9";}
+function unSetLighter(el){el.bgColor="#FFFFFF";}
+var stylePosition=1;
+function setStyle(){
+var x=new String(Math.random()).substr(2,1);
+if(x==0){x=1;}else if(x>5){x=5;}
+stylePosition=x;
+}
+function doLogout(){
+window.location.href="/bpcservlet/BPC/index.jsp?logout=1";
+}
+function doStat(){
+window.location.href="/bpcservlet/BPC/Merchant.jsp";
+}
+function doFraud(){
+window.location.href="/bpcservlet/Fraud";
+}
+function OpenCertDetails(){
+	thewindow = window.open('https://www.thawte.com/cgi/server/certdetails.exe?code=RUOOOR13-2', 'anew', config='height=400,width=450,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no,directories=no,status=yes');
+}
+</script>
+</head>
+
+<body>
+<script>setStyle();</script>
+<table border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td>
+<!-- TOP -->
+
+<table border="0" cellspacing="3" cellpadding="0" align="left" width="100%">
+
+
+<tr>
+<td colspan="3">
+
+
+<a class="menu" href="/bpcservlet/BPC/index.jsp">Главная</a> |
+<a class="menu" href="/bpcservlet/BPC/News.jsp">Новости</a> |
+<a class="menu" href="/bpcservlet/BPC/System.jsp">О системе</a> |
+<a class="menu" href="/bpcservlet/BPC/Connection.jsp"><b>[Подключение]</b></a> |
+<a class="menu" href="/bpcservlet/BPC/Registration.jsp">Регистрация</a> |
+<a class="menu" href="/bpcservlet/BPC/Docs.jsp">Документы</a> |
+<a class="menu" href="/bpcservlet/BPC/Fraude.jsp">Вопросы безопасности</a> 
+
+
+</td>
+</tr>
+
+
+<tr><td colspan="3" bgcolor="#D8D8D8" class="merchantLogin"><img src="/bpcservlet/BPC/img/1x1.gif" alt="" width="1" height="1" border="0"></td></tr>
+
+<tr>
+<td colspan="3" height="20px"  bgcolor="#D8D8D8" class="right">&nbsp;&nbsp;&nbsp;Личный кабинет: <b>merchanttest</b>&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<form name="ShopInfo" method="post" action="/bpcservlet/MerchantServlet">
+
+
+<td>
+<script>
+document.write("<img src='/bpcservlet/BPC/img/smallLogo"+stylePosition+".jpg' alt='' width='200' height='40' border='0'><br>");
+</script>
+</td>
+<td colspan="2" bgcolor="#D8D8D8" class="right" height="20px" width="100%">
+<table>
+<tr>
+<td width="99%" class="right"><input class="button" type="button" value="Антифродовый фильтр" onclick="doFraud()"></td>
+<td><input class="button" type="button" value="Статистика платежей" onclick="doStat()"></td>
+<td><input class="button" type="button" value="Выйти" onclick="doLogout()"></td>
+</tr>
+</table>
+</td>
+
+</form>
+</tr>
+<td bgcolor="#D8D8D8" colspan="3"><img src="/bpcservlet/BPC/img/1x1.gif" alt="" width="1" height="1" border="0"></td>
+</table>
+
+<!-- TOP END-->
+</td><tr>
+<tr><td>
+<table border="0" cellspacing="3" cellpadding="0" width="100%">
+<tr><td>
+<!-- MIDDLE -->
+
+
+
+
+	  
+
+				<table align="center">
+				<tr><td bgcolor="#E8E8E8">
+
+<table width="100%" border="0" cellspacing="1" cellpadding="5">
+        <tr>
+
+          <td colspan="13"  class="center" bgcolor="#FFFFFF">
+		  
+	<table cellpadding="13">
+	<tr><td>
+             <a href=https://playground.paymentgate.ru/bpcservlet/BPC/Merchant.jsp?from_year=2008&from_month=06&from_day=24&till_year=2011&till_month=06&till_day=24&till_hour=23&till_min=59&from_hour=00&from_min=00&f_minAmount=null&f_maxAmount=null&f_orderNumber=123>
+                вернуться к форме поиска...
+             </a>
+	</td></tr>
+	</table>
+		  
+          </td>
+        </tr>
+		
+	    <tr>
+
+		  <td class="center" bgcolor="#FFFFFF"><b>номер</b></td>
+		  <td class="center" bgcolor="#FFFFFF"><b>payment<br>reference</b></td>
+		  <td class="center" bgcolor="#FFFFFF"><b>сумма</b></td>
+		  <td class="center" bgcolor="#FFFFFF"><b>approved</b></td>
+		  <td class="center" bgcolor="#FFFFFF"><b>deposited</b></td>
+		  <td class="center" bgcolor="#FFFFFF"><b>состояние</b></td>
+		  <td class="center" bgcolor="#FFFFFF"><b>fraud<br>level</b></td>
+		  <td class="center" bgcolor="#FFFFFF"><b>имя на карте</b></td>
+		  <td class="center" bgcolor="#FFFFFF"><b>карта</b></td>
+		  <td class="center" bgcolor="#FFFFFF"><b>IP</b></td>
+		  <td class="center" bgcolor="#FFFFFF"><b>результат платежа</b></td>
+		  <td class="center" bgcolor="#FFFFFF"><b>дата</b></td>
+		  <td class="center" bgcolor="#FFFFFF"><b>о Банке</b></td>
+	    </tr>
+	    <tr>
+
+			    <td class="center" bgcolor="#FFFFFF"><a href="/bpcservlet/BPC/DetailedReport.jsp?mdorder=-90-48-77-104-100-101-11049592717-109-91-121-23-84_p1&merchantnumber=118600118603000118604&ordernumber=123&from_year=2008&from_month=06&from_day=24&till_year=2011&till_month=06&till_day=24&till_hour=23&till_min=59&from_hour=00&from_min=00&f_minAmount=null&f_maxAmount=null&f_orderNumber=123">123</a></td>
+			    <td class="center" bgcolor="#FFFFFF">
+                                -
+                                
+                            </td>
+			    <td class="center" bgcolor="#FFFFFF">1.0</td>
+			    <td class="center" bgcolor="#FFFFFF">1.0</td>
+			    <td class="center" bgcolor="#FFFFFF">1.0</td>
+			    <td class="center" bgcolor="#FFFFFF">deposited</td>
+			    <td class="center" 
+                                bgcolor="#FFFFFF">
+                               0
+                                
+                            </td>
+			    <td class="center" bgcolor="#FFFFFF">qwerty</td>
+			    <td class="center" bgcolor="#FFFFFF">411111**1112</td>
+			    <td class="center" bgcolor="#FFFFFF">81.211.29.32</td>
+			    <td  class="center" bgcolor="#FFFFFF">
+                                0-0
+                                000
+                                <br>
+                                
+                                    успешный платеж
+                                
+                            </td>
+			    <td  class="center" bgcolor="#FFFFFF">2009/8/6 19:24:19</td>
+			    <td  class="center" bgcolor="#FFFFFF">RU</td>
+                         
+			  </tr><tr>
+
+			    <td class="center" bgcolor="#FFFFFF"><a href="/bpcservlet/BPC/DetailedReport.jsp?mdorder=3977-121-45114-72-9-651936-120-66-49-5668-24_p1&merchantnumber=118600118603000118604&ordernumber=123&from_year=2008&from_month=06&from_day=24&till_year=2011&till_month=06&till_day=24&till_hour=23&till_min=59&from_hour=00&from_min=00&f_minAmount=null&f_maxAmount=null&f_orderNumber=123">123</a></td>
+			    <td class="center" bgcolor="#FFFFFF">
+                                -
+                                
+                            </td>
+			    <td class="center" bgcolor="#FFFFFF">1.0</td>
+			    <td class="center" bgcolor="#FFFFFF">1.0</td>
+			    <td class="center" bgcolor="#FFFFFF">1.0</td>
+			    <td class="center" bgcolor="#FFFFFF">deposited</td>
+			    <td class="center" 
+                                bgcolor="#FFFFFF">
+                               0
+                                
+                            </td>
+			    <td class="center" bgcolor="#FFFFFF">qwerty</td>
+			    <td class="center" bgcolor="#FFFFFF">411111**1112</td>
+			    <td class="center" bgcolor="#FFFFFF">81.211.29.32</td>
+			    <td  class="center" bgcolor="#FFFFFF">
+                                0-0
+                                000
+                                <br>
+                                
+                                    успешный платеж
+                                
+                            </td>
+			    <td  class="center" bgcolor="#FFFFFF">2009/8/7 10:28:32</td>
+			    <td  class="center" bgcolor="#FFFFFF">RU</td>
+                         
+			  </tr><tr>
+
+			    <td class="center" bgcolor="#FFFFFF"><a href="/bpcservlet/BPC/DetailedReport.jsp?mdorder=-76-814135-56-104-19-12228-10146-8769109843_p1&merchantnumber=118600118603000118604&ordernumber=123&from_year=2008&from_month=06&from_day=24&till_year=2011&till_month=06&till_day=24&till_hour=23&till_min=59&from_hour=00&from_min=00&f_minAmount=null&f_maxAmount=null&f_orderNumber=123">123</a></td>
+			    <td class="center" bgcolor="#FFFFFF">
+                                -
+                                
+                            </td>
+			    <td class="center" bgcolor="#FFFFFF">1.0</td>
+			    <td class="center" bgcolor="#FFFFFF">1.0</td>
+			    <td class="center" bgcolor="#FFFFFF">1.0</td>
+			    <td class="center" bgcolor="#FFFFFF">deposited</td>
+			    <td class="center" 
+                                bgcolor="#FFFFFF">
+                               0
+                                
+                            </td>
+			    <td class="center" bgcolor="#FFFFFF">qwerty</td>
+			    <td class="center" bgcolor="#FFFFFF">411111**1112</td>
+			    <td class="center" bgcolor="#FFFFFF">81.211.29.32</td>
+			    <td  class="center" bgcolor="#FFFFFF">
+                                0-0
+                                000
+                                <br>
+                                
+                                    успешный платеж
+                                
+                            </td>
+			    <td  class="center" bgcolor="#FFFFFF">2009/8/7 10:30:4</td>
+			    <td  class="center" bgcolor="#FFFFFF">RU</td>
+                         
+			  </tr><tr>
+
+			    <td class="center" bgcolor="#FFFFFF"><a href="/bpcservlet/BPC/DetailedReport.jsp?mdorder=10276-3-889593-65-10075-9075-12890-12469-93_p1&merchantnumber=118600118603000118604&ordernumber=123&from_year=2008&from_month=06&from_day=24&till_year=2011&till_month=06&till_day=24&till_hour=23&till_min=59&from_hour=00&from_min=00&f_minAmount=null&f_maxAmount=null&f_orderNumber=123">123</a></td>
+			    <td class="center" bgcolor="#FFFFFF">
+                                -
+                                
+                            </td>
+			    <td class="center" bgcolor="#FFFFFF">1.0</td>
+			    <td class="center" bgcolor="#FFFFFF">1.0</td>
+			    <td class="center" bgcolor="#FFFFFF">1.0</td>
+			    <td class="center" bgcolor="#FFFFFF">deposited</td>
+			    <td class="center" 
+                                bgcolor="#FFFFFF">
+                               0
+                                
+                            </td>
+			    <td class="center" bgcolor="#FFFFFF">qwerty</td>
+			    <td class="center" bgcolor="#FFFFFF">411111**1112</td>
+			    <td class="center" bgcolor="#FFFFFF">81.211.29.32</td>
+			    <td  class="center" bgcolor="#FFFFFF">
+                                0-0
+                                000
+                                <br>
+                                
+                                    успешный платеж
+                                
+                            </td>
+			    <td  class="center" bgcolor="#FFFFFF">2009/8/7 10:41:22</td>
+			    <td  class="center" bgcolor="#FFFFFF">RU</td>
+                         
+			  </tr><tr>
+
+			    <td class="center" bgcolor="#FFFFFF"><a href="/bpcservlet/BPC/DetailedReport.jsp?mdorder=-584254-22113-9642-128-48224-67514-10570_p1&merchantnumber=118600118603000118604&ordernumber=123&from_year=2008&from_month=06&from_day=24&till_year=2011&till_month=06&till_day=24&till_hour=23&till_min=59&from_hour=00&from_min=00&f_minAmount=null&f_maxAmount=null&f_orderNumber=123">123</a></td>
+			    <td class="center" bgcolor="#FFFFFF">
+                                -
+                                
+                            </td>
+			    <td class="center" bgcolor="#FFFFFF">1.0</td>
+			    <td class="center" bgcolor="#FFFFFF">1.0</td>
+			    <td class="center" bgcolor="#FFFFFF">1.0</td>
+			    <td class="center" bgcolor="#FFFFFF">deposited</td>
+			    <td class="center" 
+                                bgcolor="#FFFFFF">
+                               0
+                                
+                            </td>
+			    <td class="center" bgcolor="#FFFFFF">qwerty</td>
+			    <td class="center" bgcolor="#FFFFFF">411111**1112</td>
+			    <td class="center" bgcolor="#FFFFFF">81.211.29.32</td>
+			    <td  class="center" bgcolor="#FFFFFF">
+                                0-0
+                                000
+                                <br>
+                                
+                                    успешный платеж
+                                
+                            </td>
+			    <td  class="center" bgcolor="#FFFFFF">2009/8/7 13:19:51</td>
+			    <td  class="center" bgcolor="#FFFFFF">RU</td>
+                         
+			  </tr><tr>
+
+			    <td class="center" bgcolor="#FFFFFF"><a href="/bpcservlet/BPC/DetailedReport.jsp?mdorder=6773-108-33-23-94-489699-188169266-575_p1&merchantnumber=118600118603000118604&ordernumber=123&from_year=2008&from_month=06&from_day=24&till_year=2011&till_month=06&till_day=24&till_hour=23&till_min=59&from_hour=00&from_min=00&f_minAmount=null&f_maxAmount=null&f_orderNumber=123">123</a></td>
+			    <td class="center" bgcolor="#FFFFFF">
+                                -
+                                
+                            </td>
+			    <td class="center" bgcolor="#FFFFFF">29.3</td>
+			    <td class="center" bgcolor="#FFFFFF">29.3</td>
+			    <td class="center" bgcolor="#FFFFFF">0.0</td>
+			    <td class="center" bgcolor="#FFFFFF">approved</td>
+			    <td class="center" 
+                                bgcolor="#FFFFFF">
+                               0
+                                
+                            </td>
+			    <td class="center" bgcolor="#FFFFFF">VASJA PUPKIN </td>
+			    <td class="center" bgcolor="#FFFFFF">411111**1112</td>
+			    <td class="center" bgcolor="#FFFFFF">-</td>
+			    <td  class="center" bgcolor="#FFFFFF">
+                                0-0
+                                000
+                                <br>
+                                
+                                    успешный платеж
+                                
+                            </td>
+			    <td  class="center" bgcolor="#FFFFFF">2009/9/25 18:31:46</td>
+			    <td  class="center" bgcolor="#FFFFFF">RU</td>
+                         
+			  </tr><tr>
+
+			    <td class="center" bgcolor="#FFFFFF"><a href="/bpcservlet/BPC/DetailedReport.jsp?mdorder=944271099121589112395040-20-467498_p1&merchantnumber=118600118603000118604&ordernumber=123&from_year=2008&from_month=06&from_day=24&till_year=2011&till_month=06&till_day=24&till_hour=23&till_min=59&from_hour=00&from_min=00&f_minAmount=null&f_maxAmount=null&f_orderNumber=123">123</a></td>
+			    <td class="center" bgcolor="#FFFFFF">
+                                -
+                                
+                            </td>
+			    <td class="center" bgcolor="#FFFFFF">2.0</td>
+			    <td class="center" bgcolor="#FFFFFF">2.0</td>
+			    <td class="center" bgcolor="#FFFFFF">2.0</td>
+			    <td class="center" bgcolor="#FFFFFF">deposited</td>
+			    <td class="center" 
+                                bgcolor="#FFFFFF">
+                               0
+                                
+                            </td>
+			    <td class="center" bgcolor="#FFFFFF">xxxxxxxxxxxx x x</td>
+			    <td class="center" bgcolor="#FFFFFF">522223**0090</td>
+			    <td class="center" bgcolor="#FFFFFF">90.138.182.195</td>
+			    <td  class="center" bgcolor="#FFFFFF">
+                                0-0
+                                000
+                                <br>
+                                
+                                    успешный платеж
+                                
+                            </td>
+			    <td  class="center" bgcolor="#FFFFFF">2009/9/26 16:51:23</td>
+			    <td  class="center" bgcolor="#FFFFFF">RU</td>
+                         
+			  </tr><tr>
+
+			    <td class="center" bgcolor="#FFFFFF"><a href="/bpcservlet/BPC/DetailedReport.jsp?mdorder=42-8490-111-10522-22-107-63-118-914105-41-124-41_p1&merchantnumber=118600118603000118604&ordernumber=123&from_year=2008&from_month=06&from_day=24&till_year=2011&till_month=06&till_day=24&till_hour=23&till_min=59&from_hour=00&from_min=00&f_minAmount=null&f_maxAmount=null&f_orderNumber=123">123</a></td>
+			    <td class="center" bgcolor="#FFFFFF">
+                                -
+                                
+                            </td>
+			    <td class="center" bgcolor="#FFFFFF">7603.0</td>
+			    <td class="center" bgcolor="#FFFFFF">7603.0</td>
+			    <td class="center" bgcolor="#FFFFFF">7603.0</td>
+			    <td class="center" bgcolor="#FFFFFF">deposited</td>
+			    <td class="center" 
+                                bgcolor="#FFFFFF">
+                               0
+                                
+                            </td>
+			    <td class="center" bgcolor="#FFFFFF">test unifest</td>
+			    <td class="center" bgcolor="#FFFFFF">411111**1112</td>
+			    <td class="center" bgcolor="#FFFFFF">91.190.67.1</td>
+			    <td  class="center" bgcolor="#FFFFFF">
+                                0-0
+                                000
+                                <br>
+                                
+                                    успешный платеж
+                                
+                            </td>
+			    <td  class="center" bgcolor="#FFFFFF">2009/10/2 0:42:12</td>
+			    <td  class="center" bgcolor="#FFFFFF">RU</td>
+                         
+			  </tr><tr>
+
+			    <td class="center" bgcolor="#FFFFFF"><a href="/bpcservlet/BPC/DetailedReport.jsp?mdorder=-788972-6102111-12385-601498-89-73-3520-51_p1&merchantnumber=118600118603000118604&ordernumber=123&from_year=2008&from_month=06&from_day=24&till_year=2011&till_month=06&till_day=24&till_hour=23&till_min=59&from_hour=00&from_min=00&f_minAmount=null&f_maxAmount=null&f_orderNumber=123">123</a></td>
+			    <td class="center" bgcolor="#FFFFFF">
+                                -
+                                
+                            </td>
+			    <td class="center" bgcolor="#FFFFFF">30.0</td>
+			    <td class="center" bgcolor="#FFFFFF">0.0</td>
+			    <td class="center" bgcolor="#FFFFFF">0.0</td>
+			    <td class="center" bgcolor="#FFFFFF">declined</td>
+			    <td class="center" 
+                                bgcolor="#FFFFFF">
+                               0
+                                
+                            </td>
+			    <td class="center" bgcolor="#FFFFFF">Elvira Valeeva</td>
+			    <td class="center" bgcolor="#FFFFFF">427683**4871</td>
+			    <td class="center" bgcolor="#FFFFFF">94.79.50.171</td>
+			    <td  class="center" bgcolor="#FFFFFF">
+                                34-1041
+                                115
+                                <br>
+                                
+                                    Сумма транзакции превышает доступный остаток средств на выбранном счете.
+                                
+                            </td>
+			    <td  class="center" bgcolor="#FFFFFF">2009/10/16 9:38:46</td>
+			    <td  class="center" bgcolor="#FFFFFF">RU</td>
+                         
+			  </tr>
+        <tr>
+          <td colspan="13"  class="center" bgcolor="#FFFFFF">
+		  
+	<table cellpadding="13">
+	<tr><td>
+             <a href=https://playground.paymentgate.ru/bpcservlet/BPC/Merchant.jsp?from_year=2008&from_month=06&from_day=24&till_year=2011&till_month=06&till_day=24&till_hour=23&till_min=59&from_hour=00&from_min=00&f_minAmount=null&f_maxAmount=null&f_orderNumber=123>
+                вернуться к форме поиска...
+             </a>
+	</td></tr>
+	</table>
+		  
+          </td>
+        </tr>
+  	  </table>
+
+	  </td></tr>
+	  </table>
+
+
+</tr></td>
+</table>
+<!-- menu -->
+
+<table border="0" cellspacing="3" cellpadding="0" width="794px">
+<tr><td colspan="8" bgcolor="#D8D8D8" class="merchantLogin"><img src="/bpcservlet/BPC/img/1x1.gif" alt="" width="1" height="1" border="0"></td></tr>
+
+<tr>
+<td onmouseover="setLighter(this)" onmouseout="unSetLighter(this)">
+<strong>&nbsp;О системе:</strong><br>
+<ul>
+<li><a class="menu" href="/bpcservlet/BPC/System.jsp">о системе</a></li>
+<li><a class="menu" href="/bpcservlet/BPC/Fraude.jsp">вопросы безопасности</a></li>
+</ul>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr><td class="center"><a href="javascript:OpenCertDetails()"><img src="/bpcservlet/BPC/img/thawte.gif" alt="" width="134" height="85" border="0"></td></tr>
+</table>
+</td>
+<td background="/bpcservlet/BPC/img/dot.gif"><img src="/bpcservlet/BPC/img/1x1.gif" alt="" width="2" height="1" border="0"></td>
+<td onmouseover="setLighter(this)" onmouseout="unSetLighter(this)">
+<strong>&nbsp;Для магазинов:</strong>
+<ul>
+<li><a target="_blank" class="menu" href="http://www.alfabank.ru/corporate/cards/internet-acquiring/">как организовать прием пластиковых карт в Вашем интернет - магазине</a></li>
+<li><a class="menu" href="/bpcservlet/BPC/Connection.jsp"><b>[подключение]</b></a></li>
+<ul>
+<li><a class="menu" href="/bpcservlet/BPC/Registration.jsp">регистрация</a></li>
+<li><a class="menu" href="/bpcservlet/BPC/testConnection.jsp">реквизиты тестового подключения</a></li>
+<li><a class="menu" href="/bpcservlet/BPC/documents/pravila_podklucheniya.htm">руководство по подключение</a></li>
+</ul>
+
+</li>
+</ul>
+</td>
+<td background="/bpcservlet/BPC/img/dot.gif"><img src="/bpcservlet/BPC/img/1x1.gif" alt="" width="2" height="1" border="0"></td>
+<td onmouseover="setLighter(this)" onmouseout="unSetLighter(this)">
+<strong>&nbsp;Документы:</strong>
+<ul>
+<li><a class="menu" href="/bpcservlet/BPC/Pravo.jsp">правовая основа</a></li>
+<li><a class="menu" href="/bpcservlet/BPC/Struktura.jsp">инфраструктура платежей</a></li>
+<li><a class="menu" href="/bpcservlet/BPC/DS.jsp">Mеханизм дополнительной аутентификации Интернет - магазинов на основе цифровых сертификатов при использовании "усеченного" SET </a></li>
+<li><a class="menu" href="/bpcservlet/BPC/Protocols.jsp">Протоколы</a>
+<ul>
+<li><a class="menu" href="/bpcservlet/BPC/ThreeDSecure.jsp">Visa: 3D-Secure</a></li>
+<li><a class="menu" href="/bpcservlet/BPC/UCAF-SecureCode.jsp">MasterCard: UCAF/SecureCode</a></li>
+<li><a class="menu" href="/bpcservlet/BPC/SET.jsp">SET и MIA SET</a></li>
+</ul>
+</li>
+</ul>
+</td>
+<td background="/bpcservelt/BPC/img/dot.gif"><img src="/bpcservlet/BPC/img/1x1.gif" alt="" width="2" height="1" border="0"></td>
+<td>
+<strong>&nbsp;Протоколы:</strong>
+	<table border="0" cellspacing="10" cellpadding="0">
+	<tr><td><a class="menu" href="/bpcservlet/BPC/ThreeDSecure.jsp"><img src="/bpcservlet/BPC/img/visa.gif" border="0"></a></td></tr>
+	<tr><td><a class="menu" href="/bpcservlet/BPC/UCAF-SecureCode.jsp"><img src="/bpcservlet/BPC/img/mastercard.gif" border="0"></a></td></tr>
+	<tr><td><a class="menu" href="/bpcservlet/BPC/SET.jsp"><img src="/bpcservlet/BPC/img/set.gif" border="0"></a></td></tr>
+	</table>
+</td>
+</tr>
+</table>
+<!-- menu end -->
+
+</td></tr>
+<tr><td>
+<!-- BOTTOM -->
+<table border="0" cellspacing="3" cellpadding="0" width="794px">
+<tr>
+	<td bgcolor="#D8D8D8" width="20"><img src="/bpcservlet/BPC/img/1x1.gif" alt="" width="1" height="1" border="0"></td>
+	<td>
+	<a target="_blank" class="menu" href="http://www.alfabank.ru/corporate/cards/internet-acquiring/">
+	<script>
+	document.write("<img src='/bpcservlet/BPC/img/clients"+stylePosition+".jpg' alt='' width='127' height='60' border='0'><br>");
+	</script>
+	</a>
+	</td>
+	<td bgcolor="#D8D8D8" width="571"><img src="/bpcservlet/BPC/img/1x1.gif" alt="" width="1" height="1" border="0"></td>
+	<script>
+	document.write("<td background='/bpcservlet/BPC/img/bg"+stylePosition+".jpg' class='contacts'>");
+	</script>
+	101959<br>
+	<nobr>Россия, Москва,ул.Земляной Вал, д.50А/8, стр.2</nobr><br>
+	<nobr><b>тел.:</b>780-3165,факс: 780-3167</nobr><br>
+	<nobr><b>e-mail:</b> <a href="/bpcservlet/BPC/mailto:info@paymentgate.ru"><font color="#FFFFFF">info@paymentgate.ru</font></a><nobr>
+	</td>
+	<script>
+	document.write("<td valign='bottom' class='corner' background='/bpcservlet/BPC/img/bg"+stylePosition+".jpg'>");
+	document.write("<img src='/bpcservlet/BPC/img/corner"+stylePosition+".jpg' alt='' width='18' height='30' border='0'><br>");
+	</script>
+	</td>
+</tr>	
+</table>
+
+<!-- BOTTOM END-->
+</td><tr>
+</table>
+</body>
+</html>
+

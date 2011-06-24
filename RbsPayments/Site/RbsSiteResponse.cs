@@ -47,5 +47,33 @@ namespace RbsPayments
 			
 			excepted(new InvalidOperationException(text));
 		}
+		
+		public static void PaymentList(string page, Action<IList<string>> completed, Action<Exception> excepted)
+		{
+			Log.Trace("PaymentList page:`{0}'", page);
+			
+			List<string> result = new List<string>();
+			/*
+			try
+			{
+				HtmlDocument doc = new HtmlDocument();
+				doc.LoadHtml(page);
+				string xpath = "html/body/table/tr/td/table/tr/td/font/strong";
+				HtmlNode node = doc.DocumentNode.SelectSingleNode(xpath);
+				if(node == null)
+					throw new FormatException("error text not found");
+				text = node.InnerText;
+				if(string.IsNullOrEmpty(text))
+					throw new FormatException("error text not found");
+			}
+			catch (Exception err)
+			{
+				Log.Warn("can not parse page `{0}'", page);
+				excepted(new FormatException("can not parse page", err));
+				return;
+			}
+			*/
+			completed(result);
+		}
 	}
 }

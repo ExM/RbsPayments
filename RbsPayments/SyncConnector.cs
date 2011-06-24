@@ -63,7 +63,7 @@ namespace RbsPayments
 			}
 		}
 
-		public void Request (string cmd, NameValueCollection getParams, NameValueCollection postParams, Action<string, CookieCollection> completed, Action<Exception> excepted)
+		public void Request(string cmd, NameValueCollection getParams, NameValueCollection postParams, Action<string, CookieCollection> completed, Action<Exception> excepted)
 		{
 			if(getParams != null)
 				cmd = cmd + "?" + UriParameters.Encode(getParams);
@@ -79,6 +79,7 @@ namespace RbsPayments
 			byte[] postContent = PostParameters.Encode(postParams);
 			webReq.ContentLength = postContent.Length;
 			webReq.AllowAutoRedirect = false;
+			
 			webReq.CookieContainer = new CookieContainer();
 			
 			string respText;
@@ -116,6 +117,65 @@ namespace RbsPayments
 			}
 			
 			completed(respText, cookies);
+		}
+		
+		public void Request(string cmd, CookieCollection inCookies, NameValueCollection getParams, NameValueCollection postParams, Action<string> completed, Action<Exception> excepted)
+		{
+			if(getParams != null)
+				cmd = cmd + "?" + UriParameters.Encode(getParams);
+			Uri uri = new Uri(_baseUri, cmd);
+			Log.Trace("Request for uri:`{0}'", uri);
+			HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(uri);
+			
+			webReq.Method = "POST";
+			webReq.Timeout = _to;
+			webReq.ContentType = "application/x-www-form-urlencoded";
+			webReq.Headers.Add("Content-Encoding", "UTF8");
+			
+			byte[] postContent = PostParameters.Encode(postParams);
+			webReq.ContentLength = postContent.Length;
+			webReq.AllowAutoRedirect = false;
+			
+			webReq.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+			webReq.Referer = "https://playground.paymentgate.ru/bpcservlet/MerchantServlet";
+			
+			CookieContainer cc = new CookieContainer();
+			foreach(Cookie cookie in inCookies)
+				cc.Add(cookie);
+			webReq.CookieContainer = cc;
+			
+			string respText;
+			try
+			{
+				using(Stream respS = webReq.GetRequestStream())
+					respS.Write(postContent, 0, postContent.Length);
+
+				using (HttpWebResponse resp = (HttpWebResponse)webReq.GetResponse())
+				{
+					if(resp.ContentLength != 0)
+					{
+						Encoding enc = Encoding.GetEncoding(resp.CharacterSet);
+						using (Stream respS = resp.GetResponseStream())
+							respText = enc.GetString(ReadToEnd(respS));
+					}
+					else
+						respText = string.Empty;
+				}
+			}
+			catch(WebException err)
+			{
+				Log.Debug("WebException: {0}", err);
+				excepted(err);
+				return;
+			}
+			catch(Exception err)
+			{
+				Log.Debug("Exception: {0}", err);
+				excepted(new WebException("data transmission error", err, WebExceptionStatus.UnknownError, null));
+				return;
+			}
+			
+			completed(respText);
 		}
 	}
 }

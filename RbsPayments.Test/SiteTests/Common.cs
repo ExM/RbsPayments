@@ -51,6 +51,32 @@ namespace RbsPayments.SiteTests
 					Assert.AreEqual(ExpectedMessage.ErrorAuth, ex.Message);
 				});
 		}
+		
+		[Test]
+		public void FindByOrderNumber_List()
+		{
+			CookieCollection cookies = null;
+			_site.Login(_cfg.User, _cfg.Password,
+				(result) =>
+				{
+					cookies = result;
+				},
+				(ex) => 
+				{
+					Assert.Fail("unexpected exception: {0}", ex);
+				});
+			
+			_site.FindByOrderNumber(cookies, "123",
+				(result) =>
+				{
+					
+				},
+				(ex) => 
+				{
+					Assert.Fail("unexpected exception: {0}", ex);
+				});
+			
+		}
 	}
 }
 
