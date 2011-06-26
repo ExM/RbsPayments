@@ -79,7 +79,12 @@
     <None Include="SiteResponse\ErrorAuth.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="SiteResponse\PaymentList.html" />
+    <None Include="SiteResponse\PaymentList.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="SiteResponse\PaymentList_Empty.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Example\" />

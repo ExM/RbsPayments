@@ -66,10 +66,12 @@ namespace RbsPayments.SiteTests
 					Assert.Fail("unexpected exception: {0}", ex);
 				});
 			
-			_site.FindByOrderNumber(cookies, "123",
+			cookies = new CookieCollection();
+			
+			_site.FindByOrderNumber(cookies, "923467625",
 				(result) =>
 				{
-					
+					Assert.AreEqual(9, result.Count);
 				},
 				(ex) => 
 				{
@@ -77,6 +79,7 @@ namespace RbsPayments.SiteTests
 				});
 			
 		}
+		
 	}
 }
 

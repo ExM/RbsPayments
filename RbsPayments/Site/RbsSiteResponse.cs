@@ -53,18 +53,26 @@ namespace RbsPayments
 			Log.Trace("PaymentList page:`{0}'", page);
 			
 			List<string> result = new List<string>();
-			/*
+			
 			try
 			{
 				HtmlDocument doc = new HtmlDocument();
 				doc.LoadHtml(page);
-				string xpath = "html/body/table/tr/td/table/tr/td/font/strong";
-				HtmlNode node = doc.DocumentNode.SelectSingleNode(xpath);
-				if(node == null)
-					throw new FormatException("error text not found");
-				text = node.InnerText;
-				if(string.IsNullOrEmpty(text))
-					throw new FormatException("error text not found");
+				string xpath = "html/body/table//tr/td/table/tr/td/table/tr/td/table//tr/td/a";
+				HtmlNodeCollection nodes = doc.DocumentNode.SelectNodes(xpath);
+				if(nodes == null)
+					throw new FormatException("table not found");
+				
+				int N = nodes.Count - 1;
+				for(int i = 1; i<N; i++)
+				{
+					string url = nodes[i].GetAttributeValue("href", null);
+					if(url == null)
+						continue;
+					
+					string mdorder = MdOrderInUrl(url);
+					result.Add(mdorder);
+				}
 			}
 			catch (Exception err)
 			{
@@ -72,8 +80,23 @@ namespace RbsPayments
 				excepted(new FormatException("can not parse page", err));
 				return;
 			}
-			*/
+			
 			completed(result);
+		}
+		
+		private static string _mdorderTag = "mdorder=";
+		
+		private static string MdOrderInUrl(string url)
+		{
+			int b = url.IndexOf(_mdorderTag);
+			if(b == -1)
+				return null;
+			b += _mdorderTag.Length;
+			int e = url.IndexOf("&", b);
+			if(e == -1)
+				return null;
+			
+			return url.Substring(b, e-b);
 		}
 	}
 }
