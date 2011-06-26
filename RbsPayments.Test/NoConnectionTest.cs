@@ -8,6 +8,7 @@ using RbsPayments.Test;
 namespace RbsPayments
 {
 	[TestFixture]
+	[Category("NoConnection")]
 	public class NoConnectionTests
 	{
 		RbsTranslator _tr;

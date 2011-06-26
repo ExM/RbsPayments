@@ -46,24 +46,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="RbsPaymentState.cs" />
-    <Compile Include="RbsResponse.cs" />
-    <Compile Include="RbsTranslator.cs" />
     <Compile Include="SyncConnector.cs" />
     <Compile Include="UriParameters.cs" />
     <Compile Include="RbsConnectionConfig.cs" />
-    <Compile Include="PaymentInfo.cs" />
     <Compile Include="AsyncConnector.cs" />
-    <Compile Include="RegisterResult.cs" />
-    <Compile Include="ResultCode.cs" />
     <Compile Include="PostParameters.cs" />
-    <Compile Include="ICommandConnector.cs" />
     <Compile Include="Site\RbsSiteResponse.cs" />
     <Compile Include="Site\RbsSite.cs" />
     <Compile Include="Site\ISiteConnector.cs" />
+    <Compile Include="Command\ICommandConnector.cs" />
+    <Compile Include="Command\ResultCode.cs" />
+    <Compile Include="Command\RegisterResult.cs" />
+    <Compile Include="Command\RbsResponse.cs" />
+    <Compile Include="Command\RbsTranslator.cs" />
+    <Compile Include="Command\RbsPaymentState.cs" />
+    <Compile Include="Command\PaymentInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Site\" />
+    <Folder Include="Command\" />
   </ItemGroup>
 </Project>

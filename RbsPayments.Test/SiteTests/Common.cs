@@ -8,8 +8,7 @@ using RbsPayments.Test;
 
 namespace RbsPayments.SiteTests
 {
-	[TestFixture]
-	[Category("required link to playground.paymentgate.ru")]
+	[Category("RbsSandbox")]
 	public class Common
 	{
 		RbsConnectionConfig _cfg;
@@ -23,37 +22,21 @@ namespace RbsPayments.SiteTests
 			_site = new RbsSite(conn);
 		}
 		
-		[Test]
-		public void Login()
+		public RbsSite Site
 		{
-			_site.Login(_cfg.User, _cfg.Password,
-				(result) =>
-				{
-					Assert.AreNotEqual(0, result.Count, "cookies expected");
-				},
-				(ex) => 
-				{
-					Assert.Fail("unexpected exception: {0}", ex);
-				});
+			get{
+				return _site;
+			}
 		}
 		
-		[Test]
-		public void Login_WrongPass()
+		public RbsConnectionConfig Cfg
 		{
-			_site.Login(_cfg.User, "???",
-				(result) =>
-				{
-					Assert.Fail("missed error");
-				},
-				(ex) => 
-				{
-					Assert.IsInstanceOf<InvalidOperationException>(ex);
-					Assert.AreEqual(ExpectedMessage.ErrorAuth, ex.Message);
-				});
+			get{
+				return _cfg;
+			}
 		}
 		
-		[Test]
-		public void FindByOrderNumber_List()
+		public CookieCollection Login()
 		{
 			CookieCollection cookies = null;
 			_site.Login(_cfg.User, _cfg.Password,
@@ -66,20 +49,8 @@ namespace RbsPayments.SiteTests
 					Assert.Fail("unexpected exception: {0}", ex);
 				});
 			
-			cookies = new CookieCollection();
-			
-			_site.FindByOrderNumber(cookies, "923467625",
-				(result) =>
-				{
-					Assert.AreEqual(9, result.Count);
-				},
-				(ex) => 
-				{
-					Assert.Fail("unexpected exception: {0}", ex);
-				});
-			
+			return cookies;
 		}
-		
 	}
 }
 

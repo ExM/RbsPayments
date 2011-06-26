@@ -9,7 +9,7 @@ using RbsPayments.Test;
 namespace RbsPayments.ServerTests
 {
 	[TestFixture]
-	[Category("required link to playground.paymentgate.ru")]
+	[Category("RbsSandbox")]
 	public class Common
 	{
 		RbsTranslator _tr;

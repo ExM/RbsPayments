@@ -64,6 +64,8 @@
     <Compile Include="ParseResponseTests\ParseResponseTests.cs" />
     <Compile Include="SiteTests\Common.cs" />
     <Compile Include="ParseSitePageTests\ParseSitePageTests.cs" />
+    <Compile Include="SiteTests\FindByOrderNumber.cs" />
+    <Compile Include="SiteTests\Login.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

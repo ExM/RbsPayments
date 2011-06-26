@@ -36,28 +36,18 @@ namespace RbsPayments
 			NameValueCollection postParams = new NameValueCollection
 			{
 				{"f_orderNumber", orderNumber},
-				
-				//{"BANK_CC", ""},
-				//{"IP", ""},
-				//{"btnSubmit", "Âûïîëíèòü"},
-				//{"f_isFirst", "true"},
-				//{"f_maxAmount", ""},
-				//{"f_minAmount", ""},
-				//{"f_orderNumber", "123"},
-				//{"fromDate", ""},
-				{"from_day", "24"},
+
+				{"from_day", "01"}, // сервер требует указание интервала дат
 				{"from_hour", "00"},
 				{"from_min", "00"},
-				{"from_month", "06"},
-				{"from_year", "2008"},
-				//{"pan", ""},
-				//{"payment_state", "0"},
-				//{"tillDate", ""},
-				{"till_day", "24"},
+				{"from_month", "01"},
+				{"from_year", "1900"},
+
+				{"till_day", "30"},
 				{"till_hour", "23"},
 				{"till_min", "59"},
-				{"till_month", "06"},
-				{"till_year", "2011"}
+				{"till_month", "12"},
+				{"till_year", "9999"}
 			};
 			
 			_conn.Request("ReportMaker", cookies, null, postParams,

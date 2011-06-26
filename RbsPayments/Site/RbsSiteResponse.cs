@@ -52,6 +52,12 @@ namespace RbsPayments
 		{
 			Log.Trace("PaymentList page:`{0}'", page);
 			
+			if(string.IsNullOrEmpty(page))
+			{
+				excepted(new InvalidOperationException("not response, login required"));
+				return;
+			}
+			
 			List<string> result = new List<string>();
 			
 			try
