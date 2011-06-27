@@ -9,6 +9,22 @@ namespace RbsPayments
 	[TestFixture]
 	public class ParseSitePageTests
 	{
+
+		[Test]
+		public void Login_HttpsAuth()
+		{
+			string text = File.ReadAllText("SiteResponse/HttpsAuth.html");
+			
+			RbsSiteResponse.Login(text, 
+			() =>
+			{
+			},
+			(ex) => 
+			{
+				Assert.Fail("unexpected exception: {0}", ex);
+			});
+		}
+
 		[Test]
 		public void Login_ErrorAuth()
 		{

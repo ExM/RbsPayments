@@ -1,0 +1,441 @@
+
+
+
+
+
+<html>
+<head>
+	<title>Runet Business Systems: надежная система электронных платежей</title>
+	<META content="text/html;charset=windows-1251" http-equiv="Content-Type">
+	<link type="text/css" rel="stylesheet" href="/bpcservlet/BPC/css/paymentgate.css" media="screen">
+<script>
+	function setLighter(el) { el.bgColor = "#E9E9E9"; }
+	function unSetLighter(el) { el.bgColor = "#FFFFFF"; }
+	var stylePosition = 1;
+	function setStyle() {
+		var x = new String(Math.random()).substr(2, 1);
+		if (x == 0) { x = 1; } else if (x > 5) { x = 5; }
+		stylePosition = x;
+	}
+	function doLogout() {
+		window.location.href = "/bpcservlet/BPC/index.jsp?logout=1";
+	}
+	function doStat() {
+		window.location.href = "/bpcservlet/BPC/Merchant.jsp";
+	}
+	function doFraud() {
+		window.location.href = "/bpcservlet/BPC/fraud2/tabs.jsp";
+	}
+	function OpenCertDetails() {
+		thewindow = window.open('https://www.thawte.com/cgi/server/certdetails.exe?code=RUOOOR13-2', 'anew', config = 'height=400,width=450,toolbar=no,menubar=no,scrollbars=yes,resizable=no,location=no,directories=no,status=yes');
+	}
+</script>
+</head>
+
+<body>
+<script>	setStyle();</script>
+<table border="0" cellspacing="0" cellpadding="0" align="left">
+<tr>
+<td>
+<!-- TOP -->
+
+<table border="0" cellspacing="3" cellpadding="0" align="left" width="100%">
+
+
+<tr>
+<td colspan="3">
+
+
+<a class="menu" href="/bpcservlet/BPC/index.jsp">Главная</a> |
+<a class="menu" href="/bpcservlet/BPC/News.jsp">Новости</a> |
+<a class="menu" href="/bpcservlet/BPC/System.jsp">О системе</a> |
+<a class="menu" href="/bpcservlet/BPC/Connection.jsp"><b>[Подключение]</b></a> |
+<a class="menu" href="/bpcservlet/BPC/Registration.jsp">Регистрация</a> |
+<a class="menu" href="/bpcservlet/BPC/Docs.jsp">Документы</a> |
+<a class="menu" href="/bpcservlet/BPC/Fraude.jsp">Вопросы безопасности</a> 
+
+
+</td>
+</tr>
+
+
+<tr><td colspan="3" bgcolor="#D8D8D8" class="merchantLogin"><img src="/bpcservlet/BPC/img/1x1.gif" alt="" width="1" height="1" border="0"></td></tr>
+
+<tr>
+<td colspan="3" height="20px"  bgcolor="#D8D8D8" class="right">&nbsp;&nbsp;&nbsp;Личный кабинет: <b>merchanttest</b>&nbsp;&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<form name="ShopInfo" method="post" action="/bpcservlet/MerchantServlet">
+
+
+<td>
+<script>
+	document.write("<img src='/bpcservlet/BPC/img/smallLogo" + stylePosition + ".jpg' alt='' width='200' height='40' border='0'><br>");
+</script>
+</td>
+<td colspan="2" bgcolor="#D8D8D8" class="right" height="20px" width="100%">
+<table>
+<tr>
+<td width="99%" class="right"><input class="button" type="button" value="Антифродовый фильтр" onclick="doFraud()"></td>
+<td><input class="button" type="button" value="Статистика платежей" onclick="doStat()"></td>
+<td><input class="button" type="button" value="Выйти" onclick="doLogout()"></td>
+</tr>
+</table>
+</td>
+
+</form>
+</tr>
+<td bgcolor="#D8D8D8" colspan="3"><img src="/bpcservlet/BPC/img/1x1.gif" alt="" width="1" height="1" border="0"></td>
+</table>
+
+<!-- TOP END-->
+</td><tr>
+<tr><td>
+<table border="0" cellspacing="3" cellpadding="0" width="100%">
+<tr><td>
+<!-- MIDDLE -->
+
+
+
+
+
+
+<SCRIPT LANGUAGE="JavaScript"><!--	//
+	function summaryView() {
+		document.forms[0].action = "/bpcservlet/BPC/Summary.jsp";
+		setDate();
+		document.forms[0].submit();
+	}
+            
+
+//--></script>
+
+
+
+<form id="main_form" name="main_form" method="post" action="/bpcservlet/ReportMaker"">
+<INPUT TYPE=HIDDEN NAME="f_isFirst" VALUE="true">
+		
+				<table align="center">
+				<tr><td bgcolor="#E8E8E8">
+
+<table width="100%" border="0" cellspacing="1" cellpadding="3">
+
+<tr> 
+<td colspan="2" class="center" bgcolor="#FFFFFF">
+	<table cellpadding="10">
+	<tr><td>Укажите параметры фильтра, по которому вы хотите получить отчет: </td></tr>
+	</table>
+</td>
+</tr>
+
+
+
+<tr>
+<td class="right" bgcolor="#FFFFFF">
+<b>Номер заказа<b>
+</td>
+<td bgcolor="#FFFFFF">
+<INPUT class="text" TYPE="TEXT" NAME="f_orderNumber" value="">
+</td>
+</tr>
+
+<tr>
+<td class="right" bgcolor="#FFFFFF">
+<b>Страна банка<b>
+</td>
+<td bgcolor="#FFFFFF">
+<INPUT class="text" TYPE="TEXT" NAME="BANK_CC" value="">&nbsp;(например RU) Внимание! Данные о стране банка доступны начиная с 09.03.13 
+</td>
+</tr>
+<tr>
+<td class="right" bgcolor="#FFFFFF">
+<b>состояние<b>
+</td>
+<td bgcolor="#FFFFFF">
+    <select name="payment_state">
+        <option value='0'>-
+        <option value='1'>approved
+        <option value='2'>deposited
+        <option value='4'>declined
+        <option value='5'>void
+
+        <option value='8'>chargeback
+    </select>
+</td>
+</tr>
+
+<tr>
+<td class="right" bgcolor="#FFFFFF">
+<b>PAN<b>
+</td>
+<td bgcolor="#FFFFFF">
+<INPUT class="text" TYPE="TEXT" NAME="pan" value=""> (Например 4123456789012345 или 412345%1234, где % служит свободным символом)
+</td>
+</tr>
+
+<tr>
+<td class="right" bgcolor="#FFFFFF">
+<b>IP адрес<b>
+</td>
+<td bgcolor="#FFFFFF">
+<INPUT class="text" TYPE="TEXT" NAME="IP" value=""> (Например 123.112.223.%, где % служит свободным символом)
+</td>
+</tr>
+
+<tr>
+<td class="right" bgcolor="#FFFFFF">
+<b>Cумма заказа больше</b>
+</td>
+<td bgcolor="#FFFFFF">
+<INPUT class="text" TYPE="TEXT" NAME="f_minAmount"  value=""> (Например 5.00)
+</td>
+</tr>
+
+
+<tr>
+<td class="right" bgcolor="#FFFFFF">
+<b>Cумма заказа меньше</b>
+</td>
+<td bgcolor="#FFFFFF">
+<INPUT class="text" TYPE="TEXT" NAME="f_maxAmount"  value=""> (Например 100.00)
+</td>
+</tr>
+
+<tr> 
+<td class="right" bgcolor="#FFFFFF">
+<b>Дата начала периода</b>
+</td>
+<td bgcolor="#FFFFFF"> 
+<SELECT NAME="from_year">
+<OPTION VALUE="2001">2001<OPTION VALUE="2002">2002<OPTION VALUE="2003">2003<OPTION VALUE="2004">2004<OPTION VALUE="2005">2005<OPTION VALUE="2006">2006<OPTION VALUE="2007">2007<OPTION VALUE="2008" selected>2008<OPTION VALUE="2009">2009<OPTION VALUE="2010">2010<OPTION VALUE="2011">2011
+</SELECT>
+&nbsp; / &nbsp; 
+<SELECT NAME="from_month">
+<OPTION VALUE="01">01<OPTION VALUE="02">02<OPTION VALUE="03">03<OPTION VALUE="04">04<OPTION VALUE="05">05<OPTION VALUE="06" selected>06<OPTION VALUE="07">07<OPTION VALUE="08">08<OPTION VALUE="09">09<OPTION VALUE="10">10<OPTION VALUE="11">11<OPTION VALUE="12">12
+</SELECT> 
+&nbsp; / &nbsp; 
+<SELECT NAME="from_day">
+<OPTION VALUE="01">01<OPTION VALUE="02">02<OPTION VALUE="03">03<OPTION VALUE="04">04<OPTION VALUE="05">05<OPTION VALUE="06">06<OPTION VALUE="07">07<OPTION VALUE="08">08<OPTION VALUE="09">09<OPTION VALUE="10">10<OPTION VALUE="11">11<OPTION VALUE="12">12<OPTION VALUE="13">13<OPTION VALUE="14">14<OPTION VALUE="15">15<OPTION VALUE="16">16<OPTION VALUE="17">17<OPTION VALUE="18">18<OPTION VALUE="19">19<OPTION VALUE="20">20<OPTION VALUE="21">21<OPTION VALUE="22">22<OPTION VALUE="23">23<OPTION VALUE="24">24<OPTION VALUE="25">25<OPTION VALUE="26">26<OPTION VALUE="27" selected>27<OPTION VALUE="28">28<OPTION VALUE="29">29<OPTION VALUE="30">30<OPTION VALUE="31">31
+</SELECT> 
+&nbsp;&nbsp;&nbsp; 
+<SELECT NAME="from_hour">
+<OPTION VALUE="00"  selected>00<OPTION VALUE="01" >01<OPTION VALUE="02" >02<OPTION VALUE="03" >03<OPTION VALUE="04" >04<OPTION VALUE="05" >05<OPTION VALUE="06" >06<OPTION VALUE="07" >07<OPTION VALUE="08" >08<OPTION VALUE="09" >09<OPTION VALUE="10" >10<OPTION VALUE="11" >11<OPTION VALUE="12" >12<OPTION VALUE="13" >13<OPTION VALUE="14" >14<OPTION VALUE="15" >15<OPTION VALUE="16" >16<OPTION VALUE="17" >17<OPTION VALUE="18" >18<OPTION VALUE="19" >19<OPTION VALUE="20" >20<OPTION VALUE="21" >21<OPTION VALUE="22" >22<OPTION VALUE="23" >23
+</SELECT> 
+&nbsp; : &nbsp; 
+<SELECT NAME="from_min">
+<OPTION VALUE="00"  selected>00<OPTION VALUE="01" >01<OPTION VALUE="02" >02<OPTION VALUE="03" >03<OPTION VALUE="04" >04<OPTION VALUE="05" >05<OPTION VALUE="06" >06<OPTION VALUE="07" >07<OPTION VALUE="08" >08<OPTION VALUE="09" >09<OPTION VALUE="10" >10<OPTION VALUE="11" >11<OPTION VALUE="12" >12<OPTION VALUE="13" >13<OPTION VALUE="14" >14<OPTION VALUE="15" >15<OPTION VALUE="16" >16<OPTION VALUE="17" >17<OPTION VALUE="18" >18<OPTION VALUE="19" >19<OPTION VALUE="20" >20<OPTION VALUE="21" >21<OPTION VALUE="22" >22<OPTION VALUE="23" >23<OPTION VALUE="24" >24<OPTION VALUE="25" >25<OPTION VALUE="26" >26<OPTION VALUE="27" >27<OPTION VALUE="28" >28<OPTION VALUE="29" >29<OPTION VALUE="30" >30<OPTION VALUE="31" >31<OPTION VALUE="32" >32<OPTION VALUE="33" >33<OPTION VALUE="34" >34<OPTION VALUE="35" >35<OPTION VALUE="36" >36<OPTION VALUE="37" >37<OPTION VALUE="38" >38<OPTION VALUE="39" >39<OPTION VALUE="40" >40<OPTION VALUE="41" >41<OPTION VALUE="42" >42<OPTION VALUE="43" >43<OPTION VALUE="44" >44<OPTION VALUE="45" >45<OPTION VALUE="46" >46<OPTION VALUE="47" >47<OPTION VALUE="48" >48<OPTION VALUE="49" >49<OPTION VALUE="50" >50<OPTION VALUE="51" >51<OPTION VALUE="52" >52<OPTION VALUE="53" >53<OPTION VALUE="54" >54<OPTION VALUE="55" >55<OPTION VALUE="56" >56<OPTION VALUE="57" >57<OPTION VALUE="58" >58<OPTION VALUE="59" >59
+</SELECT> 
+</td>
+</tr>
+
+<tr> 
+<td class="right" bgcolor="#FFFFFF">
+<b>Дата окончания периода</b>
+</td>
+<td bgcolor="#FFFFFF"> 
+<SELECT NAME="till_year">
+<OPTION VALUE="2001">2001<OPTION VALUE="2002">2002<OPTION VALUE="2003">2003<OPTION VALUE="2004">2004<OPTION VALUE="2005">2005<OPTION VALUE="2006">2006<OPTION VALUE="2007">2007<OPTION VALUE="2008">2008<OPTION VALUE="2009">2009<OPTION VALUE="2010">2010<OPTION VALUE="2011" selected>2011<OPTION VALUE="2012">2012<OPTION VALUE="2013">2013<OPTION VALUE="2014">2014<OPTION VALUE="2015">2015<OPTION VALUE="2016">2016<OPTION VALUE="2017">2017<OPTION VALUE="2018">2018<OPTION VALUE="2019">2019
+</SELECT>
+&nbsp; / &nbsp; 
+<SELECT NAME="till_month">
+<OPTION VALUE="01">01<OPTION VALUE="02">02<OPTION VALUE="03">03<OPTION VALUE="04">04<OPTION VALUE="05">05<OPTION VALUE="06" selected>06<OPTION VALUE="07">07<OPTION VALUE="08">08<OPTION VALUE="09">09<OPTION VALUE="10">10<OPTION VALUE="11">11<OPTION VALUE="12">12
+</SELECT> 
+&nbsp; / &nbsp; 
+<SELECT NAME="till_day">
+<OPTION VALUE="01">01<OPTION VALUE="02">02<OPTION VALUE="03">03<OPTION VALUE="04">04<OPTION VALUE="05">05<OPTION VALUE="06">06<OPTION VALUE="07">07<OPTION VALUE="08">08<OPTION VALUE="09">09<OPTION VALUE="10">10<OPTION VALUE="11">11<OPTION VALUE="12">12<OPTION VALUE="13">13<OPTION VALUE="14">14<OPTION VALUE="15">15<OPTION VALUE="16">16<OPTION VALUE="17">17<OPTION VALUE="18">18<OPTION VALUE="19">19<OPTION VALUE="20">20<OPTION VALUE="21">21<OPTION VALUE="22">22<OPTION VALUE="23">23<OPTION VALUE="24">24<OPTION VALUE="25">25<OPTION VALUE="26">26<OPTION VALUE="27" selected>27<OPTION VALUE="28">28<OPTION VALUE="29">29<OPTION VALUE="30">30<OPTION VALUE="31">31
+</SELECT> 
+&nbsp;  &nbsp; 
+<SELECT NAME="till_hour">
+<OPTION VALUE="00" >00<OPTION VALUE="01" >01<OPTION VALUE="02" >02<OPTION VALUE="03" >03<OPTION VALUE="04" >04<OPTION VALUE="05" >05<OPTION VALUE="06" >06<OPTION VALUE="07" >07<OPTION VALUE="08" >08<OPTION VALUE="09" >09<OPTION VALUE="10" >10<OPTION VALUE="11" >11<OPTION VALUE="12" >12<OPTION VALUE="13" >13<OPTION VALUE="14" >14<OPTION VALUE="15" >15<OPTION VALUE="16" >16<OPTION VALUE="17" >17<OPTION VALUE="18" >18<OPTION VALUE="19" >19<OPTION VALUE="20" >20<OPTION VALUE="21" >21<OPTION VALUE="22" >22<OPTION VALUE="23"  selected>23
+</SELECT> 
+&nbsp; : &nbsp; 
+<SELECT NAME="till_min">
+<OPTION VALUE="00" >00<OPTION VALUE="01" >01<OPTION VALUE="02" >02<OPTION VALUE="03" >03<OPTION VALUE="04" >04<OPTION VALUE="05" >05<OPTION VALUE="06" >06<OPTION VALUE="07" >07<OPTION VALUE="08" >08<OPTION VALUE="09" >09<OPTION VALUE="10" >10<OPTION VALUE="11" >11<OPTION VALUE="12" >12<OPTION VALUE="13" >13<OPTION VALUE="14" >14<OPTION VALUE="15" >15<OPTION VALUE="16" >16<OPTION VALUE="17" >17<OPTION VALUE="18" >18<OPTION VALUE="19" >19<OPTION VALUE="20" >20<OPTION VALUE="21" >21<OPTION VALUE="22" >22<OPTION VALUE="23" >23<OPTION VALUE="24" >24<OPTION VALUE="25" >25<OPTION VALUE="26" >26<OPTION VALUE="27" >27<OPTION VALUE="28" >28<OPTION VALUE="29" >29<OPTION VALUE="30" >30<OPTION VALUE="31" >31<OPTION VALUE="32" >32<OPTION VALUE="33" >33<OPTION VALUE="34" >34<OPTION VALUE="35" >35<OPTION VALUE="36" >36<OPTION VALUE="37" >37<OPTION VALUE="38" >38<OPTION VALUE="39" >39<OPTION VALUE="40" >40<OPTION VALUE="41" >41<OPTION VALUE="42" >42<OPTION VALUE="43" >43<OPTION VALUE="44" >44<OPTION VALUE="45" >45<OPTION VALUE="46" >46<OPTION VALUE="47" >47<OPTION VALUE="48" >48<OPTION VALUE="49" >49<OPTION VALUE="50" >50<OPTION VALUE="51" >51<OPTION VALUE="52" >52<OPTION VALUE="53" >53<OPTION VALUE="54" >54<OPTION VALUE="55" >55<OPTION VALUE="56" >56<OPTION VALUE="57" >57<OPTION VALUE="58" >58<OPTION VALUE="59"  selected>59
+</SELECT> 
+</td>
+</tr>
+
+
+<tr> 
+<td colspan="2" class="center" bgcolor="#FFFFFF">
+<input type=HIDDEN name=fromDate>
+<input type=HIDDEN name=tillDate>
+	<table cellpadding="10">
+	<tr>
+            
+            <td><input class="button" type="submit" name="btnSubmit" value="Выполнить"></td> 
+            
+        </tr>
+	</table>
+</td>
+</tr>
+
+</table>
+			</td></tr>
+			</table>
+			
+</form>
+
+
+
+
+<form name="ReportToday" method="get" action="/bpcservlet/ReportMaker"">
+<INPUT TYPE=HIDDEN NAME="f_isFirst" VALUE="true">
+<INPUT TYPE=HIDDEN NAME="f_orderNumber" VALUE="">
+<INPUT TYPE=HIDDEN NAME="f_minAmount" VALUE="">
+<INPUT TYPE=HIDDEN NAME="f_maxAmount" VALUE="">
+ 
+<input type="hidden" name="from_year" value="2011">
+<input type="hidden" name="from_month" value="06">
+<input type="hidden" name="from_day" value="27">
+<input type="hidden" name="from_hour" value="00">
+<input type="hidden" name="from_min" value="00">
+
+<input type="hidden" name="till_year" value="2011">
+<input type="hidden" name="till_month" value="06">
+<input type="hidden" name="till_day" value="27">
+<input type="hidden" name="till_hour" value="23">
+<input type="hidden" name="till_min" value="59">
+
+<table align="center" width="100%">
+<tr><td bgcolor="#E8E8E8">
+
+<table width="100%" border="0" cellspacing="1" cellpadding="15">
+<tr>
+<td bgcolor="#FFFFFF" class="center">
+<input class="button" type="submit" value="Статистика за сегодня">
+</td>
+</td>
+
+<tr>
+<td bgcolor="#FFFFFF" class="center">
+<a href="https://playground.paymentgate.ru/bpcservlet/BPC/user_controller_login.jsp">
+    Страница дополнительной аутентификации.
+</a>
+<p>
+<a href="https://playground.paymentgate.ru/bpcservlet/BPC/summary_page.jsp">
+    Итоговый отчет.
+</a>
+
+<p>
+<a href="https://playground.paymentgate.ru/bpcservlet/BPC/bin_controller.jsp">
+    Список БИНов запрещенных к 3D-Secure.
+</a>
+
+
+
+
+
+
+
+</td>
+</td>
+</table>
+
+</td></tr>
+</table>
+
+</form>
+
+
+
+
+</tr></td>
+</table>
+<!-- menu -->
+
+<table border="0" cellspacing="3" cellpadding="0" width="794px">
+<tr><td colspan="8" bgcolor="#D8D8D8" class="merchantLogin"><img src="/bpcservlet/BPC/img/1x1.gif" alt="" width="1" height="1" border="0"></td></tr>
+
+<tr>
+<td onmouseover="setLighter(this)" onmouseout="unSetLighter(this)">
+<strong>&nbsp;О системе:</strong><br>
+<ul>
+<li><a class="menu" href="/bpcservlet/BPC/System.jsp">о системе</a></li>
+<li><a class="menu" href="/bpcservlet/BPC/Fraude.jsp">вопросы безопасности</a></li>
+</ul>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr><td class="center"><a href="javascript:OpenCertDetails()"><img src="/bpcservlet/BPC/img/thawte.gif" alt="" width="134" height="85" border="0"></td></tr>
+</table>
+</td>
+<td background="/bpcservlet/BPC/img/dot.gif"><img src="/bpcservlet/BPC/img/1x1.gif" alt="" width="2" height="1" border="0"></td>
+<td onmouseover="setLighter(this)" onmouseout="unSetLighter(this)">
+<strong>&nbsp;Для магазинов:</strong>
+<ul>
+<li><a target="_blank" class="menu" href="http://www.alfabank.ru/corporate/cards/internet-acquiring/">как организовать прием пластиковых карт в Вашем интернет - магазине</a></li>
+<li><a class="menu" href="/bpcservlet/BPC/Connection.jsp"><b>[подключение]</b></a></li>
+<ul>
+<li><a class="menu" href="/bpcservlet/BPC/Registration.jsp">регистрация</a></li>
+<li><a class="menu" href="/bpcservlet/BPC/testConnection.jsp">реквизиты тестового подключения</a></li>
+<li><a class="menu" href="/bpcservlet/BPC/documents/pravila_podklucheniya.htm">руководство по подключение</a></li>
+</ul>
+
+</li>
+</ul>
+</td>
+<td background="/bpcservlet/BPC/img/dot.gif"><img src="/bpcservlet/BPC/img/1x1.gif" alt="" width="2" height="1" border="0"></td>
+<td onmouseover="setLighter(this)" onmouseout="unSetLighter(this)">
+<strong>&nbsp;Документы:</strong>
+<ul>
+<li><a class="menu" href="/bpcservlet/BPC/Pravo.jsp">правовая основа</a></li>
+<li><a class="menu" href="/bpcservlet/BPC/Struktura.jsp">инфраструктура платежей</a></li>
+<li><a class="menu" href="/bpcservlet/BPC/DS.jsp">Mеханизм дополнительной аутентификации Интернет - магазинов на основе цифровых сертификатов при использовании "усеченного" SET </a></li>
+<li><a class="menu" href="/bpcservlet/BPC/Protocols.jsp">Протоколы</a>
+<ul>
+<li><a class="menu" href="/bpcservlet/BPC/ThreeDSecure.jsp">Visa: 3D-Secure</a></li>
+<li><a class="menu" href="/bpcservlet/BPC/UCAF-SecureCode.jsp">MasterCard: UCAF/SecureCode</a></li>
+<li><a class="menu" href="/bpcservlet/BPC/SET.jsp">SET и MIA SET</a></li>
+</ul>
+</li>
+</ul>
+</td>
+<td background="/bpcservelt/BPC/img/dot.gif"><img src="/bpcservlet/BPC/img/1x1.gif" alt="" width="2" height="1" border="0"></td>
+<td>
+<strong>&nbsp;Протоколы:</strong>
+	<table border="0" cellspacing="10" cellpadding="0">
+	<tr><td><a class="menu" href="/bpcservlet/BPC/ThreeDSecure.jsp"><img src="/bpcservlet/BPC/img/visa.gif" border="0"></a></td></tr>
+	<tr><td><a class="menu" href="/bpcservlet/BPC/UCAF-SecureCode.jsp"><img src="/bpcservlet/BPC/img/mastercard.gif" border="0"></a></td></tr>
+	<tr><td><a class="menu" href="/bpcservlet/BPC/SET.jsp"><img src="/bpcservlet/BPC/img/set.gif" border="0"></a></td></tr>
+	</table>
+</td>
+</tr>
+</table>
+<!-- menu end -->
+
+</td></tr>
+<tr><td>
+<!-- BOTTOM -->
+<table border="0" cellspacing="3" cellpadding="0" width="794px">
+<tr>
+	<td bgcolor="#D8D8D8" width="20"><img src="/bpcservlet/BPC/img/1x1.gif" alt="" width="1" height="1" border="0"></td>
+	<td>
+	<a target="_blank" class="menu" href="http://www.alfabank.ru/corporate/cards/internet-acquiring/">
+	<script>
+		document.write("<img src='/bpcservlet/BPC/img/clients" + stylePosition + ".jpg' alt='' width='127' height='60' border='0'><br>");
+	</script>
+	</a>
+	</td>
+	<td bgcolor="#D8D8D8" width="571"><img src="/bpcservlet/BPC/img/1x1.gif" alt="" width="1" height="1" border="0"></td>
+	<script>
+		document.write("<td background='/bpcservlet/BPC/img/bg" + stylePosition + ".jpg' class='contacts'>");
+	</script>
+	101959<br>
+	<nobr>Россия, Москва,ул.Земляной Вал, д.50А/8, стр.2</nobr><br>
+	<nobr><b>тел.:</b>780-3165,факс: 780-3167</nobr><br>
+	<nobr><b>e-mail:</b> <a href="/bpcservlet/BPC/mailto:info@paymentgate.ru"><font color="#FFFFFF">info@paymentgate.ru</font></a><nobr>
+	</td>
+	<script>
+		document.write("<td valign='bottom' class='corner' background='/bpcservlet/BPC/img/bg" + stylePosition + ".jpg'>");
+		document.write("<img src='/bpcservlet/BPC/img/corner" + stylePosition + ".jpg' alt='' width='18' height='30' border='0'><br>");
+	</script>
+	</td>
+</tr>	
+</table>
+
+<!-- BOTTOM END-->
+</td><tr>
+</table>
+</body>
+</html>
+

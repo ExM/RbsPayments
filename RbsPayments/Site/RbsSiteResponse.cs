@@ -23,20 +23,28 @@ namespace RbsPayments
 				completed();
 				return;
 			}
-			
-			string text;
-			
+
 			try
 			{
 				HtmlDocument doc = new HtmlDocument();
 				doc.LoadHtml(page);
-				string xpath = "html/body/table/tr/td/table/tr/td/font/strong";
-				HtmlNode node = doc.DocumentNode.SelectSingleNode(xpath);
-				if(node == null)
-					throw new FormatException("error text not found");
-				text = node.InnerText;
-				if(string.IsNullOrEmpty(text))
-					throw new FormatException("error text not found");
+				if (!CheckLogoutAction(doc))
+				{
+					string xpath = "html/body/table/tr/td/table/tr/td/font/strong";
+					HtmlNode node = doc.DocumentNode.SelectSingleNode(xpath);
+					if (node == null)
+						throw new FormatException("error text not found");
+					string errText = node.InnerText;
+					if (string.IsNullOrEmpty(errText))
+						throw new FormatException("error text not found");
+					else
+						throw new InvalidOperationException(errText);
+				}
+			}
+			catch (InvalidOperationException err)
+			{
+				excepted(err);
+				return;
 			}
 			catch (Exception err)
 			{
@@ -44,8 +52,8 @@ namespace RbsPayments
 				excepted(new FormatException("can not parse page", err));
 				return;
 			}
-			
-			excepted(new InvalidOperationException(text));
+
+			completed();
 		}
 		
 		public static void PaymentList(string page, Action<IList<string>> completed, Action<Exception> excepted)
@@ -88,6 +96,16 @@ namespace RbsPayments
 			}
 			
 			completed(result);
+		}
+
+		private static bool CheckLogoutAction(HtmlDocument doc)
+		{
+			string xpath = "html/body/table/tr/td/table/tr[4]/td[2]/table/tr/td[3]/input[@onclick='doLogout()']";
+			HtmlNode node = doc.DocumentNode.SelectSingleNode(xpath);
+			if(node != null)
+				Log.Warn("node.InnerHtml `{0}'", node.InnerHtml);
+			
+			return node != null;
 		}
 		
 		private static string _mdorderTag = "mdorder=";
