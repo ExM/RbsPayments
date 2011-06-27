@@ -30,6 +30,25 @@ namespace RbsPayments.CommandTests
 		}
 		
 		[Test]
+		public void NotEnoughMoney()
+		{
+			string orderNum = CreateOrderNumber();
+			Sandbox.Block(orderNum, 100m, TestCard.Bad116,
+				(result) =>
+				{
+					Assert.IsFalse(result.Required3DSecure);
+					Assert.Greater(result.MdOrder.Length, 10);
+					Assert.IsTrue(result.Code.NotSuccessfulTransaction, "unexpected result code: {0}", result.Code);
+					Assert.AreEqual(RbsPaymentState.Declined, result.State);
+					Assert.AreEqual(116, result.ActionCode);
+				},
+				(ex) => 
+				{
+					Assert.Fail("unexpected exception: {0}", ex);
+				});
+		}
+		
+		[Test]
 		public void IncorrectFormat()
 		{
 			Sandbox.Block("ABC", 100m, TestCard.Good,

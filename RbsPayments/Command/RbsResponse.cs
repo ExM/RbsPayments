@@ -6,6 +6,7 @@ using System.Web;
 using System.Xml.Linq;
 using NLog;
 using System.Globalization;
+using System.Xml;
 
 namespace RbsPayments
 {
@@ -22,6 +23,7 @@ namespace RbsPayments
 			string stateText = null;
 			string acsUrl = null;
 			string paReq = null;
+			string actCodeText = null;
 			
 			try
 			{
@@ -32,31 +34,32 @@ namespace RbsPayments
 						continue;
 
 					string key = HttpUtility.UrlDecode(pair.Substring(0, d));
-					string encVal = pair.Substring(d + 1, pair.Length - d - 1);
-					string val = HttpUtility.UrlDecode(encVal);
+					string val = pair.Substring(d + 1, pair.Length - d - 1);
 					if (key == "MDORDER")
 						mdorder = val.Trim();
 					else if (key == "ANSWER")
-						answer = val;
+						answer = HttpUtility.UrlDecode(val);
+					else if (key == "ACTION_CODE")
+						actCodeText = val.Trim();
 					else if (key == "STATE")
 						stateText = val.Trim();
 					else if (key == "ACSUrl")
-						acsUrl = val.Trim();
+						acsUrl = HttpUtility.UrlDecode(val).Trim();
 					else if (key == "PaReq")
-						paReq = encVal;
+						paReq = val;
 				}
 			}
 			catch (Exception err)
 			{
 				Log.Warn("unexpected keys in `{0}'", text);
-				excepted(new InvalidOperationException("can not parse response", err));
+				excepted(new FormatException("can not parse response", err));
 				return;
 			}
 			
 			if (!string.IsNullOrEmpty(answer) &&
 				!string.IsNullOrEmpty(stateText) &&
 				!string.IsNullOrEmpty(mdorder))
-				No3DSequre(mdorder, answer, stateText, completed, excepted);
+				No3DSequre(mdorder, answer, stateText, actCodeText, completed, excepted);
 			else if(!string.IsNullOrEmpty(acsUrl) &&
 				!string.IsNullOrEmpty(paReq) &&
 				!string.IsNullOrEmpty(mdorder))
@@ -65,18 +68,29 @@ namespace RbsPayments
 				CheckResultCode(text, completed, excepted);
 		}
 		
-		private static void CheckResultCode(string text, 
+		private static void CheckResultCode(string text,
 			Action<RegisterResult> completed, Action<Exception> excepted)
 		{
 			ResultCode rCode;
-			
 			try
 			{
 				XDocument doc = XDocument.Parse(text);
 				rCode = ExtractResultInfo(doc.Root);
 			}
-			catch (Exception)
+			catch (XmlException)
 			{
+				excepted(new InvalidOperationException(text));
+				return;
+			}
+			catch(FormatException err)
+			{
+				Log.Warn("unexpected xml: `{0}'", text);
+				excepted(new FormatException("unexpected xml", err));
+				return;
+			}
+			catch(Exception)
+			{
+				Log.Warn("unexpected xml: `{0}'", text);
 				excepted(new InvalidOperationException(text));
 				return;
 			}
@@ -87,11 +101,12 @@ namespace RbsPayments
 				completed(new RegisterResult(rCode));
 		}
 
-		private static void No3DSequre(string mdorder, string answer, string stateText,
+		private static void No3DSequre(string mdorder, string answer, string stateText, string actCodeText,
 			Action<RegisterResult> completed, Action<Exception> excepted)
 		{
 			ResultCode rInfo;
 			RbsPaymentState state;
+			int actionCode = 0;
 			
 			try
 			{
@@ -102,6 +117,8 @@ namespace RbsPayments
 					state != RbsPaymentState.Declined &&
 					state != RbsPaymentState.Deposited)
 					throw new InvalidOperationException(string.Format("unexpected payment state `{0}'", state));
+				if(!string.IsNullOrEmpty(actCodeText))
+					actionCode = int.Parse(actCodeText);
 			}
 			catch (Exception err)
 			{
@@ -109,7 +126,7 @@ namespace RbsPayments
 				return;
 			}
 			
-			completed(new RegisterResult(mdorder, rInfo, state));
+			completed(new RegisterResult(mdorder, rInfo, state, actionCode));
 		}
 		
 		public static void QueryOrders(string text, Action<ResultCode, PaymentInfo, RbsPaymentState> completed, Action<Exception> excepted)

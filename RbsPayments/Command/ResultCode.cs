@@ -28,6 +28,17 @@ namespace RbsPayments
 		}
 		
 		/// <summary>
+		/// неуспешная транзакция. см. подробности в ACTION_CODE
+		/// </summary>
+		public bool NotSuccessfulTransaction
+		{
+			get
+			{
+				return PrimaryRC == 34 && SecondaryRC == 1014;
+			}
+		}
+		
+		/// <summary>
 		/// Заказ с данным MDORDER не найден
 		/// </summary>
 		public bool MdOrderNotFound

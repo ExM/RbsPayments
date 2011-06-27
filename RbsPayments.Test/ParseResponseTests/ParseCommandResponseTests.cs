@@ -30,6 +30,26 @@ namespace RbsPayments
 			});
 		}
 		
+		
+		[Test]
+		public void Merchant2Rbs_Bad116()
+		{
+			string text = "MDORDER=11181269-6384-65-104-123-64-90120-84-4516-42_p1&ANSWER=%3C%3Fxml+version%3D%221.0%22+encoding%3D%22UTF-8%22%3F%3E%0A%3CPSApiResult+primaryRC%3D%2234%22+secondaryRC%3D%221014%22%2F%3E&STATE=payment_declined&ACTION_CODE=116\r\n";
+			
+			RbsResponse.Merchant2Rbs(text, 
+			(result) =>
+			{
+				Assert.IsFalse(result.Required3DSecure);
+				Assert.IsTrue(result.Code.NotSuccessfulTransaction, "unexpected result code: {0}", result.Code);
+				Assert.AreEqual(RbsPaymentState.Declined, result.State);
+				Assert.AreEqual(116, result.ActionCode);
+			},
+			(ex) => 
+			{
+				Assert.Fail("unexpected exception: {0}", ex);
+			});
+		}
+		
 		[Test]
 		public void Merchant2Rbs_3Dsec()
 		{

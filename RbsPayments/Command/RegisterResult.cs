@@ -16,6 +16,10 @@ namespace RbsPayments
 		/// </summary>
 		public readonly ResultCode Code;
 		/// <summary>
+		/// Параметр более подробно описывает причину отклонения платежа
+		/// </summary>
+		public readonly int ActionCode;
+		/// <summary>
 		/// Состояние платежа
 		/// </summary>
 		public readonly RbsPaymentState State;
@@ -42,6 +46,7 @@ namespace RbsPayments
 		{
 			MdOrder = null;
 			Code = resCode;
+			ActionCode = 0;
 			State = RbsPaymentState.Unknown;
 			AcsUrl = null;
 			PaReq = null;
@@ -60,10 +65,14 @@ namespace RbsPayments
 		/// <param name='state'>
 		/// состояние платежа
 		/// </param>
-		public RegisterResult(string mdOrder, ResultCode resCode, RbsPaymentState state)
+		/// <param name='actionCode'>
+		/// Параметр более подробно описывает причину отклонения платежа
+		/// </param>
+		public RegisterResult(string mdOrder, ResultCode resCode, RbsPaymentState state, int actionCode)
 		{
 			MdOrder = mdOrder;
 			Code = resCode;
+			ActionCode = actionCode;
 			State = state;
 			AcsUrl = null;
 			PaReq = null;
@@ -86,6 +95,7 @@ namespace RbsPayments
 		{
 			MdOrder = mdOrder;
 			Code = new ResultCode(){PrimaryRC = 0, SecondaryRC = 0};
+			ActionCode = 0;
 			State = RbsPaymentState.Unknown;
 			AcsUrl = acsUrl;
 			PaReq = paReq;
