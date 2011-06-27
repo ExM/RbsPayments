@@ -79,7 +79,7 @@ namespace RbsPayments
 			byte[] postContent = PostParameters.Encode(postParams);
 			webReq.ContentLength = postContent.Length;
 			webReq.AllowAutoRedirect = false;
-			
+			webReq.ServicePoint.Expect100Continue = false;
 			webReq.CookieContainer = new CookieContainer();
 			
 			string respText;
@@ -135,10 +135,9 @@ namespace RbsPayments
 			byte[] postContent = PostParameters.Encode(postParams);
 			webReq.ContentLength = postContent.Length;
 			webReq.AllowAutoRedirect = false;
-			
+			webReq.ServicePoint.Expect100Continue = false;
 			webReq.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
-			webReq.Referer = "https://playground.paymentgate.ru/bpcservlet/MerchantServlet";
-			
+
 			CookieContainer cc = new CookieContainer();
 			foreach(Cookie cookie in inCookies)
 				cc.Add(cookie);
