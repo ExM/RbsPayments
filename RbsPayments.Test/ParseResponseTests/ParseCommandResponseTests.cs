@@ -6,7 +6,7 @@ using RbsPayments.Test;
 namespace RbsPayments
 {
 	[TestFixture]
-	public class ParseResponseTests
+	public class ParseCommandResponseTests
 	{
 		[Test]
 		public void Merchant2Rbs_Deposited()

@@ -13,7 +13,7 @@ namespace RbsPayments.Test
 	{
 		private static Logger Log = LogManager.GetCurrentClassLogger();
 
-		public static IAppSettings AppSettings;
+		private static IAppSettings _settings;
 
 		static Env()
 		{
@@ -25,9 +25,12 @@ namespace RbsPayments.Test
 			config.LoggingRules.Add(rule1);
 			LogManager.Configuration = config;
 
-			AppSettings = new FileSettings("RbsPayments.Test.cfg.xml");
+			_settings = new FileSettings("RbsPayments.Test.cfg.xml");
 
 			ServicePointManager.ServerCertificateValidationCallback = ValidateServerCertificate;
+			
+			
+			
 		}
 
 		public static bool ValidateServerCertificate(object sender,
@@ -37,6 +40,22 @@ namespace RbsPayments.Test
 			Log.Info("Validate server certificate for uri: {0}", ((HttpWebRequest)sender).RequestUri.ToString());
 			Log.Info("Server certificate:\r\n{0}", certificate.ToString(true));
 			return true;
+		}
+		
+		public static RbsConnectionConfig NoConn
+		{
+			get
+			{
+				return _settings.Load<RbsConnectionConfig>(EmptyResult.Throw, "NotConn");
+			}
+		}
+		
+		public static RbsConnectionConfig Sandbox
+		{
+			get
+			{
+				return _settings.Load<RbsConnectionConfig>(EmptyResult.Throw, "Sandbox");
+			}
 		}
 	}
 }

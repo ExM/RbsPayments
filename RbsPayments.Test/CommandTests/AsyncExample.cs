@@ -7,10 +7,9 @@ using System.Threading;
 using System.Net;
 using RbsPayments.Test;
 
-namespace RbsPayments.ServerTests
+namespace RbsPayments.CommandTests
 {
 	[TestFixture]
-	[Category("RbsSandbox")]
 	public class AsyncExample
 	{
 		RbsTranslator _tr;
@@ -18,7 +17,7 @@ namespace RbsPayments.ServerTests
 		[TestFixtureSetUp]
 		public void SetUp()
 		{
-			RbsConnectionConfig cfg = Env.AppSettings.Load<RbsConnectionConfig>(EmptyResult.Throw, "RbsSandbox");
+			RbsConnectionConfig cfg = Env.Sandbox;
 			AsyncConnector conn = new AsyncConnector(new Uri(cfg.Uri), TimeSpan.FromSeconds(10));
 			_tr = new RbsTranslator(conn, cfg);
 		}

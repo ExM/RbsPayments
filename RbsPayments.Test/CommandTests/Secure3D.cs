@@ -5,10 +5,9 @@ using RbsPayments.Example;
 using Configuration;
 using RbsPayments.Test;
 
-namespace RbsPayments.ServerTests
+namespace RbsPayments.CommandTests
 {
 	[TestFixture]
-	[Category("RbsSandbox")]
 	public class Secure3D
 	{
 		RbsTranslator _tr;
@@ -16,7 +15,7 @@ namespace RbsPayments.ServerTests
 		[TestFixtureSetUp]
 		public void SetUp()
 		{
-			RbsConnectionConfig cfg = Env.AppSettings.Load<RbsConnectionConfig>(EmptyResult.Throw, "RbsSandbox");
+			RbsConnectionConfig cfg = Env.Sandbox;
 			SyncConnector conn = new SyncConnector(new Uri(cfg.Uri), TimeSpan.FromSeconds(30));
 			_tr = new RbsTranslator(conn, cfg);
 		}

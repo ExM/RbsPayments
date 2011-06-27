@@ -8,7 +8,6 @@ using RbsPayments.Test;
 
 namespace RbsPayments.SiteTests
 {
-	[Category("RbsSandbox")]
 	public class Common
 	{
 		RbsConnectionConfig _cfg;
@@ -17,7 +16,7 @@ namespace RbsPayments.SiteTests
 		[TestFixtureSetUp]
 		public void SetUp()
 		{
-			_cfg = Env.AppSettings.Load<RbsConnectionConfig>(EmptyResult.Throw, "RbsSandbox");
+			_cfg = Env.Sandbox;
 			SyncConnector conn = new SyncConnector(new Uri(_cfg.Uri), TimeSpan.FromSeconds(30));
 			_site = new RbsSite(conn);
 		}

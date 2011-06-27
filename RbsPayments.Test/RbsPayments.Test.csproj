@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -53,19 +53,20 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Env.cs" />
-    <Compile Include="NoConnectionTest.cs" />
     <Compile Include="ExpectedMessage.cs" />
     <Compile Include="Example\PaymentCard.cs" />
     <Compile Include="Example\RbsTranslatorExtensions.cs" />
     <Compile Include="TestCard.cs" />
-    <Compile Include="ServerTests\Common.cs" />
-    <Compile Include="ServerTests\Secure3D.cs" />
-    <Compile Include="ServerTests\AsyncExample.cs" />
-    <Compile Include="ParseResponseTests\ParseResponseTests.cs" />
     <Compile Include="SiteTests\Common.cs" />
     <Compile Include="ParseSitePageTests\ParseSitePageTests.cs" />
     <Compile Include="SiteTests\FindByOrderNumber.cs" />
     <Compile Include="SiteTests\Login.cs" />
+    <Compile Include="ParseResponseTests\ParseCommandResponseTests.cs" />
+    <Compile Include="CommandTests\Secure3D.cs" />
+    <Compile Include="CommandTests\AsyncExample.cs" />
+    <Compile Include="CommandTests\Block.cs" />
+    <Compile Include="TestCmdTranslator.cs" />
+    <Compile Include="CommandTests\QueryOrders.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

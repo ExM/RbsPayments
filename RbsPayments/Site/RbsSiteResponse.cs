@@ -102,9 +102,6 @@ namespace RbsPayments
 		{
 			string xpath = "html/body/table/tr/td/table/tr[4]/td[2]/table/tr/td[3]/input[@onclick='doLogout()']";
 			HtmlNode node = doc.DocumentNode.SelectSingleNode(xpath);
-			if(node != null)
-				Log.Warn("node.InnerHtml `{0}'", node.InnerHtml);
-			
 			return node != null;
 		}
 		

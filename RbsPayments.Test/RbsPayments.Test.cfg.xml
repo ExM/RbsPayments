@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Config>
-  <RbsSandbox Uri="http://playground.paymentgate.ru/bpcservlet/"
+  <Sandbox Uri="https://playground.paymentgate.ru/bpcservlet/"
 				 MerchantNumber="118600118603000118604"
 				 MerchantPassword="lazY2k"
 				 User="merchant"
 				 Password="lazY2k" />
-  <NoConnection Uri="http://www/"
+  <NotConn Uri="http://www/"
 				 MerchantNumber="1" User="l" MerchantPassword="p" Password="p" />
 </Config>
