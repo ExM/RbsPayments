@@ -7,5 +7,5 @@
  http://nlog.codeplex.com/releases/view/52957
  
 Текущая версия 2 beta1
-Файл архива NLog2.netfx40-Beta1.zip получен из
- http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=nlog&DownloadId=153009&FileTime=129300227914300000&Build=17831
+Файл архива NLog2.netfx35-Beta1.zip получен из
+ http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=nlog&DownloadId=153008&FileTime=129300227914000000&Build=17889
