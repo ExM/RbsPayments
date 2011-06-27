@@ -67,6 +67,7 @@
     <Compile Include="CommandTests\Block.cs" />
     <Compile Include="TestCmdTranslator.cs" />
     <Compile Include="CommandTests\QueryOrders.cs" />
+    <Compile Include="CommandTests\CancelBlock.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
