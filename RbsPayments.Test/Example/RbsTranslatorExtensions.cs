@@ -59,6 +59,15 @@ namespace RbsPayments
 		{
 			tr.DepositReversal(mdOrder, completed, excepted);
 		}
+		
+		public static void Refund(this RbsTranslator tr, string mdOrder, decimal? amount,
+			Action<ResultCode> completed, Action<Exception> excepted)
+		{
+			if(amount.HasValue)
+				tr.Refund(mdOrder, ToMinorOfUnit(amount.Value), completed, excepted);
+			else
+				tr.Refund(mdOrder, completed, excepted);
+		}
 	}
 }
 

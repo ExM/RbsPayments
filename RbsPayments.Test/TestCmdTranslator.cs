@@ -46,6 +46,32 @@ namespace RbsPayments.Test
 				});
 			return result.MdOrder;
 		}
+		
+		public void Capture(string mdOrder, decimal? amount)
+		{
+			Sandbox.Capture(mdOrder, amount,
+				(rCode) =>
+				{
+					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);
+				},
+				(ex) => 
+				{
+					Assert.Fail("unexpected exception: {0}", ex);
+				});
+		}
+		
+		public void Refund(string mdOrder, decimal? amount)
+		{
+			Sandbox.Refund(mdOrder, amount,
+				(rCode) =>
+				{
+					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);
+				},
+				(ex) => 
+				{
+					Assert.Fail("unexpected exception: {0}", ex);
+				});
+		}
 	}
 }
 

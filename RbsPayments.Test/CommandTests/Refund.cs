@@ -9,12 +9,12 @@ using RbsPayments.Test;
 namespace RbsPayments.CommandTests
 {
 	[TestFixture]
-	public class Capture: TestCmdTranslator
+	public class Refund: TestCmdTranslator
 	{
 		[Test]
 		public void IncorrectMdOrder()
 		{
-			Sandbox.Capture("123", null,
+			Sandbox.Refund("123",
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.MdOrderNotFound, "unexpected result code: {0}", rCode);
@@ -30,8 +30,9 @@ namespace RbsPayments.CommandTests
 		{
 			string orderNum = CreateOrderNumber();
 			string mdOrder = Block(orderNum, 123.45m);
+			Capture(mdOrder, null);
 			
-			Sandbox.Capture(mdOrder, null,
+			Sandbox.Refund(mdOrder,
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);
@@ -43,12 +44,13 @@ namespace RbsPayments.CommandTests
 		}
 		
 		[Test]
-		public void PartAmount()
+		public void PartAmountAfterAllCapture()
 		{
 			string orderNum = CreateOrderNumber();
 			string mdOrder = Block(orderNum, 123.45m);
+			Capture(mdOrder, null);
 			
-			Sandbox.Capture(mdOrder, 100m,
+			Sandbox.Refund(mdOrder, 100m,
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);
@@ -64,35 +66,16 @@ namespace RbsPayments.CommandTests
 		{
 			string orderNum = CreateOrderNumber();
 			string mdOrder = Block(orderNum, 123.45m);
-			
-			Sandbox.Capture(mdOrder, 200m,
+			Capture(mdOrder, null);
+			Sandbox.Refund(mdOrder, 200m,
 				(rCode) =>
 				{
-					//HACK: неожиданно, по видимому если есть доступные средства, то снятие произойдет
 					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);
 				},
 				(ex) => 
 				{
 					Assert.Fail("unexpected exception: {0}", ex);
 				});
-		}
-		
-		[Test]
-		public void TwoPart_AllAmount()
-		{
-			string orderNum = CreateOrderNumber();
-			string mdOrder = Block(orderNum, 123.45m);
-			Capture(mdOrder, 100);
-			Capture(mdOrder, null);
-		}
-		
-		[Test]
-		public void TwoPart_OverAmount()
-		{
-			string orderNum = CreateOrderNumber();
-			string mdOrder = Block(orderNum, 123.45m);
-			Capture(mdOrder, 100);
-			Capture(mdOrder, 100);
 		}
 	}
 }
