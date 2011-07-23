@@ -12,7 +12,8 @@ namespace RbsPayments.Test
 	public static class Env
 	{
 		private static Logger Log = LogManager.GetCurrentClassLogger();
-
+		
+		public static Random _rnd = new Random();
 		private static IAppSettings _settings;
 
 		static Env()
@@ -56,6 +57,12 @@ namespace RbsPayments.Test
 			{
 				return _settings.Load<RbsConnectionConfig>(EmptyResult.Throw, "Sandbox");
 			}
+		}
+		
+		public static string CreateOrderNumber()
+		{
+			//HACK: тут можно сделать проверку на уникальность номера, если изменится поведение сервера
+			return _rnd.Next(999999999).ToString();
 		}
 	}
 }

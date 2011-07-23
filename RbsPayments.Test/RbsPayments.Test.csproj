@@ -62,7 +62,6 @@
     <Compile Include="SiteTests\FindByOrderNumber.cs" />
     <Compile Include="SiteTests\Login.cs" />
     <Compile Include="ParseResponseTests\ParseCommandResponseTests.cs" />
-    <Compile Include="CommandTests\Secure3D.cs" />
     <Compile Include="CommandTests\AsyncExample.cs" />
     <Compile Include="CommandTests\Block.cs" />
     <Compile Include="TestCmdTranslator.cs" />
@@ -70,6 +69,7 @@
     <Compile Include="CommandTests\CancelBlock.cs" />
     <Compile Include="CommandTests\Capture.cs" />
     <Compile Include="CommandTests\Refund.cs" />
+    <Compile Include="Secure3D\Secure3D.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -96,5 +96,12 @@
     <None Include="SiteResponse\HttpsAuth.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Secure3D\" />
+    <Folder Include="CommandTests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Secure3D\request.html" />
   </ItemGroup>
 </Project>

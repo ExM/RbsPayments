@@ -34,15 +34,15 @@ namespace RbsPayments
 						continue;
 
 					string key = HttpUtility.UrlDecode(pair.Substring(0, d));
-					string val = pair.Substring(d + 1, pair.Length - d - 1);
+					string val = pair.Substring(d + 1, pair.Length - d - 1).Trim();
 					if (key == "MDORDER")
-						mdorder = val.Trim();
+						mdorder = val;
 					else if (key == "ANSWER")
 						answer = HttpUtility.UrlDecode(val);
 					else if (key == "ACTION_CODE")
-						actCodeText = val.Trim();
+						actCodeText = val;
 					else if (key == "STATE")
-						stateText = val.Trim();
+						stateText = val;
 					else if (key == "ACSUrl")
 						acsUrl = HttpUtility.UrlDecode(val).Trim();
 					else if (key == "PaReq")

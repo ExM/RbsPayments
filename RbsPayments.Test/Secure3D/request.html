@@ -1,0 +1,12 @@
+<html>
+<body OnLoad=OnLoadEvent();>
+    <form name="downloadForm" action="{Url}" method="POST"> 
+        <input type="hidden" name="PaReq" value="{PaReq}">
+        <input type="hidden" name="TermUrl" value="{BackUrl}">
+        <input type="hidden" name="MD" value="{MdOrder}">
+    </form>
+    <script language="Javascript">
+        document.downloadForm.submit();
+    </script>
+</body>
+</html>
