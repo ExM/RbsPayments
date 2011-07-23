@@ -14,7 +14,7 @@ namespace RbsPayments.SiteTests
 		[Test]
 		public void Valid()
 		{
-			Site.Login(Cfg.User, Cfg.Password,
+			Site.Login(Cfg.Site.User, Cfg.Site.Pass,
 				(result) =>
 				{
 					Assert.AreNotEqual(0, result.Count, "cookies expected");
@@ -28,7 +28,7 @@ namespace RbsPayments.SiteTests
 		[Test]
 		public void WrongPass()
 		{
-			Site.Login(Cfg.User, "???",
+			Site.Login(Cfg.Site.User, "???",
 				(result) =>
 				{
 					Assert.Fail("missed error");

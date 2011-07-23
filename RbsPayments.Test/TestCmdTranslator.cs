@@ -19,7 +19,7 @@ namespace RbsPayments.Test
 		public static RbsTranslator CreateSyncConn(RbsConnectionConfig cfg)
 		{
 			SyncConnector conn = new SyncConnector(new Uri(cfg.Uri), TimeSpan.FromSeconds(10));
-			return new RbsTranslator(conn, cfg);
+			return new RbsTranslator(conn, cfg.Merchant, cfg.Refund);
 		}
 		
 		public string CreateOrderNumber()

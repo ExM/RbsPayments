@@ -38,7 +38,7 @@ namespace RbsPayments.SiteTests
 		public CookieCollection Login()
 		{
 			CookieCollection cookies = null;
-			_site.Login(_cfg.User, _cfg.Password,
+			_site.Login(_cfg.Site.User, _cfg.Site.Pass,
 				(result) =>
 				{
 					cookies = result;

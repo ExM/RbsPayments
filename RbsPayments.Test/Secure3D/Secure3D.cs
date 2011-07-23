@@ -25,7 +25,7 @@ namespace RbsPayments.CommandTests
 		{
 			RbsConnectionConfig cfg = Env.Sandbox;
 			SyncConnector conn = new SyncConnector(new Uri(cfg.Uri), TimeSpan.FromSeconds(30));
-			_tr = new RbsTranslator(conn, cfg);
+			_tr = new RbsTranslator(conn, cfg.Merchant, cfg.Refund);
 		}
 		
 		public RegisterResult Block_3DSec(string orderNumber, decimal amount)

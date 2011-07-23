@@ -7,22 +7,18 @@ namespace RbsPayments
 	public class RbsTranslator
 	{
 		private readonly ICommandConnector _conn;
-		private readonly string _merchantNum;
-		private readonly string _merchantPass;
-		private readonly string _refundUser;
-		private readonly string _refundPass;
+		private readonly AuthenticateConfig _merchant;
+		private readonly AuthenticateConfig _refund;
 		
 		public RbsTranslator(ICommandConnector conn, string merchantNum, string merchantPass, string refundUser, string refundPass)
 		{
 			_conn = conn;
-			_merchantNum = merchantNum;
-			_merchantPass = merchantPass;
-			_refundUser = refundUser;
-			_refundPass = refundPass;
+			_merchant = new AuthenticateConfig {User = merchantNum, Pass = merchantPass};
+			_refund = new AuthenticateConfig {User = refundUser, Pass = refundPass};
 		}
 		
-		public RbsTranslator(ICommandConnector conn, RbsConnectionConfig cfg)
-			:this(conn, cfg.MerchantNumber, cfg.MerchantPassword, cfg.User, cfg.Password)
+		public RbsTranslator(ICommandConnector conn, AuthenticateConfig merchant, AuthenticateConfig refund)
+			:this(conn, merchant.User, merchant.Pass, refund.User, refund.Pass)
 		{
 		}
 		
@@ -32,14 +28,14 @@ namespace RbsPayments
 		{
 			NameValueCollection getParams = new NameValueCollection
 			{
-				{"MERCHANTNUMBER", _merchantNum},
+				{"MERCHANTNUMBER", _merchant.User},
 				{"ORDERNUMBER", orderNum},
 				{"AMOUNT", amount.ToString()},
 				{"BACKURL", backUrl},
 				{"$ORDERDESCRIPTION", orderDesc},
 				{"LANGUAGE", "RU"},
 				{"DEPOSITFLAG", depositFlag?"1":"0"},
-				{"MERCHANTPASSWD", _merchantPass},
+				{"MERCHANTPASSWD", _merchant.Pass},
 				{"PAN_MKO", cardNum},
 				{"CVC_MKO", cardCvc},
 				{"EXP_MKO", cardExpDate},
@@ -70,7 +66,7 @@ namespace RbsPayments
 			NameValueCollection getParams = new NameValueCollection
 			{
 				{"MDORDER", mdOrder},
-				{"MERCHANTPASSWD", _merchantPass}
+				{"MERCHANTPASSWD", _merchant.Pass}
 			};
 			
 			_conn.Request("QueryOrders", getParams,
@@ -102,7 +98,7 @@ namespace RbsPayments
 			NameValueCollection getParams = new NameValueCollection
 			{
 				{"MDORDER", mdOrder},
-				{"MERCHANTPASSWD", _merchantPass}
+				{"MERCHANTPASSWD", _merchant.Pass}
 			};
 			
 			if(amount.HasValue)
@@ -131,7 +127,7 @@ namespace RbsPayments
 			NameValueCollection getParams = new NameValueCollection
 			{
 				{"MDORDER", mdOrder},
-				{"MERCHANTPASSWD", _merchantPass}
+				{"MERCHANTPASSWD", _merchant.Pass}
 			};
 			
 			_conn.Request("DepositReversal", getParams,
@@ -157,9 +153,9 @@ namespace RbsPayments
 			NameValueCollection getParams = new NameValueCollection
 			{
 				{"MDORDER", mdOrder},
-				{"MERCHANTPASSWD", _merchantPass},
-				{"user", _refundUser},
-				{"pwd", _refundPass}
+				{"MERCHANTPASSWD", _merchant.Pass},
+				{"user", _refund.User},
+				{"pwd", _refund.Pass}
 			};
 			
 			_conn.Request("DepositReversal", getParams,
@@ -188,10 +184,10 @@ namespace RbsPayments
 			NameValueCollection getParams = new NameValueCollection
 			{
 				{"MDORDER", mdOrder},
-				{"MERCHANTPASSWD", _merchantPass},
+				{"MERCHANTPASSWD", _merchant.Pass},
 				{"AMOUNT", amount.ToString()},
-				{"user", _refundUser},
-				{"pwd", _refundPass}
+				{"user", _refund.User},
+				{"pwd", _refund.Pass}
 			};
 			
 			_conn.Request("Refund", getParams,

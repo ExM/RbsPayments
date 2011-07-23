@@ -19,7 +19,7 @@ namespace RbsPayments.CommandTests
 		{
 			RbsConnectionConfig cfg = Env.Sandbox;
 			AsyncConnector conn = new AsyncConnector(new Uri(cfg.Uri), TimeSpan.FromSeconds(10));
-			_tr = new RbsTranslator(conn, cfg);
+			_tr = new RbsTranslator(conn, cfg.Merchant, cfg.Refund);
 		}
 
 		[Test]

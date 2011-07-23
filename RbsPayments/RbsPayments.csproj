@@ -48,7 +48,6 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="SyncConnector.cs" />
     <Compile Include="UriParameters.cs" />
-    <Compile Include="RbsConnectionConfig.cs" />
     <Compile Include="AsyncConnector.cs" />
     <Compile Include="PostParameters.cs" />
     <Compile Include="Site\RbsSiteResponse.cs" />
@@ -61,10 +60,13 @@
     <Compile Include="Command\RbsTranslator.cs" />
     <Compile Include="Command\RbsPaymentState.cs" />
     <Compile Include="Command\PaymentInfo.cs" />
+    <Compile Include="Config\RbsConnectionConfig.cs" />
+    <Compile Include="Config\AuthenticateConfig.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Site\" />
     <Folder Include="Command\" />
+    <Folder Include="Config\" />
   </ItemGroup>
 </Project>
