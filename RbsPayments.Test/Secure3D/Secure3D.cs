@@ -55,24 +55,18 @@ namespace RbsPayments.CommandTests
 		[Test]
 		public void Block_3DSec()
 		{
-			Block_3DSec("5687845", 100.12m);
+			Block_3DSec(Env.CreateOrderNumber(), 100.12m);
 		}
 		
 		[Test]
-		public void Full_3DSec_FromBrowsers()
+		public void Full_3DSec_FromBrowser()
 		{
 			RegisterResult result = Block_3DSec(Env.CreateOrderNumber(), 100.12m);
 			
-			RunBrowser(result.AcsUrl, "http://localhost:55000/", result.MdOrder, result.PaReq);
+			string backUrl = "http://localhost:55000/";
 			
-			HttpListener listener = new HttpListener();
-			listener.Prefixes.Add("http://localhost:55000/");
-			listener.Start();
-			HttpListenerContext context = listener.GetContext();
-			
-			Assert.AreEqual("post", context.Request.HttpMethod.ToLower());
-			NameValueCollection postParams = ReadPostParams(context.Request.InputStream);
-			listener.Stop();
+			Secure3DHelper.RunBrowser(result.AcsUrl, backUrl, result.MdOrder, result.PaReq);
+			NameValueCollection postParams = Secure3DHelper.WaitPostRequest(backUrl, TimeSpan.FromSeconds(30));
 			
 			string paRes = postParams["PaRes"];
 			Assert.AreEqual(result.MdOrder, postParams["MD"]);
@@ -91,38 +85,39 @@ namespace RbsPayments.CommandTests
 				});
 		}
 		
-		public NameValueCollection ReadPostParams(Stream stream)
+		[Test]
+		public void Full_3DSec()
 		{
-			string postData = new StreamReader(stream, Encoding.ASCII).ReadToEnd();
-			Console.WriteLine(postData);
+			RegisterResult res3ds = Block_3DSec(Env.CreateOrderNumber(), 100.12m);
 			
-			NameValueCollection result = new NameValueCollection();
-			string[] pairs = postData.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
-			foreach (string pair in pairs)
+			NameValueCollection postParams = new NameValueCollection
 			{
-				int d = pair.IndexOf('=');
-				if (d == -1)
-					result.Add(string.Empty, pair);
-				else
-					result.Add(
-						HttpUtility.UrlDecode(pair.Substring(0, d), Encoding.ASCII),
-						HttpUtility.UrlDecode(pair.Substring(d + 1, pair.Length - d - 1), Encoding.ASCII));
-			}
-			return result;
-		}
+				{"TermUrl", "localhost"},
+				{"MD", res3ds.MdOrder},
+				{"PaReq", res3ds.PaReq}
+			};
+			
+			HttpWebRequest webReq = (HttpWebRequest)WebRequest.Create(res3ds.AcsUrl);
+			webReq.Method = "POST";
+			webReq.Timeout = 10000;
+			webReq.ContentType = "application/x-www-form-urlencoded";
+			webReq.Headers.Add("Content-Encoding", "UTF8");
+			
+			byte[] postContent = PostParameters.Encode(postParams);
+			webReq.ContentLength = postContent.Length;
+			webReq.AllowAutoRedirect = false;
+			webReq.ServicePoint.Expect100Continue = false;
+			
+			string respText;
 
-		public void RunBrowser(string url, string backUrl, string mdOrder, string paReq)
-		{
-			Assembly asm = Assembly.GetExecutingAssembly();
-			string reqPage = new StreamReader(asm.GetManifestResourceStream("RbsPayments.Test.Secure3D.request.html")).ReadToEnd();
+			using(Stream respS = webReq.GetRequestStream())
+				respS.Write(postContent, 0, postContent.Length);
+
+			using (HttpWebResponse resp = (HttpWebResponse)webReq.GetResponse())
+			using (Stream respS = resp.GetResponseStream())
+				respText = new StreamReader(respS).ReadToEnd();
 			
-			reqPage = reqPage.Replace("{Url}", url);
-			reqPage = reqPage.Replace("{BackUrl}", backUrl);
-			reqPage = reqPage.Replace("{MdOrder}", mdOrder);
-			reqPage = reqPage.Replace("{PaReq}", paReq);
-			
-			File.WriteAllText("req.html", reqPage);
-			System.Diagnostics.Process.Start("firefox", "req.html");
+			Console.WriteLine("Response: \r\n{0}", respText);
 		}
 	}
 }

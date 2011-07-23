@@ -70,6 +70,7 @@
     <Compile Include="CommandTests\Capture.cs" />
     <Compile Include="CommandTests\Refund.cs" />
     <Compile Include="Secure3D\Secure3D.cs" />
+    <Compile Include="Secure3D\Secure3DHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -2,7 +2,7 @@
 <Config>
   <Sandbox Uri="https://playground.paymentgate.ru/bpcservlet/">
 	<Merchant User="118600118603000118604" Pass="lazY2k" />
-	<Refund User="?" Pass="?" />
+	<Refund User="finmanager" Pass="qweasd" />
 	<Site User="merchant" Pass="lazY2k" />
   </Sandbox>
   <NotConn Uri="http://www/">
