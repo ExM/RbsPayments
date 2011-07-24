@@ -49,6 +49,17 @@ namespace RbsPayments
 			}
 		}
 		
+		/// <summary>
+		/// Фродовая транзакция. Согласно данным полученным от процессига или/и платежной сети.
+		/// </summary>
+		public bool FraudTransaction
+		{
+			get
+			{
+				return PrimaryRC == 200 && SecondaryRC == 1;
+			}
+		}
+		
 		public override string ToString ()
 		{
 			return string.Format ("[ResultCode: PrimaryRC={0}, SecondaryRC={1}]", PrimaryRC, SecondaryRC);
