@@ -12,5 +12,20 @@ namespace RbsPayments
 		
 		[XmlAttribute]
 		public string Browser { get; set; }
+		
+		[XmlIgnore]
+		public TimeSpan UserWait = TimeSpan.Zero;
+		[XmlAttribute("UserWait")]
+		public string xmlUserWait
+		{
+			get
+			{
+				return UserWait.ToString();
+			}
+			set
+			{
+				UserWait = TimeSpan.Parse(value);
+			}
+		}
 	}
 }

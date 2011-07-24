@@ -19,6 +19,7 @@ namespace RbsPayments.Test
 		
 		public RbsConnectionConfig NoConn;
 		public RbsConnectionConfig Sandbox;
+		public Secure3DTestConfig Secure3DTest;
 		public RbsTranslator Conn;
 		public RbsSite SiteConn;
 
@@ -42,6 +43,11 @@ namespace RbsPayments.Test
 			Sandbox = _settings.Load<RbsConnectionConfig>(EmptyResult.Throw, "Sandbox");
 			SyncConnector conn = new SyncConnector(new Uri(Sandbox.Uri), TimeSpan.FromSeconds(30));
 			Conn = new RbsTranslator(conn, Sandbox.Merchant, Sandbox.Refund);
+		}
+		
+		public void BrowserConfigure()
+		{
+			Secure3DTest = _settings.Load<Secure3DTestConfig>(EmptyResult.Throw);
 		}
 		
 		public void SanboxSiteConfigure()

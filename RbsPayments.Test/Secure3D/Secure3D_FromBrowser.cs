@@ -23,6 +23,7 @@ namespace RbsPayments
 		public void SetUp()
 		{
 			SandboxConfigure();
+			BrowserConfigure();
 		}
 		
 		[Test]
@@ -31,11 +32,9 @@ namespace RbsPayments
 		{
 			RegisterResult result = Block_3DSec(CreateOrderNumber(), 100.12m);
 			
-			string backUrl = "http://localhost:55000/";
+			RunBrowser(result.AcsUrl, Secure3DTest.BackUrl, result.MdOrder, result.PaReq);
 			
-			RunBrowser(result.AcsUrl, backUrl, result.MdOrder, result.PaReq);
-			
-			NameValueCollection postParams = WaitPostRequest(backUrl, TimeSpan.FromSeconds(30));
+			NameValueCollection postParams = WaitPostRequest(Secure3DTest.BackUrl, Secure3DTest.UserWait);
 			
 			string paRes = postParams["PaRes"];
 			Assert.AreEqual(result.MdOrder, postParams["MD"]);
@@ -108,7 +107,7 @@ namespace RbsPayments
 			reqPage = reqPage.Replace("{PaReq}", paReq);
 			
 			File.WriteAllText("req.html", reqPage);
-			System.Diagnostics.Process.Start("firefox", "req.html");
+			System.Diagnostics.Process.Start(Secure3DTest.Browser, "req.html");
 		}
 	}
 }

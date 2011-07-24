@@ -10,4 +10,5 @@
 	<Refund User="?" Pass="?" />
 	<Site User="?" Pass="?" />
   </NoConn>
+  <Secure3DTest BackUrl="http://localhost:55000/" Browser="firefox" UserWait="0:30:0"/>
 </Config>
