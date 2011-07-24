@@ -9,12 +9,19 @@ using RbsPayments.Test;
 namespace RbsPayments.CommandTests
 {
 	[TestFixture]
+	[Category("server required")]
 	public class QueryOrders: TestCmdTranslator
 	{
+		[TestFixtureSetUp]
+		public void SetUp()
+		{
+			SandboxConfigure();
+		}
+		
 		[Test]
 		public void IncorrectMdOrder()
 		{
-			Sandbox.QueryOrders("123",
+			Conn.QueryOrders("123",
 				(rInfo, pInfo, state) =>
 				{
 					Assert.Fail("missed error");
@@ -32,7 +39,7 @@ namespace RbsPayments.CommandTests
 			string orderNum = CreateOrderNumber();
 			string mdOrder = Block(orderNum, 123.45m);
 			
-			Sandbox.QueryOrders(mdOrder,
+			Conn.QueryOrders(mdOrder,
 				(rInfo, pInfo, state) =>
 				{
 					Assert.IsTrue(rInfo.Success, "unexpected result code: {0}", rInfo);

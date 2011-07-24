@@ -9,12 +9,19 @@ using RbsPayments.Test;
 namespace RbsPayments.CommandTests
 {
 	[TestFixture]
+	[Category("server required")]
 	public class Refund: TestCmdTranslator
 	{
+		[TestFixtureSetUp]
+		public void SetUp()
+		{
+			SandboxConfigure();
+		}
+		
 		[Test]
 		public void IncorrectMdOrder()
 		{
-			Sandbox.Refund("123",
+			Conn.Refund("123",
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.MdOrderNotFound, "unexpected result code: {0}", rCode);
@@ -32,7 +39,7 @@ namespace RbsPayments.CommandTests
 			string mdOrder = Block(orderNum, 123.45m);
 			Capture(mdOrder, null);
 			
-			Sandbox.Refund(mdOrder,
+			Conn.Refund(mdOrder,
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);
@@ -50,7 +57,7 @@ namespace RbsPayments.CommandTests
 			string mdOrder = Block(orderNum, 123.45m);
 			Capture(mdOrder, null);
 			
-			Sandbox.Refund(mdOrder, 100m,
+			Conn.Refund(mdOrder, 100m,
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);
@@ -67,7 +74,7 @@ namespace RbsPayments.CommandTests
 			string orderNum = CreateOrderNumber();
 			string mdOrder = Block(orderNum, 123.45m);
 			Capture(mdOrder, null);
-			Sandbox.Refund(mdOrder, 200m,
+			Conn.Refund(mdOrder, 200m,
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);

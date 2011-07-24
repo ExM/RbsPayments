@@ -9,12 +9,13 @@ using RbsPayments.Test;
 namespace RbsPayments.SiteTests
 {
 	[TestFixture]
+	[Category("server required")]
 	public class FindByOrderNumber: Common
 	{
 		[Test]
 		public void List()
 		{
-			Site.FindByOrderNumber(Login(), "123", //FIXME: это заранее известный номер на котором висит 9 платежей
+			SiteConn.FindByOrderNumber(Login(), "123", //FIXME: это заранее известный номер на котором висит 9 платежей
 				(result) =>
 				{
 					Assert.AreEqual(9, result.Count);
@@ -29,7 +30,7 @@ namespace RbsPayments.SiteTests
 		[Test]
 		public void Empty()
 		{
-			Site.FindByOrderNumber(Login(), "923467625", //FIXME: предполагается, что сервер не знает этого номера
+			SiteConn.FindByOrderNumber(Login(), "923467625", //FIXME: предполагается, что сервер не знает этого номера
 				(result) =>
 				{
 					Assert.AreEqual(0, result.Count);
@@ -43,7 +44,7 @@ namespace RbsPayments.SiteTests
 		[Test]
 		public void NoLogin()
 		{
-			Site.FindByOrderNumber(new CookieCollection(), "123",
+			SiteConn.FindByOrderNumber(new CookieCollection(), "123",
 				(result) =>
 				{
 					Assert.Fail("missed error");

@@ -49,6 +49,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Configuration\Configuration.File.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
@@ -70,7 +71,9 @@
     <Compile Include="CommandTests\Capture.cs" />
     <Compile Include="CommandTests\Refund.cs" />
     <Compile Include="Secure3D\Secure3D.cs" />
-    <Compile Include="Secure3D\Secure3DHelper.cs" />
+    <Compile Include="Config\Secure3DTestConfig.cs" />
+    <Compile Include="Secure3D\Secure3D_FromBrowser.cs" />
+    <Compile Include="CommandTests\NoConnection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

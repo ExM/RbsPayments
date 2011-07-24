@@ -5,9 +5,9 @@
 	<Refund User="finmanager" Pass="qweasd" />
 	<Site User="merchant" Pass="lazY2k" />
   </Sandbox>
-  <NotConn Uri="http://www/">
+  <NoConn Uri="http://www/">
 	<Merchant User="?" Pass="?" />
 	<Refund User="?" Pass="?" />
 	<Site User="?" Pass="?" />
-  </NotConn>
+  </NoConn>
 </Config>

@@ -9,12 +9,19 @@ using RbsPayments.Test;
 namespace RbsPayments.CommandTests
 {
 	[TestFixture]
+	[Category("server required")]
 	public class CancelBlock: TestCmdTranslator
 	{
+		[TestFixtureSetUp]
+		public void SetUp()
+		{
+			SandboxConfigure();
+		}
+		
 		[Test]
 		public void IncorrectMdOrder()
 		{
-			Sandbox.CancelBlock("123",
+			Conn.CancelBlock("123",
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.MdOrderNotFound, "unexpected result code: {0}", rCode);
@@ -31,7 +38,7 @@ namespace RbsPayments.CommandTests
 			string orderNum = CreateOrderNumber();
 			string mdOrder = Block(orderNum, 123.45m);
 			
-			Sandbox.CancelBlock(mdOrder,
+			Conn.CancelBlock(mdOrder,
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);

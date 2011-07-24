@@ -6,15 +6,21 @@ using Configuration;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
+using NUnit.Framework;
 
 namespace RbsPayments.Test
 {
-	public static class Env
+	public class Env
 	{
 		private static Logger Log = LogManager.GetCurrentClassLogger();
 		
 		public static Random _rnd = new Random();
 		private static IAppSettings _settings;
+		
+		public RbsConnectionConfig NoConn;
+		public RbsConnectionConfig Sandbox;
+		public RbsTranslator Conn;
+		public RbsSite SiteConn;
 
 		static Env()
 		{
@@ -29,11 +35,29 @@ namespace RbsPayments.Test
 			_settings = new FileSettings("RbsPayments.Test.cfg.xml");
 
 			ServicePointManager.ServerCertificateValidationCallback = ValidateServerCertificate;
-			
-			
-			
+		}
+		
+		public void SandboxConfigure()
+		{
+			Sandbox = _settings.Load<RbsConnectionConfig>(EmptyResult.Throw, "Sandbox");
+			SyncConnector conn = new SyncConnector(new Uri(Sandbox.Uri), TimeSpan.FromSeconds(30));
+			Conn = new RbsTranslator(conn, Sandbox.Merchant, Sandbox.Refund);
+		}
+		
+		public void SanboxSiteConfigure()
+		{
+			Sandbox = _settings.Load<RbsConnectionConfig>(EmptyResult.Throw, "Sandbox");
+			SyncConnector conn = new SyncConnector(new Uri(Sandbox.Uri), TimeSpan.FromSeconds(30));
+			SiteConn = new RbsSite(conn);
 		}
 
+		public void NoConnConfigure()
+		{
+			NoConn = _settings.Load<RbsConnectionConfig>(EmptyResult.Throw, "NoConn");
+			SyncConnector conn = new SyncConnector(new Uri(NoConn.Uri), TimeSpan.FromSeconds(30));
+			Conn = new RbsTranslator(conn, NoConn.Merchant, NoConn.Refund);
+		}
+		
 		public static bool ValidateServerCertificate(object sender,
 			X509Certificate certificate, X509Chain chain,
 			SslPolicyErrors sslPolicyErrors)
@@ -43,26 +67,34 @@ namespace RbsPayments.Test
 			return true;
 		}
 		
-		public static RbsConnectionConfig NoConn
-		{
-			get
-			{
-				return _settings.Load<RbsConnectionConfig>(EmptyResult.Throw, "NotConn");
-			}
-		}
-		
-		public static RbsConnectionConfig Sandbox
-		{
-			get
-			{
-				return _settings.Load<RbsConnectionConfig>(EmptyResult.Throw, "Sandbox");
-			}
-		}
-		
 		public static string CreateOrderNumber()
 		{
 			//HACK: тут можно сделать проверку на уникальность номера, если изменится поведение сервера
 			return _rnd.Next(999999999).ToString();
+		}
+		
+		public RegisterResult Block_3DSec(string orderNumber, decimal amount)
+		{
+			RegisterResult result = null;
+
+			Conn.Block(orderNumber, amount, TestCard.Good3DSec,
+				(res) =>
+				{
+					result = res;
+				},
+				(ex) => 
+				{
+					Assert.Fail("unexpected exception: {0}", ex);
+				});
+			
+			if(!result.Required3DSecure)
+				Assert.Ignore("test card not required 3d secure");
+			Assert.Greater(result.MdOrder.Length, 10);
+			Assert.IsNotEmpty(result.AcsUrl);
+			Assert.IsNotEmpty(result.PaReq);
+			Assert.Greater(Convert.FromBase64String(result.PaReq).Length, 350);
+			
+			return result;
 		}
 	}
 }

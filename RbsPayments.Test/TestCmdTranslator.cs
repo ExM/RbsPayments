@@ -3,35 +3,12 @@ using NUnit.Framework;
 
 namespace RbsPayments.Test
 {
-	public class TestCmdTranslator
+	public class TestCmdTranslator: Env
 	{
-		public static Random _rnd = new Random();
-		
-		public RbsTranslator NoConn;
-		public RbsTranslator Sandbox;
-		
-		public TestCmdTranslator()
-		{
-			NoConn = CreateSyncConn(Env.NoConn);
-			Sandbox = CreateSyncConn(Env.Sandbox);
-		}
-		
-		public static RbsTranslator CreateSyncConn(RbsConnectionConfig cfg)
-		{
-			SyncConnector conn = new SyncConnector(new Uri(cfg.Uri), TimeSpan.FromSeconds(10));
-			return new RbsTranslator(conn, cfg.Merchant, cfg.Refund);
-		}
-		
-		public string CreateOrderNumber()
-		{
-			//HACK: тут можно сделать проверку на уникальность номера, если изменится поведение сервера
-			return _rnd.Next(999999999).ToString();
-		}
-		
 		public string Block(string orderNum, decimal amount)
 		{
 			RegisterResult result = null;
-			Sandbox.Block(orderNum, amount, TestCard.Good,
+			Conn.Block(orderNum, amount, TestCard.Good,
 				(resInfo) =>
 				{
 					Assert.IsFalse(resInfo.Required3DSecure);
@@ -49,7 +26,7 @@ namespace RbsPayments.Test
 		
 		public void Capture(string mdOrder, decimal? amount)
 		{
-			Sandbox.Capture(mdOrder, amount,
+			Conn.Capture(mdOrder, amount,
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);
@@ -62,7 +39,7 @@ namespace RbsPayments.Test
 		
 		public void Refund(string mdOrder, decimal? amount)
 		{
-			Sandbox.Refund(mdOrder, amount,
+			Conn.Refund(mdOrder, amount,
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);

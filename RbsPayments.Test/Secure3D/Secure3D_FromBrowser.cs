@@ -13,11 +13,48 @@ using System.Net;
 using System.Text;
 using System.Web;
 
-namespace RbsPayments.CommandTests
+namespace RbsPayments
 {
-	public static class Secure3DHelper
+	[TestFixture]
+	[Category("server required")]
+	public class Secure3D_FromBrowser: Env
 	{
-		public static NameValueCollection WaitPostRequest(string prefix, TimeSpan to)
+		[TestFixtureSetUp]
+		public void SetUp()
+		{
+			SandboxConfigure();
+		}
+		
+		[Test]
+		[Category("browser required")]
+		public void Run()
+		{
+			RegisterResult result = Block_3DSec(CreateOrderNumber(), 100.12m);
+			
+			string backUrl = "http://localhost:55000/";
+			
+			RunBrowser(result.AcsUrl, backUrl, result.MdOrder, result.PaReq);
+			
+			NameValueCollection postParams = WaitPostRequest(backUrl, TimeSpan.FromSeconds(30));
+			
+			string paRes = postParams["PaRes"];
+			Assert.AreEqual(result.MdOrder, postParams["MD"]);
+			
+			Conn.Bpc3ds(result.MdOrder, paRes,
+				(result2) =>
+				{
+					Assert.Greater(result2.MdOrder.Length, 10);
+					Assert.AreEqual(0, result2.Code.PrimaryRC);
+					Assert.AreEqual(0, result2.Code.SecondaryRC);
+					Assert.AreEqual(RbsPaymentState.Deposited, result2.State);
+				},
+				(ex) => 
+				{
+					Assert.Fail("unexpected exception: {0}", ex);
+				});
+		}
+		
+		public NameValueCollection WaitPostRequest(string prefix, TimeSpan to)
 		{
 			HttpListener listener = new HttpListener();
 			listener.Prefixes.Add(prefix);
@@ -40,7 +77,7 @@ namespace RbsPayments.CommandTests
 			return postParams;
 		}
 		
-		public static NameValueCollection ReadPostParams(Stream stream)
+		public NameValueCollection ReadPostParams(Stream stream)
 		{
 			string postData = new StreamReader(stream, Encoding.ASCII).ReadToEnd();
 			Console.WriteLine(postData);
@@ -60,7 +97,7 @@ namespace RbsPayments.CommandTests
 			return result;
 		}
 
-		public static void RunBrowser(string url, string backUrl, string mdOrder, string paReq)
+		public void RunBrowser(string url, string backUrl, string mdOrder, string paReq)
 		{
 			Assembly asm = Assembly.GetExecutingAssembly();
 			string reqPage = new StreamReader(asm.GetManifestResourceStream("RbsPayments.Test.Secure3D.request.html")).ReadToEnd();

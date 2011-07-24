@@ -9,13 +9,20 @@ using RbsPayments.Test;
 namespace RbsPayments.CommandTests
 {
 	[TestFixture]
+	[Category("server required")]
 	public class Block: TestCmdTranslator
 	{
+		[TestFixtureSetUp]
+		public void SetUp()
+		{
+			SandboxConfigure();
+		}
+		
 		[Test]
 		public void Success()
 		{
 			string orderNum = CreateOrderNumber();
-			Sandbox.Block(orderNum, 100m, TestCard.Good,
+			Conn.Block(orderNum, 100m, TestCard.Good,
 				(result) =>
 				{
 					Assert.IsFalse(result.Required3DSecure);
@@ -33,7 +40,7 @@ namespace RbsPayments.CommandTests
 		public void NotEnoughMoney()
 		{
 			string orderNum = CreateOrderNumber();
-			Sandbox.Block(orderNum, 100m, TestCard.Bad116,
+			Conn.Block(orderNum, 100m, TestCard.Bad116,
 				(result) =>
 				{
 					Assert.IsFalse(result.Required3DSecure);
@@ -51,7 +58,7 @@ namespace RbsPayments.CommandTests
 		[Test]
 		public void IncorrectFormat()
 		{
-			Sandbox.Block("ABC", 100m, TestCard.Good,
+			Conn.Block("ABC", 100m, TestCard.Good,
 				(result) =>
 				{
 					Assert.Fail("missed error");
@@ -60,21 +67,6 @@ namespace RbsPayments.CommandTests
 				{
 					Assert.IsInstanceOf<InvalidOperationException>(ex);
 					Assert.IsTrue(ex.Message.Contains("ABC"), "not contain `ABC' in `{0}'", ex.Message);
-				});
-		}
-		
-		[Test]
-		[Category("NoConn")]
-		public void NoConnection()
-		{
-			NoConn.Block("ABC", 100m, TestCard.Good,
-				(result) =>
-				{
-					Assert.Fail("missed error");
-				},
-				(ex) => 
-				{
-					Assert.IsInstanceOf<WebException>(ex, "unexpected exception: {0}", ex);
 				});
 		}
 	}

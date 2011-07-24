@@ -9,12 +9,13 @@ using RbsPayments.Test;
 namespace RbsPayments.SiteTests
 {
 	[TestFixture]
+	[Category("server required")]
 	public class Login: Common
 	{
 		[Test]
 		public void Valid()
 		{
-			Site.Login(Cfg.Site.User, Cfg.Site.Pass,
+			SiteConn.Login(Sandbox.Site.User, Sandbox.Site.Pass,
 				(result) =>
 				{
 					Assert.AreNotEqual(0, result.Count, "cookies expected");
@@ -28,7 +29,7 @@ namespace RbsPayments.SiteTests
 		[Test]
 		public void WrongPass()
 		{
-			Site.Login(Cfg.Site.User, "???",
+			SiteConn.Login(Sandbox.Site.User, "???",
 				(result) =>
 				{
 					Assert.Fail("missed error");

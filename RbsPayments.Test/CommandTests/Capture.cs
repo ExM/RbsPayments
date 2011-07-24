@@ -9,12 +9,19 @@ using RbsPayments.Test;
 namespace RbsPayments.CommandTests
 {
 	[TestFixture]
+	[Category("server required")]
 	public class Capture: TestCmdTranslator
 	{
+		[TestFixtureSetUp]
+		public void SetUp()
+		{
+			SandboxConfigure();
+		}
+		
 		[Test]
 		public void IncorrectMdOrder()
 		{
-			Sandbox.Capture("123", null,
+			Conn.Capture("123", null,
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.MdOrderNotFound, "unexpected result code: {0}", rCode);
@@ -31,7 +38,7 @@ namespace RbsPayments.CommandTests
 			string orderNum = CreateOrderNumber();
 			string mdOrder = Block(orderNum, 123.45m);
 			
-			Sandbox.Capture(mdOrder, null,
+			Conn.Capture(mdOrder, null,
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);
@@ -48,7 +55,7 @@ namespace RbsPayments.CommandTests
 			string orderNum = CreateOrderNumber();
 			string mdOrder = Block(orderNum, 123.45m);
 			
-			Sandbox.Capture(mdOrder, 100m,
+			Conn.Capture(mdOrder, 100m,
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);
@@ -65,7 +72,7 @@ namespace RbsPayments.CommandTests
 			string orderNum = CreateOrderNumber();
 			string mdOrder = Block(orderNum, 123.45m);
 			
-			Sandbox.Capture(mdOrder, 200m,
+			Conn.Capture(mdOrder, 200m,
 				(rCode) =>
 				{
 					//HACK: неожиданно, по видимому если есть доступные средства, то снятие произойдет

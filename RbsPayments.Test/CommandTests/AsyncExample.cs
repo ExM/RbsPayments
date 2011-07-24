@@ -10,16 +10,17 @@ using RbsPayments.Test;
 namespace RbsPayments.CommandTests
 {
 	[TestFixture]
-	public class AsyncExample
+	[Category("server required")]
+	public class AsyncExample: Env
 	{
-		RbsTranslator _tr;
+		RbsTranslator _asyncTr;
 		
 		[TestFixtureSetUp]
 		public void SetUp()
 		{
-			RbsConnectionConfig cfg = Env.Sandbox;
-			AsyncConnector conn = new AsyncConnector(new Uri(cfg.Uri), TimeSpan.FromSeconds(10));
-			_tr = new RbsTranslator(conn, cfg.Merchant, cfg.Refund);
+			SandboxConfigure();
+			AsyncConnector conn = new AsyncConnector(new Uri(Sandbox.Uri), TimeSpan.FromSeconds(10));
+			_asyncTr = new RbsTranslator(conn, Sandbox.Merchant, Sandbox.Refund);
 		}
 
 		[Test]
@@ -28,7 +29,7 @@ namespace RbsPayments.CommandTests
 			ManualResetEvent wait =  new ManualResetEvent(false);
 			Exception ex = null;
 			
-			_tr.Block("ABC", 100m, TestCard.Good,
+			_asyncTr.Block("ABC", 100m, TestCard.Good,
 				(result) =>
 				{
 					wait.Set();
