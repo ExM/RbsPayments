@@ -29,7 +29,7 @@ namespace RbsPayments
 			return iMuAmount;
 		}
 		
-		public static void Block(this RbsTranslator tr, string orderNum, decimal amount, PaymentCard card,
+		public static void Block(this RbsApi tr, string orderNum, decimal amount, PaymentCard card,
 			Action<RegisterResult> completed, Action<Exception> excepted)
 		{
 			tr.Merchant2Rbs(orderNum, "example payment", ToMinorOfUnit(amount), "www.example.com", false,
@@ -37,7 +37,7 @@ namespace RbsPayments
 				completed, excepted);
 		}
 		
-		public static void Capture(this RbsTranslator tr, string orderNum, decimal amount, PaymentCard card,
+		public static void Capture(this RbsApi tr, string orderNum, decimal amount, PaymentCard card,
 			Action<RegisterResult> completed, Action<Exception> excepted)
 		{
 			tr.Merchant2Rbs(orderNum, "example payment", ToMinorOfUnit(amount), "www.example.com", true,
@@ -45,7 +45,7 @@ namespace RbsPayments
 				completed, excepted);
 		}
 		
-		public static void Capture(this RbsTranslator tr, string mdOrder, decimal? amount,
+		public static void Capture(this RbsApi tr, string mdOrder, decimal? amount,
 			Action<ResultCode> completed, Action<Exception> excepted)
 		{
 			int? iAmount = null;
@@ -54,13 +54,13 @@ namespace RbsPayments
 			tr.DepositPayment(mdOrder, iAmount, completed, excepted);
 		}
 		
-		public static void CancelBlock(this RbsTranslator tr, string mdOrder,
+		public static void CancelBlock(this RbsApi tr, string mdOrder,
 			Action<ResultCode> completed, Action<Exception> excepted)
 		{
 			tr.DepositReversal(mdOrder, completed, excepted);
 		}
 		
-		public static void Refund(this RbsTranslator tr, string mdOrder, decimal? amount,
+		public static void Refund(this RbsApi tr, string mdOrder, decimal? amount,
 			Action<ResultCode> completed, Action<Exception> excepted)
 		{
 			if(amount.HasValue)

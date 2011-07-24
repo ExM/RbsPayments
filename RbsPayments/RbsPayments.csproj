@@ -56,12 +56,12 @@
     <Compile Include="Command\ICommandConnector.cs" />
     <Compile Include="Command\ResultCode.cs" />
     <Compile Include="Command\RegisterResult.cs" />
-    <Compile Include="Command\RbsResponse.cs" />
-    <Compile Include="Command\RbsTranslator.cs" />
     <Compile Include="Command\RbsPaymentState.cs" />
     <Compile Include="Command\PaymentInfo.cs" />
     <Compile Include="Config\RbsConnectionConfig.cs" />
     <Compile Include="Config\AuthenticateConfig.cs" />
+    <Compile Include="Command\RbsApiResponse.cs" />
+    <Compile Include="Command\RbsApi.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

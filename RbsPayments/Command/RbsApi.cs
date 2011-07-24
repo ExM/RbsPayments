@@ -4,20 +4,20 @@ using System.Collections.Specialized;
 
 namespace RbsPayments
 {
-	public class RbsTranslator
+	public class RbsApi
 	{
 		private readonly ICommandConnector _conn;
 		private readonly AuthenticateConfig _merchant;
 		private readonly AuthenticateConfig _refund;
 		
-		public RbsTranslator(ICommandConnector conn, string merchantNum, string merchantPass, string refundUser, string refundPass)
+		public RbsApi(ICommandConnector conn, string merchantNum, string merchantPass, string refundUser, string refundPass)
 		{
 			_conn = conn;
 			_merchant = new AuthenticateConfig {User = merchantNum, Pass = merchantPass};
 			_refund = new AuthenticateConfig {User = refundUser, Pass = refundPass};
 		}
 		
-		public RbsTranslator(ICommandConnector conn, AuthenticateConfig merchant, AuthenticateConfig refund)
+		public RbsApi(ICommandConnector conn, AuthenticateConfig merchant, AuthenticateConfig refund)
 			:this(conn, merchant.User, merchant.Pass, refund.User, refund.Pass)
 		{
 		}
@@ -44,7 +44,7 @@ namespace RbsPayments
 			};
 			
 			_conn.Request("Merchant2Rbs", getParams,
-				(resp) => RbsResponse.Merchant2Rbs(resp, completed, excepted),
+				(resp) => RbsApiResponse.Merchant2Rbs(resp, completed, excepted),
 				excepted);
 		}
 		
@@ -70,7 +70,7 @@ namespace RbsPayments
 			};
 			
 			_conn.Request("QueryOrders", getParams,
-				(resp) => RbsResponse.QueryOrders(resp, completed, excepted),
+				(resp) => RbsApiResponse.QueryOrders(resp, completed, excepted),
 				excepted);
 		}
 		
@@ -105,7 +105,7 @@ namespace RbsPayments
 				getParams.Add("DEPOSIT_AMOUNT", amount.Value.ToString());
 			
 			_conn.Request("DepositPayment", getParams,
-				(resp) => RbsResponse.DepositPayment(resp, completed, excepted),
+				(resp) => RbsApiResponse.DepositPayment(resp, completed, excepted),
 				excepted);
 		}
 		
@@ -131,7 +131,7 @@ namespace RbsPayments
 			};
 			
 			_conn.Request("DepositReversal", getParams,
-				(resp) => RbsResponse.DepositReversal(resp, completed, excepted),
+				(resp) => RbsApiResponse.DepositReversal(resp, completed, excepted),
 				excepted);
 		}
 		
@@ -159,7 +159,7 @@ namespace RbsPayments
 			};
 			
 			_conn.Request("DepositReversal", getParams,
-				(resp) => RbsResponse.DepositReversal(resp, completed, excepted),
+				(resp) => RbsApiResponse.DepositReversal(resp, completed, excepted),
 				excepted);
 		}
 		
@@ -191,7 +191,7 @@ namespace RbsPayments
 			};
 			
 			_conn.Request("Refund", getParams,
-				(resp) => RbsResponse.Refund(resp, completed, excepted),
+				(resp) => RbsApiResponse.Refund(resp, completed, excepted),
 				excepted);
 		}
 		
@@ -206,7 +206,7 @@ namespace RbsPayments
 			};
 			
 			_conn.Request("BPC3DS", getParams,
-				(resp) => RbsResponse.Merchant2Rbs(resp,
+				(resp) => RbsApiResponse.Merchant2Rbs(resp,
 					(result) =>
 					{
 						if(result.Required3DSecure)

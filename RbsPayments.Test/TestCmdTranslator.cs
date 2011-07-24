@@ -8,7 +8,7 @@ namespace RbsPayments.Test
 		public string Block(string orderNum, decimal amount)
 		{
 			RegisterResult result = null;
-			Conn.Block(orderNum, amount, TestCard.Good,
+			ApiConn.Block(orderNum, amount, TestCard.Good,
 				(resInfo) =>
 				{
 					Assert.IsFalse(resInfo.Required3DSecure);
@@ -26,7 +26,7 @@ namespace RbsPayments.Test
 		
 		public void Capture(string mdOrder, decimal? amount)
 		{
-			Conn.Capture(mdOrder, amount,
+			ApiConn.Capture(mdOrder, amount,
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);
@@ -39,7 +39,7 @@ namespace RbsPayments.Test
 		
 		public void Refund(string mdOrder, decimal? amount)
 		{
-			Conn.Refund(mdOrder, amount,
+			ApiConn.Refund(mdOrder, amount,
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);

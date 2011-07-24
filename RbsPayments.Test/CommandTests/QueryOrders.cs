@@ -21,7 +21,7 @@ namespace RbsPayments.CommandTests
 		[Test]
 		public void IncorrectMdOrder()
 		{
-			Conn.QueryOrders("123",
+			ApiConn.QueryOrders("123",
 				(rInfo, pInfo, state) =>
 				{
 					Assert.Fail("missed error");
@@ -39,7 +39,7 @@ namespace RbsPayments.CommandTests
 			string orderNum = CreateOrderNumber();
 			string mdOrder = Block(orderNum, 123.45m);
 			
-			Conn.QueryOrders(mdOrder,
+			ApiConn.QueryOrders(mdOrder,
 				(rInfo, pInfo, state) =>
 				{
 					Assert.IsTrue(rInfo.Success, "unexpected result code: {0}", rInfo);

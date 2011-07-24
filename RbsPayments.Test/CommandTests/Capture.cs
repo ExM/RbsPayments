@@ -21,7 +21,7 @@ namespace RbsPayments.CommandTests
 		[Test]
 		public void IncorrectMdOrder()
 		{
-			Conn.Capture("123", null,
+			ApiConn.Capture("123", null,
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.MdOrderNotFound, "unexpected result code: {0}", rCode);
@@ -38,7 +38,7 @@ namespace RbsPayments.CommandTests
 			string orderNum = CreateOrderNumber();
 			string mdOrder = Block(orderNum, 123.45m);
 			
-			Conn.Capture(mdOrder, null,
+			ApiConn.Capture(mdOrder, null,
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);
@@ -55,7 +55,7 @@ namespace RbsPayments.CommandTests
 			string orderNum = CreateOrderNumber();
 			string mdOrder = Block(orderNum, 123.45m);
 			
-			Conn.Capture(mdOrder, 100m,
+			ApiConn.Capture(mdOrder, 100m,
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);
@@ -72,7 +72,7 @@ namespace RbsPayments.CommandTests
 			string orderNum = CreateOrderNumber();
 			string mdOrder = Block(orderNum, 123.45m);
 			
-			Conn.Capture(mdOrder, 200m,
+			ApiConn.Capture(mdOrder, 200m,
 				(rCode) =>
 				{
 					//HACK: неожиданно, по видимому если есть доступные средства, то снятие произойдет

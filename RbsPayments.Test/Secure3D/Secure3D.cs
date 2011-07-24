@@ -66,7 +66,7 @@ namespace RbsPayments.CommandTests
 			string page3 = PostRequest(res3ds.AcsUrl, postParams3);
 			string paRes = ExtractPaRes(page3);
 			
-			Conn.Bpc3ds(res3ds.MdOrder, paRes,
+			ApiConn.Bpc3ds(res3ds.MdOrder, paRes,
 				(result2) =>
 				{
 					Assert.Greater(result2.MdOrder.Length, 10);

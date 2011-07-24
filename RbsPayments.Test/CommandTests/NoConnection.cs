@@ -20,7 +20,7 @@ namespace RbsPayments.CommandTests
 		[Test]
 		public void Block()
 		{
-			Conn.Block("ABC", 100m, TestCard.Good,
+			ApiConn.Block("ABC", 100m, TestCard.Good,
 				(result) =>
 				{
 					Assert.Fail("missed error");

@@ -22,7 +22,7 @@ namespace RbsPayments.CommandTests
 		public void Success()
 		{
 			string orderNum = CreateOrderNumber();
-			Conn.Block(orderNum, 100m, TestCard.Good,
+			ApiConn.Block(orderNum, 100m, TestCard.Good,
 				(result) =>
 				{
 					Assert.IsFalse(result.Required3DSecure);
@@ -40,7 +40,7 @@ namespace RbsPayments.CommandTests
 		public void NotEnoughMoney()
 		{
 			string orderNum = CreateOrderNumber();
-			Conn.Block(orderNum, 100m, TestCard.Bad116,
+			ApiConn.Block(orderNum, 100m, TestCard.Bad116,
 				(result) =>
 				{
 					Assert.IsFalse(result.Required3DSecure);
@@ -58,7 +58,7 @@ namespace RbsPayments.CommandTests
 		[Test]
 		public void IncorrectFormat()
 		{
-			Conn.Block("ABC", 100m, TestCard.Good,
+			ApiConn.Block("ABC", 100m, TestCard.Good,
 				(result) =>
 				{
 					Assert.Fail("missed error");

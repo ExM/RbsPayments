@@ -15,7 +15,7 @@ namespace RbsPayments
 				"ANSWER=%3C%3Fxml+version%3D%221.0%22+encoding%3D%22UTF-8%22%3F%3E%0A%3CPSApiResult" +
 				"+primaryRC%3D%220%22+secondaryRC%3D%220%22%2F%3E&STATE=payment_deposited";
 			
-			RbsResponse.Merchant2Rbs(text, 
+			RbsApiResponse.Merchant2Rbs(text, 
 			(result) =>
 			{
 				Assert.IsFalse(result.Required3DSecure);
@@ -36,7 +36,7 @@ namespace RbsPayments
 		{
 			string text = "MDORDER=11181269-6384-65-104-123-64-90120-84-4516-42_p1&ANSWER=%3C%3Fxml+version%3D%221.0%22+encoding%3D%22UTF-8%22%3F%3E%0A%3CPSApiResult+primaryRC%3D%2234%22+secondaryRC%3D%221014%22%2F%3E&STATE=payment_declined&ACTION_CODE=116\r\n";
 			
-			RbsResponse.Merchant2Rbs(text, 
+			RbsApiResponse.Merchant2Rbs(text, 
 			(result) =>
 			{
 				Assert.IsFalse(result.Required3DSecure);
@@ -55,7 +55,7 @@ namespace RbsPayments
 		{
 			string text = "MDORDER=1139797-87-91-68-103-1843-85-111-1106910-521_p1&ACSUrl=https://playground.paymentgate.ru/acs/PAReq&PaReq=eJxVUttuozAQ/RXE+2KbO9HEVVq62j6kTS/7AV4zIqyAUGO6oV+/44T0ItnSnBn7HM8cw9Wxa703NGNz6Ne+CLjvYa8PVdPXa//3y88fuX8l4WVvEMtn1JNBCVscR1Wj11RrvxvrIORC8FQUnHMRCs6LPI4Tnosi8iXsNk/4KmGRkKQQhMAukLiM3qveSlD69fruXiZxGkcxsAVCh+aulDExO/bovICd09CrDqXF0XYLD7BTCvRh6q2ZJZEBuwCYTCv31g4rxoZWzbWhQhUMau6wt7WyGJiJ/Rn0iOatRcuudzdR+QzM3QP2+dbd5KKRdI5NJbfl5t95375vy5pv/+r5obxNHsrHNTB3Airilpc5eZyvuFiFAtgpD6pzD5Q0Os6p8zOCwYlsvpW+poDMMOTVLHNBpQ8EeBwOPfUjac4fMVQ4aolH1Q0tekvHpO+ywD77ufnlnNCWhiuSKMuKNEuTQCRZmKdZnuZhkcZZ5uw5nXFiDU02dP6kJz0HgTketnjPlg9D0beP9B/7Us1q\r\n";
 			
-			RbsResponse.Merchant2Rbs(text, 
+			RbsApiResponse.Merchant2Rbs(text, 
 			(result) =>
 			{
 				Assert.IsTrue(result.Required3DSecure);
@@ -75,7 +75,7 @@ namespace RbsPayments
 			//HACK: такой варинт ответа не описан в документации
 			string text = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<PSApiResult primaryRC=\"-2\" secondaryRC=\"6\"/>";
 			
-			RbsResponse.Merchant2Rbs(text, 
+			RbsApiResponse.Merchant2Rbs(text, 
 			(result) =>
 			{
 				Assert.IsFalse(result.Required3DSecure);
@@ -97,7 +97,7 @@ namespace RbsPayments
 			string text = "orderNumber is not a number\r\nSystem error =For input string: \"ABC\" <p> may be" +
 				" some enetered data is in incorrect format, try again\r\n";
 			
-			RbsResponse.Merchant2Rbs(text, 
+			RbsApiResponse.Merchant2Rbs(text, 
 			(result) =>
 			{
 				Assert.Fail("missed error");
@@ -112,7 +112,7 @@ namespace RbsPayments
 		[Test]
 		public void DateTimeParse()
 		{
-			DateTime dt = RbsResponse.ParseTime("Fri Jun 10 17:16:17 MSD 2011");
+			DateTime dt = RbsApiResponse.ParseTime("Fri Jun 10 17:16:17 MSD 2011");
 			Assert.AreEqual(new DateTime(2011, 6, 10, 17, 16, 17, DateTimeKind.Unspecified), dt);
 		}
 		
@@ -128,7 +128,7 @@ namespace RbsPayments
 				"paymentType=\"BPC\" payment_state=\"payment_approved\"/></PaymentCollection></PSOrder>"+
 				"</PSApiResult><!-- transaction_type=SSL_transaction -->";
 
-			RbsResponse.QueryOrders(text, 
+			RbsApiResponse.QueryOrders(text, 
 			(rInfo, pInfo, state) =>
 			{
 				Assert.AreEqual(1000, pInfo.Amount);
@@ -156,7 +156,7 @@ namespace RbsPayments
 			string text = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<error>System error =String index out of " +
 				"range: 6 <p> may be some entered data is in incorrect format, try again</error>\r\n";
 			
-			RbsResponse.QueryOrders(text, 
+			RbsApiResponse.QueryOrders(text, 
 			(rInfo, pInfo, state) =>
 			{
 				Assert.Fail("missed error");

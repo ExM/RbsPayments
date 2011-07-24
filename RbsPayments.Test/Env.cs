@@ -20,7 +20,7 @@ namespace RbsPayments.Test
 		public RbsConnectionConfig NoConn;
 		public RbsConnectionConfig Sandbox;
 		public Secure3DTestConfig Secure3DTest;
-		public RbsTranslator Conn;
+		public RbsApi ApiConn;
 		public RbsSite SiteConn;
 
 		static Env()
@@ -42,7 +42,7 @@ namespace RbsPayments.Test
 		{
 			Sandbox = _settings.Load<RbsConnectionConfig>(EmptyResult.Throw, "Sandbox");
 			SyncConnector conn = new SyncConnector(new Uri(Sandbox.Uri), TimeSpan.FromSeconds(30));
-			Conn = new RbsTranslator(conn, Sandbox.Merchant, Sandbox.Refund);
+			ApiConn = new RbsApi(conn, Sandbox.Merchant, Sandbox.Refund);
 		}
 		
 		public void BrowserConfigure()
@@ -61,7 +61,7 @@ namespace RbsPayments.Test
 		{
 			NoConn = _settings.Load<RbsConnectionConfig>(EmptyResult.Throw, "NoConn");
 			SyncConnector conn = new SyncConnector(new Uri(NoConn.Uri), TimeSpan.FromSeconds(30));
-			Conn = new RbsTranslator(conn, NoConn.Merchant, NoConn.Refund);
+			ApiConn = new RbsApi(conn, NoConn.Merchant, NoConn.Refund);
 		}
 		
 		public static bool ValidateServerCertificate(object sender,
@@ -83,7 +83,7 @@ namespace RbsPayments.Test
 		{
 			RegisterResult result = null;
 
-			Conn.Block(orderNumber, amount, TestCard.Good3DSec,
+			ApiConn.Block(orderNumber, amount, TestCard.Good3DSec,
 				(res) =>
 				{
 					result = res;

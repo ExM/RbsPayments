@@ -39,7 +39,7 @@ namespace RbsPayments
 			string paRes = postParams["PaRes"];
 			Assert.AreEqual(result.MdOrder, postParams["MD"]);
 			
-			Conn.Bpc3ds(result.MdOrder, paRes,
+			ApiConn.Bpc3ds(result.MdOrder, paRes,
 				(result2) =>
 				{
 					Assert.Greater(result2.MdOrder.Length, 10);

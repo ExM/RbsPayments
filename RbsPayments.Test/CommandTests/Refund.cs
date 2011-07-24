@@ -21,7 +21,7 @@ namespace RbsPayments.CommandTests
 		[Test]
 		public void IncorrectMdOrder()
 		{
-			Conn.Refund("123",
+			ApiConn.Refund("123",
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.MdOrderNotFound, "unexpected result code: {0}", rCode);
@@ -39,7 +39,7 @@ namespace RbsPayments.CommandTests
 			string mdOrder = Block(orderNum, 123.45m);
 			Capture(mdOrder, null);
 			
-			Conn.Refund(mdOrder,
+			ApiConn.Refund(mdOrder,
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);
@@ -57,7 +57,7 @@ namespace RbsPayments.CommandTests
 			string mdOrder = Block(orderNum, 123.45m);
 			Capture(mdOrder, null);
 			
-			Conn.Refund(mdOrder, 100m,
+			ApiConn.Refund(mdOrder, 100m,
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);
@@ -74,7 +74,7 @@ namespace RbsPayments.CommandTests
 			string orderNum = CreateOrderNumber();
 			string mdOrder = Block(orderNum, 123.45m);
 			Capture(mdOrder, null);
-			Conn.Refund(mdOrder, 200m,
+			ApiConn.Refund(mdOrder, 200m,
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);

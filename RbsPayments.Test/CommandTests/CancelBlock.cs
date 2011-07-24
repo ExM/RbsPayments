@@ -21,7 +21,7 @@ namespace RbsPayments.CommandTests
 		[Test]
 		public void IncorrectMdOrder()
 		{
-			Conn.CancelBlock("123",
+			ApiConn.CancelBlock("123",
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.MdOrderNotFound, "unexpected result code: {0}", rCode);
@@ -38,7 +38,7 @@ namespace RbsPayments.CommandTests
 			string orderNum = CreateOrderNumber();
 			string mdOrder = Block(orderNum, 123.45m);
 			
-			Conn.CancelBlock(mdOrder,
+			ApiConn.CancelBlock(mdOrder,
 				(rCode) =>
 				{
 					Assert.IsTrue(rCode.Success, "unexpected result code: {0}", rCode);

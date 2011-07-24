@@ -13,14 +13,14 @@ namespace RbsPayments.CommandTests
 	[Category("server required")]
 	public class AsyncExample: Env
 	{
-		RbsTranslator _asyncTr;
+		RbsApi _asyncTr;
 		
 		[TestFixtureSetUp]
 		public void SetUp()
 		{
 			SandboxConfigure();
 			AsyncConnector conn = new AsyncConnector(new Uri(Sandbox.Uri), TimeSpan.FromSeconds(10));
-			_asyncTr = new RbsTranslator(conn, Sandbox.Merchant, Sandbox.Refund);
+			_asyncTr = new RbsApi(conn, Sandbox.Merchant, Sandbox.Refund);
 		}
 
 		[Test]

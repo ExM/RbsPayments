@@ -10,7 +10,7 @@ using System.Xml;
 
 namespace RbsPayments
 {
-	public static class RbsResponse
+	public static class RbsApiResponse
 	{
 		private static Logger Log = LogManager.GetCurrentClassLogger();
 		
